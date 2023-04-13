@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### My ###
+src/main/java/com/flightDelay/flightdelayapi/converter/.idea
+src/main/resources/application.properties

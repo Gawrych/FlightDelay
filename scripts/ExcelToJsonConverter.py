@@ -153,7 +153,7 @@ for file_name in files:
         url = 'http://localhost:8080/'
         if endpoint is not None:
             url += endpoint
-            response = requests.post(url, json=thisisjson_dict)
+            response = requests.put(url, json=thisisjson_dict)
 
             response_dict = {'file_name': file_name, 'status_code': str(response.status_code),
                                   'request': response.request.__str__(), 'url': response.url}

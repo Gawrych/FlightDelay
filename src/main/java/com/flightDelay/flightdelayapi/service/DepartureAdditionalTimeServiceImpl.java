@@ -8,11 +8,11 @@ import com.flightDelay.flightdelayapi.repository.DepartureAdditionalTimeReposito
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,31 +24,15 @@ public class DepartureAdditionalTimeServiceImpl implements DepartureAdditionalTi
     private ObjectMapper objectMapper;
 
     @Transactional
-    public void addToDatabase(String newDataInJsonString) {
+    public ResponseEntity<String> addNewDepartureAdditionalTimeRecords(String newDataInJsonString) {
         try {
             TypeReference<List<DepartureAdditionalTime>> typeReference = new TypeReference<>(){};
             List<DepartureAdditionalTime> departureAdditionalTimeRecords = objectMapper.readValue(newDataInJsonString, typeReference);
-
-            boolean update = checkIfDatabaseNeedsUpdate(departureAdditionalTimeRecords);
-            System.out.println("Need update: " + update);
-            if (update) {
-//                departureAdditionalTimeRecords.forEach(this::save);
-            }
-            // return request http status code
+            departureAdditionalTimeRecords.forEach(this::save);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error processing JSON data", e);
+            return new ResponseEntity<>("Error processing JSON data " + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private boolean checkIfDatabaseNeedsUpdate(List<DepartureAdditionalTime> departureAdditionalTimeRecords) {
-        Optional<DepartureAdditionalTime> departureList = departureAdditionalTimeRecords
-                .stream().max(Comparator.comparing(DepartureAdditionalTime::getFlightDate));
-
-        if (departureList.isPresent()) {
-            DepartureAdditionalTime record = departureList.get();
-            return record.getFlightDate() > findNewestRecordByStage(record.getStage()).getFlightDate();
-        }
-        return true;
+        return new ResponseEntity<>("New data has been added to the database", HttpStatus.CREATED);
     }
 
     public void save(DepartureAdditionalTime departureAdditionalTime) {
@@ -57,9 +41,4 @@ public class DepartureAdditionalTimeServiceImpl implements DepartureAdditionalTi
             departureAdditionalTimeRepository.save(departureAdditionalTime);
         }
     }
-
-    public DepartureAdditionalTime findNewestRecordByStage(String stage) {
-        return departureAdditionalTimeRepository.findNewestRecordByStage(stage).get(0);
-    }
-
 }

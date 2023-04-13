@@ -13,8 +13,5 @@ public interface DepartureAdditionalTimeRepository extends ListCrudRepository<De
 
     List<DepartureAdditionalTime> findAllByAirportCode(String airportCode);
 
-    @Query("SELECT d FROM DepartureAdditionalTime d WHERE d.stage = :stage ORDER BY d.flightDate DESC")
-    List<DepartureAdditionalTime> findNewestRecordByStage(@Param("stage") String stage);
-
     boolean existsByGeneratedId(String generatedId);
 }

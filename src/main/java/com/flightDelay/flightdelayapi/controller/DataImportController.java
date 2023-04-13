@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/data")
-@CrossOrigin
 public class DataImportController {
 
     private final DataImportServiceImpl dataImportService;
@@ -36,7 +36,8 @@ public class DataImportController {
             }
             return new ResponseEntity<>(responseJson, HttpStatus.CREATED);
         } catch (JsonProcessingException e) {
-            return new ResponseEntity<>(responseJson, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error processing JSON data " + e + "\n" + responseJson,
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

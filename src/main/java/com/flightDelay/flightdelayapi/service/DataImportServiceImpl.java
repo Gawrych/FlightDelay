@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class DataImportServiceImpl implements DataImportService {
 
     private static final String PATH_TO_PYTHON_CONVERTER_SCRIPT =
-            "/home/broslaw/Programming/flight-delay-api/src/main/java/com/flightDelay/flightdelayapi/converter/ExcelToJsonConverter.py";
+            "scripts/ExcelToJsonConverter.py";
 
     private final ObjectMapper objectMapper;
 
@@ -30,16 +30,8 @@ public class DataImportServiceImpl implements DataImportService {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             return reader.lines().collect(Collectors.joining(System.lineSeparator()));
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            //TODO: Add exceptionClass
+            return "[{\"status_code\": \"500\",\"error\": \"Script does not exist or was interrupted\"}]";
         }
     }
-
-    private String readProcessOutput(InputStream inputStream) {
-        try {
-            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }

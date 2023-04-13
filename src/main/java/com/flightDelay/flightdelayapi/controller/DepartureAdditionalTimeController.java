@@ -25,10 +25,9 @@ public class DepartureAdditionalTimeController {
         return departureAdditionalTimeRepository.findAll();
     }
 
-    @PostMapping
-    public ResponseEntity<?> updateDelays(@RequestBody String newDepartureAdditionalTimeRecords) {
-        departureAdditionalTimeService.addToDatabase(newDepartureAdditionalTimeRecords);
-        return ResponseEntity.ok("resource departure additional time updated");
+    @PutMapping
+    public ResponseEntity<?> addNewRecords(@RequestBody String newDepartureAdditionalTimeRecords) {
+        return departureAdditionalTimeService.addNewDepartureAdditionalTimeRecords(newDepartureAdditionalTimeRecords);
     }
 
     @DeleteMapping

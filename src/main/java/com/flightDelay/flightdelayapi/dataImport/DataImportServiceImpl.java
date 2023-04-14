@@ -1,7 +1,9 @@
 package com.flightDelay.flightdelayapi.dataImport;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flightDelay.flightdelayapi.shared.UpdateFromJson;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -13,23 +15,30 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DataImportServiceImpl implements DataImportService {
 
-    private static final String PATH_TO_PYTHON_CONVERTER_SCRIPT =
-            "scripts/ExcelToJsonConverter.py";
+    private static final String CONVERTER_BASE_PATH = "scripts/converter/";
+    public static final String ARRIVAL_DELAY_SCRIPT_NAME = "ExcelToJsonConverter.py";
+    public static final String DEPARTURE_ADDITIONAL_TIME_SCRIPT_NAME = "ExcelToJsonConverter.py";
+    public static final String PRE_DEPARTURE_DELAY_SCRIPT_NAME = "ExcelToJsonConverter.py";
+    public static final String TRAFFIC_SCRIPT_NAME = "ExcelToJsonConverter.py";
 
-    private final ObjectMapper objectMapper;
-
-    public String importDataFromFiles() {
+    public ResponseEntity<String> importFromFile(UpdateFromJson entityAbleToBeUpdatedByJson, String scriptName) {
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder("python3", PATH_TO_PYTHON_CONVERTER_SCRIPT);
+            ProcessBuilder processBuilder = new ProcessBuilder("python3", CONVERTER_BASE_PATH+scriptName);
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
-            int exitCode = process.waitFor();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            return reader.lines().collect(Collectors.joining(System.lineSeparator()));
+            String newDataInJson = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                return new ResponseEntity<>(
+                        "Error converting JSON data. Exit code: " + exitCode, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            return entityAbleToBeUpdatedByJson.updateFromJson(newDataInJson);
         } catch (IOException | InterruptedException e) {
-            //TODO: Add exceptionClass
-            return "[{\"status_code\": \"500\",\"error\": \"Script does not exist or was interrupted\"}]";
+            return new ResponseEntity<>("Error processing JSON data " + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

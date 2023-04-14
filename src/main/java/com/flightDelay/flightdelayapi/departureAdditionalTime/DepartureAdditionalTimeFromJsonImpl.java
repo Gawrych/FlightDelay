@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.AirportServiceImpl;
+import com.flightDelay.flightdelayapi.shared.UpdateFromJson;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,15 +15,16 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class DepartureAdditionalTimeServiceImpl implements DepartureAdditionalTimeService {
+public class DepartureAdditionalTimeFromJsonImpl implements DepartureAdditionalTimeService, UpdateFromJson {
 
     private final DepartureAdditionalTimeRepository departureAdditionalTimeRepository;
     private final AirportServiceImpl airportService;
-    @Autowired
-    private ObjectMapper objectMapper;
 
+    private final ObjectMapper objectMapper;
+
+    @Override
     @Transactional
-    public ResponseEntity<String> addNewDepartureAdditionalTimeRecords(String newDataInJsonString) {
+    public ResponseEntity<String> updateFromJson(String newDataInJsonString) {
         try {
             TypeReference<List<DepartureAdditionalTime>> typeReference = new TypeReference<>(){};
             List<DepartureAdditionalTime> departureAdditionalTimeRecords = objectMapper.readValue(newDataInJsonString, typeReference);

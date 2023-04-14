@@ -39,6 +39,7 @@ public class Region {
     @JsonProperty("keywords")
     private String keywords;
 
+    @ToString.Exclude
     @JsonBackReference
     @OneToOne(mappedBy = "region")
     private Airport airport;

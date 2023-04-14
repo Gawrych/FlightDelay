@@ -1,35 +1,29 @@
 package com.flightDelay.flightdelayapi.departureAdditionalTime;
 
+import com.flightDelay.flightdelayapi.dataImport.DataImportServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import static com.flightDelay.flightdelayapi.dataImport.DataImportServiceImpl.DEPARTURE_ADDITIONAL_TIME_SCRIPT_NAME;
 
-
+@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/departure")
 public class DepartureAdditionalTimeController {
 
-    private final DepartureAdditionalTimeRepository departureAdditionalTimeRepository;
+    private final DepartureAdditionalTimeFromJsonImpl departureAdditionalTimeService;
 
-    private final DepartureAdditionalTimeServiceImpl departureAdditionalTimeService;
+    private final DataImportServiceImpl dataImportService;
 
-    @GetMapping(path = "/all")
-    public List<DepartureAdditionalTime> getDelaysInJSON() {
-//        return arrivalDelayRepository.findByFlightArrivalDelay(minFlightArrivalDelayNumber);
-        return departureAdditionalTimeRepository.findAll();
+    @PutMapping("/file-update")
+    public ResponseEntity<String> updateFromFile() {
+        return dataImportService.importFromFile(departureAdditionalTimeService, DEPARTURE_ADDITIONAL_TIME_SCRIPT_NAME);
     }
 
-    @PutMapping
-    public ResponseEntity<?> addNewRecords(@RequestBody String newDepartureAdditionalTimeRecords) {
-        return departureAdditionalTimeService.addNewDepartureAdditionalTimeRecords(newDepartureAdditionalTimeRecords);
-    }
-
-    @DeleteMapping
-    public String removeAllDepartureAddTimes() {
-        departureAdditionalTimeRepository.deleteAll();
-        return "DELETED";
+    @PutMapping("/update")
+    public ResponseEntity<?> update(@RequestBody String dataInJson) {
+        return departureAdditionalTimeService.updateFromJson(dataInJson);
     }
 }

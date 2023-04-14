@@ -4,7 +4,6 @@ import pandas as pd
 import datetime
 import pandas
 import math
-import requests
 import calendar
 
 unixTime = datetime.datetime(1970, 1, 1)
@@ -98,12 +97,6 @@ preprocessors = {
     'TaxiOutAdditionalTime': preprocess_taxi_out_additional_time,
 }
 
-endpoints = {
-    'AirportTraffic': 'traffic',
-    'TaxiOutAdditionalTime': 'departure',
-    'ASMA_AdditionalTime': 'departure'
-}
-
 folder_path = '/home/broslaw/Programming/FlightDelayData/eurocontrol/toConvert/'
 files = os.listdir(folder_path)
 
@@ -124,8 +117,6 @@ for i in range(amountOfMonthsToCollectDataFrom):
         years.append(date.year)
         months.append(date.month)
 
-jsonResult = '['
-
 for file_name in files:
     if not file_name.endswith('.xlsx'):
         continue
@@ -135,11 +126,9 @@ for file_name in files:
     thisisjson = excel_data_df.to_json(orient='records')
     thisisjson_dict = json.loads(thisisjson)
 
-    # Preprocess data based on file name
     titleWithoutExtension = file_name[:-5]
     preprocess_fn = preprocessors.get(titleWithoutExtension)
     if preprocess_fn:
-        # Convert list of dictionaries to DataFrame
         df = pd.DataFrame(thisisjson_dict)
 
         df = df[((df['YEAR'].isin(years)) & (df['MONTH_NUM'].isin(months))) | (
@@ -148,21 +137,6 @@ for file_name in files:
         thisisjson_dict = preprocess_fn(df)
 
         thisisjson_dict = replace_nan_with_null(thisisjson_dict)
+        json_str = json.dumps(thisisjson_dict, indent=0)
 
-        endpoint = endpoints.get(titleWithoutExtension)
-        url = 'http://localhost:8080/'
-        if endpoint is not None:
-            url += endpoint
-            response = requests.put(url, json=thisisjson_dict)
-
-            response_dict = {'file_name': file_name, 'status_code': str(response.status_code),
-                                  'request': response.request.__str__(), 'url': response.url}
-
-            jsonResult += json.dumps(response_dict, indent=4)
-            jsonResult += ',\n'
-
-    # Write data to JSON file
-    with open(os.path.join(folder_path, titleWithoutExtension + '.json'), 'w') as json_file:
-        json.dump(thisisjson_dict, json_file)
-
-print(jsonResult[:-2]+']')
+        print(json_str)

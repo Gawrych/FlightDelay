@@ -64,6 +64,7 @@ public class Traffic {
         this.generatedId = generateId();
     }
 
+    @ToString.Exclude
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "airportIdent")

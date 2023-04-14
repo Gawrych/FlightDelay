@@ -108,6 +108,7 @@ public class ArrivalDelay {
         this.generatedId = generateId();
     }
 
+    @ToString.Exclude
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "airportIdent")

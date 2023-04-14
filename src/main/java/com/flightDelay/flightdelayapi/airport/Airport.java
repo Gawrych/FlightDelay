@@ -60,27 +60,33 @@ public class Airport {
     @JsonProperty("keywords")
     private String keywords;
 
+    @ToString.Exclude
     @JsonManagedReference
     @OneToMany(mappedBy="airport")
     private Set<Runway> runways;
 
+    @ToString.Exclude
     @JsonManagedReference
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "regionIsoCode", referencedColumnName = "isoCode")
     private Region region;
 
+    @ToString.Exclude
     @JsonManagedReference
     @OneToMany(mappedBy="airport")
     private List<Traffic> trafficReports;
 
+    @ToString.Exclude
     @JsonManagedReference
     @OneToMany(mappedBy="airport")
     private List<ArrivalDelay> arrivalDelays;
 
+    @ToString.Exclude
     @JsonManagedReference
     @OneToMany(mappedBy="airport")
     private List<PreDepartureDelay> preDepartureDelays;
 
+    @ToString.Exclude
     @JsonManagedReference
     @OneToMany(mappedBy="airport")
     private List<DepartureAdditionalTime> departureAdditionalTimes;

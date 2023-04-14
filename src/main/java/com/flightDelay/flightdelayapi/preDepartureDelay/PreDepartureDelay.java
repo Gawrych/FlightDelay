@@ -63,6 +63,7 @@ public class PreDepartureDelay {
         }
     }
 
+    @ToString.Exclude
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "airportIdent")

@@ -49,6 +49,7 @@ public class DepartureAdditionalTime {
     @JsonProperty("TOTAL_ADD_TIME_MIN")
     private Double totalAdditionalTimeMin;
 
+    @ToString.Exclude
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "airportIdent")

@@ -1,34 +1,27 @@
 package com.flightDelay.flightdelayapi.arrivalDelay;
 
+import com.flightDelay.flightdelayapi.dataImport.DataImportServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import static com.flightDelay.flightdelayapi.dataImport.DataImportServiceImpl.ARRIVAL_DELAY_SCRIPT_NAME;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/delays")
 public class ArrivalDelayController {
 
-    private final ArrivalDelayRepository arrivalDelayRepository;
+    private final ArrivalDelayFromJsonImpl arrivalDelayService;
+    private final DataImportServiceImpl dataImportService;
 
-    private final ArrivalDelayServiceImpl arrivalDelayService;
-
-    @GetMapping(path = "/all")
-    public List<ArrivalDelay> getDelaysInJson() {
-        return arrivalDelayRepository.findAll();
+    @PutMapping("/file-update")
+    public ResponseEntity<String> updateFromFile() {
+        return dataImportService.importFromFile(arrivalDelayService, ARRIVAL_DELAY_SCRIPT_NAME);
     }
 
-    @PostMapping
-    public ResponseEntity<?> addNewArrivalDelaysReport(@RequestBody String newDataInJsonString) {
-        arrivalDelayService.addToDatabase(newDataInJsonString);
-        return ResponseEntity.ok("Resource delay updated");
-    }
-
-    @DeleteMapping
-    public String removeAllTraffic() {
-        arrivalDelayRepository.deleteAll();
-        return "DELETED";
+    @PutMapping("/update")
+    public ResponseEntity<?> update(@RequestBody String dataInJson) {
+        return arrivalDelayService.updateFromJson(dataInJson);
     }
 }

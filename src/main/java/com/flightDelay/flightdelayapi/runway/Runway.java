@@ -71,6 +71,7 @@ public class Runway {
     @JsonProperty("he_heading_degT")
     private Integer heHeadingDegT;
 
+    @ToString.Exclude
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "airportIdent")

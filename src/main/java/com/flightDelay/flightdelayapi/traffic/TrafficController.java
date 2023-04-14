@@ -1,37 +1,26 @@
 package com.flightDelay.flightdelayapi.traffic;
 
-
+import com.flightDelay.flightdelayapi.dataImport.DataImportServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import static com.flightDelay.flightdelayapi.dataImport.DataImportServiceImpl.TRAFFIC_SCRIPT_NAME;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/traffic")
 public class TrafficController {
 
-    private final TrafficRepository trafficRepository;
-    private final TrafficServiceImpl trafficService;
+    private final TrafficFromJsonImpl trafficService;
+    private final DataImportServiceImpl dataImportService;
 
-    @GetMapping(path = "/airport")
-    @ResponseBody
-    public List<Traffic> getTrafficInJSON(@RequestParam String airportCode) {
-        return trafficRepository.findAllByAirportCode(airportCode);
+    @PutMapping("/file-update")
+    public ResponseEntity<String> updateFromFile() {
+        return dataImportService.importFromFile(trafficService, TRAFFIC_SCRIPT_NAME);
     }
 
-    @PostMapping
-    public ResponseEntity<?> addNewTrafficReport(@RequestBody String newDataInJsonString) {
-        trafficService.addToDatabase(newDataInJsonString);
-        return ResponseEntity.ok("Resource traffic updated");
-    }
-
-    @DeleteMapping
-    @ResponseBody
-    public String removeAllRowsInTrafficTable() {
-        // Move deleteAll to traffic service
-        trafficRepository.deleteAll();
-        return "DELETED";
+    @PutMapping("/update")
+    public ResponseEntity<String> update(@RequestBody String dataInJson) {
+        return trafficService.updateFromJson(dataInJson);
     }
 }

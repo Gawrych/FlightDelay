@@ -12,7 +12,7 @@ import static com.flightDelay.flightdelayapi.dataImport.DataImportServiceImpl.AR
 @RequestMapping("/delays")
 public class ArrivalDelayController {
 
-    private final ArrivalDelayFromJsonImpl arrivalDelayService;
+    private final ArrivalDelayServiceImpl arrivalDelayService;
     private final DataImportServiceImpl dataImportService;
 
     @PutMapping("/file-update")

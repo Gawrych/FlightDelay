@@ -13,7 +13,7 @@ import static com.flightDelay.flightdelayapi.dataImport.DataImportServiceImpl.DE
 @RequestMapping("/departure")
 public class DepartureAdditionalTimeController {
 
-    private final DepartureAdditionalTimeFromJsonImpl departureAdditionalTimeService;
+    private final DepartureAdditionalTimeServiceImpl departureAdditionalTimeService;
 
     private final DataImportServiceImpl dataImportService;
 

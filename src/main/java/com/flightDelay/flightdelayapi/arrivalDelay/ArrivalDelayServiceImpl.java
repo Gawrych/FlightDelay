@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ArrivalDelayFromJsonImpl implements ArrivalDelayService, UpdateFromJson {
+public class ArrivalDelayServiceImpl implements ArrivalDelayService, UpdateFromJson {
 
     private final ArrivalDelayRepository arrivalDelayRepository;
 

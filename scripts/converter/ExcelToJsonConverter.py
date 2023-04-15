@@ -1,142 +1,55 @@
-import os
+import math
 import json
 import pandas as pd
 import datetime
 import pandas
-import math
-import calendar
-
-unixTime = datetime.datetime(1970, 1, 1)
 
 
-def preprocess_predeparture_delay(df):
-    return df.dropna(subset=['DLY_ATC_PRE_2']).to_dict('records')
+class ExcelToJsonConverter:
 
+    def replace_nan_to_null(self, data):
+        if isinstance(data, dict):
+            return {k: self.replace_nan_to_null(v) for k, v in data.items()}
+        elif isinstance(data, list):
+            return [self.replace_nan_to_null(item) for item in data]
+        elif isinstance(data, float) and math.isnan(data):
+            return None
+        else:                                                                                        
+            return data
 
-def preprocess_airport_arrival_delay(df):
-    return df.drop(columns=['APT_NAME', 'STATE_NAME', 'ATFM_VERSION', 'Pivot Label']). \
-        dropna(subset=['FLT_ARR_1_DLY']).to_dict('records')
+    def convert(self, file_name):
+        try:
+            file_path = self.folder_path + file_name + '.xlsx'
+            excel_data_df = pandas.read_excel(file_path, sheet_name='DATA')
 
+            json_str = excel_data_df.to_json(orient='records')
+            json_dictionary = json.loads(json_str)
+            df = pd.DataFrame(json_dictionary)
 
-def preprocess_airport_traffic(df):
-    return df.drop(columns=['APT_NAME', 'STATE_NAME', 'Pivot Label']). \
-        dropna(subset=['FLT_TOT_1']).to_dict('records')
+            df = df[((df['YEAR'].isin(self.years)) & (df['MONTH_NUM'].isin(self.months))) | (
+                    (df['YEAR'].isin(self.secondYears)) & (df['MONTH_NUM'].isin(self.secondMonths)))]
 
+            return df
+        except FileNotFoundError:
+            print('No such file or directory: "' + file_name + '.xlsx"')
+            exit(1)
 
-def preprocess_asma_additional_time(df):
-    cleaned_json = df.drop(columns=['APT_NAME', 'MONTH_MON', 'STATE_NAME', 'TF', 'PIVOT_LABEL', 'COMMENT']). \
-        dropna(subset=['TOTAL_ADD_TIME_MIN']).to_dict('records')
+    def calculate_dates(self):
+        for i in range(self.amountOfMonthsToCollectDataFrom):
+            date = self.today - datetime.timedelta(days=(i + 1) * 31)
+            if date.year != self.today.year:
+                self.secondYears.append(date.year)
+                self.secondMonths.append(date.month)
+            else:
+                self.years.append(date.year)
+                self.months.append(date.month)
 
-    for jsonObj in cleaned_json:
-        year = jsonObj['YEAR']
-        month = jsonObj['MONTH_NUM']
-        last_day_of_month = calendar.monthrange(year, month)[1]
-
-        flight_date_in_days = \
-            (datetime.datetime(year, month, last_day_of_month) - unixTime).days
-        jsonObj['FLT_DATE'] = flight_date_in_days
-        jsonObj['STAGE'] = 'ASMA'
-
-    return cleaned_json
-
-
-def preprocess_taxi_in_additional_time(df):
-    cleaned_json = df.drop(columns=['APT_NAME', 'MONTH_MON', 'STATE_NAME', 'TF', 'PIVOT_LABEL', 'COMMENT']). \
-        dropna(subset=['TOTAL_ADD_TIME_MIN']).to_dict('records')
-
-    for jsonObj in cleaned_json:
-        year = jsonObj['YEAR']
-        month = jsonObj['MONTH_NUM']
-        last_day_of_month = calendar.monthrange(year, month)[1]
-
-        flight_date_in_days = \
-            (datetime.datetime(year, month, last_day_of_month) - unixTime).days
-        jsonObj['FLT_DATE'] = flight_date_in_days
-        jsonObj['STAGE'] = 'TAXI_IN'
-
-    return cleaned_json
-
-
-def preprocess_taxi_out_additional_time(df):
-    cleaned_json = df.drop(columns=['APT_NAME', 'MONTH_MON', 'STATE_NAME', 'TF', 'PIVOT_LABEL', 'COMMENT']) \
-        .to_dict('records')
-
-    for jsonObj in cleaned_json:
-        year = jsonObj['YEAR']
-        month = jsonObj['MONTH_NUM']
-        last_day_of_month = calendar.monthrange(year, month)[1]
-
-        flight_date_in_days = \
-            (datetime.datetime(year, month, last_day_of_month) - unixTime).days
-        jsonObj['FLT_DATE'] = flight_date_in_days
-        jsonObj['STAGE'] = 'TAXI_OUT'
-
-    return cleaned_json
-
-
-def replace_nan_with_null(data):
-    """
-    Recursively replaces NaN values with null in a dictionary or list.
-    """
-    if isinstance(data, dict):
-        return {k: replace_nan_with_null(v) for k, v in data.items()}
-    elif isinstance(data, list):
-        return [replace_nan_with_null(item) for item in data]
-    elif isinstance(data, float) and math.isnan(data):
-        return None
-    else:
-        return data
-
-
-preprocessors = {
-    'PreDepartureDelay': preprocess_predeparture_delay,
-    'AirportArrivalDelay': preprocess_airport_arrival_delay,
-    'AirportTraffic': preprocess_airport_traffic,
-    'ASMA_AdditionalTime': preprocess_asma_additional_time,
-    'TaxiInAdditionalTime': preprocess_taxi_in_additional_time,
-    'TaxiOutAdditionalTime': preprocess_taxi_out_additional_time,
-}
-
-folder_path = '/home/broslaw/Programming/FlightDelayData/eurocontrol/toConvert/'
-files = os.listdir(folder_path)
-
-today = datetime.date.today()
-years = []
-months = []
-secondYears = []
-secondMonths = []
-
-amountOfMonthsToCollectDataFrom = 5
-
-for i in range(amountOfMonthsToCollectDataFrom):
-    date = today - datetime.timedelta(days=(i + 1) * 31)
-    if date.year != today.year:
-        secondYears.append(date.year)
-        secondMonths.append(date.month)
-    else:
-        years.append(date.year)
-        months.append(date.month)
-
-for file_name in files:
-    if not file_name.endswith('.xlsx'):
-        continue
-
-    excel_data_df = pandas.read_excel(folder_path + file_name, sheet_name='DATA')
-
-    thisisjson = excel_data_df.to_json(orient='records')
-    thisisjson_dict = json.loads(thisisjson)
-
-    titleWithoutExtension = file_name[:-5]
-    preprocess_fn = preprocessors.get(titleWithoutExtension)
-    if preprocess_fn:
-        df = pd.DataFrame(thisisjson_dict)
-
-        df = df[((df['YEAR'].isin(years)) & (df['MONTH_NUM'].isin(months))) | (
-                (df['YEAR'].isin(secondYears)) & (df['MONTH_NUM'].isin(secondMonths)))]
-
-        thisisjson_dict = preprocess_fn(df)
-
-        thisisjson_dict = replace_nan_with_null(thisisjson_dict)
-        json_str = json.dumps(thisisjson_dict, indent=0)
-
-        print(json_str)
+    def __init__(self):
+        self.folder_path = '/home/broslaw/Programming/flight-delay-api/src/main/resources/data/'
+        self.amountOfMonthsToCollectDataFrom = 4
+        self.today = datetime.date.today()
+        self.years = []
+        self.months = []
+        self.secondYears = []
+        self.secondMonths = []
+        self.calculate_dates()

@@ -1,4 +1,4 @@
-package com.flightDelay.flightdelayapi.departureAdditionalTime;
+package com.flightDelay.flightdelayapi.preDepartureDelay;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -11,13 +11,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class DepartureAdditionalTimeFromJsonImpl implements DepartureAdditionalTimeService, UpdateFromJson {
+public class PreDepartureDelayServiceImpl implements PreDepartureDelayService, UpdateFromJson {
 
-    private final DepartureAdditionalTimeRepository departureAdditionalTimeRepository;
+    private final PreDepartureDelayRepository preDepartureDelayRepository;
+
     private final AirportServiceImpl airportService;
 
     private final ObjectMapper objectMapper;
@@ -26,19 +27,19 @@ public class DepartureAdditionalTimeFromJsonImpl implements DepartureAdditionalT
     @Transactional
     public ResponseEntity<String> updateFromJson(String newDataInJsonString) {
         try {
-            TypeReference<List<DepartureAdditionalTime>> typeReference = new TypeReference<>(){};
-            List<DepartureAdditionalTime> departureAdditionalTimeRecords = objectMapper.readValue(newDataInJsonString, typeReference);
-            departureAdditionalTimeRecords.forEach(this::save);
+            TypeReference<List<PreDepartureDelay>> typeReference = new TypeReference<>(){};
+            List<PreDepartureDelay> preDepartureDelays = objectMapper.readValue(newDataInJsonString, typeReference);
+            preDepartureDelays.forEach(this::save);
         } catch (JsonProcessingException e) {
             return new ResponseEntity<>("Error processing JSON data " + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>("New data has been added to the database", HttpStatus.CREATED);
     }
 
-    public void save(DepartureAdditionalTime departureAdditionalTime) {
-        if (!departureAdditionalTimeRepository.existsByGeneratedId(departureAdditionalTime.generateId())) {
-            departureAdditionalTime.setAirportBidirectionalRelationshipByCode(departureAdditionalTime.getAirportCode(), airportService);
-            departureAdditionalTimeRepository.save(departureAdditionalTime);
+    public void save(PreDepartureDelay preDepartureDelay) {
+        if (!preDepartureDelayRepository.existsByGeneratedId(preDepartureDelay.generateId())) {
+            preDepartureDelay.setAirportBidirectionalRelationshipByCode(preDepartureDelay.getAirportCode(), airportService);
+            preDepartureDelayRepository.save(preDepartureDelay);
         }
     }
 }

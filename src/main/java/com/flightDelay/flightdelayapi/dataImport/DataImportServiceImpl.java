@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 public class DataImportServiceImpl implements DataImportService {
 
     private static final String CONVERTER_BASE_PATH = "scripts/converter/";
-    public static final String ARRIVAL_DELAY_SCRIPT_NAME = "ExcelToJsonConverter.py";
-    public static final String DEPARTURE_ADDITIONAL_TIME_SCRIPT_NAME = "ExcelToJsonConverter.py";
-    public static final String PRE_DEPARTURE_DELAY_SCRIPT_NAME = "ExcelToJsonConverter.py";
-    public static final String TRAFFIC_SCRIPT_NAME = "ExcelToJsonConverter.py";
+    public static final String ARRIVAL_DELAY_SCRIPT_NAME = "ArrivalDelayScript.py";
+    public static final String DEPARTURE_ADDITIONAL_TIME_SCRIPT_NAME = "DepartureAdditionalTimeScript.py";
+    public static final String PRE_DEPARTURE_DELAY_SCRIPT_NAME = "PreDepartureDelayScript.py";
+    public static final String TRAFFIC_SCRIPT_NAME = "TrafficScript.py";
 
     public ResponseEntity<String> importFromFile(UpdateFromJson entityAbleToBeUpdatedByJson, String scriptName) {
         try {
@@ -32,8 +32,8 @@ public class DataImportServiceImpl implements DataImportService {
 
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                return new ResponseEntity<>(
-                        "Error converting JSON data. Exit code: " + exitCode, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>("Error during converting JSON data. Exit code: "
+                        + exitCode + " " + newDataInJson, HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
             return entityAbleToBeUpdatedByJson.updateFromJson(newDataInJson);

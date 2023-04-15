@@ -12,7 +12,7 @@ import static com.flightDelay.flightdelayapi.dataImport.DataImportServiceImpl.PR
 @RequestMapping("/pre-departure")
 public class PreDepartureDelayController {
 
-    private final PreDepartureDelayFromJsonImpl preDepartureDelayService;
+    private final PreDepartureDelayServiceImpl preDepartureDelayService;
 
     private final DataImportServiceImpl dataImportService;
 

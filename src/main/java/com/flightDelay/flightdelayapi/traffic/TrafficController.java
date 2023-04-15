@@ -11,7 +11,7 @@ import static com.flightDelay.flightdelayapi.dataImport.DataImportServiceImpl.TR
 @RequestMapping("/traffic")
 public class TrafficController {
 
-    private final TrafficFromJsonImpl trafficService;
+    private final TrafficServiceImpl trafficService;
     private final DataImportServiceImpl dataImportService;
 
     @PutMapping("/file-update")

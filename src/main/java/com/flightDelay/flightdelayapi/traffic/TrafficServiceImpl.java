@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TrafficFromJsonImpl implements TrafficService, UpdateFromJson {
+public class TrafficServiceImpl implements TrafficService, UpdateFromJson {
 
     private final TrafficRepository trafficRepository;
     private final AirportServiceImpl airportService;

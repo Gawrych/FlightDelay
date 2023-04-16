@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/weather")
 public class WeatherController {
 
-    private final WeatherRestService weatherRestService;
+    private final WeatherService weatherService;
 
     @GetMapping
     public String getWeather(ModelMap model) {

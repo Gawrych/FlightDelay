@@ -1,6 +1,5 @@
 package com.flightDelay.flightdelayapi.airport;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,0 +1,20 @@
+package com.flightDelay.flightdelayapi.shared;
+
+import lombok.experimental.UtilityClass;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
+@UtilityClass
+public class DateProcessor {
+
+    public static final String WEATHER_API_PATTERN = "yyyy-MM-dd";
+
+    public static String parse(long dateInMillis, String pattern) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDate date = Instant.ofEpochMilli(dateInMillis).atZone(ZoneId.systemDefault()).toLocalDate();
+        return dateTimeFormatter.format(date);
+    }
+}

@@ -9,10 +9,12 @@ public class AirportServiceImpl implements AirportService {
 
     private final AirportRepository airportRepository;
 
+    @Override
     public void save(Airport airport) {
         airportRepository.save(airport);
     }
 
+    @Override
     public Airport findByAirportIdent(String airportIdent) {
         return airportRepository.findByAirportIdent(airportIdent);
     }

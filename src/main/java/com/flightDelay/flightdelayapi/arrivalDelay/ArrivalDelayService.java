@@ -1,8 +1,9 @@
 package com.flightDelay.flightdelayapi.arrivalDelay;
 
+import com.flightDelay.flightdelayapi.shared.UpdateFromJson;
+import org.springframework.http.ResponseEntity;
 
-import java.util.List;
+public interface ArrivalDelayService extends UpdateFromJson {
 
-public interface ArrivalDelayService {
-
+    void save(ArrivalDelay arrivalDelay);
 }

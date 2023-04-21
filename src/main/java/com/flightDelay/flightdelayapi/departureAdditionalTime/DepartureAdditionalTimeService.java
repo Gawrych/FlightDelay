@@ -1,5 +1,8 @@
 package com.flightDelay.flightdelayapi.departureAdditionalTime;
 
-public interface DepartureAdditionalTimeService {
+import com.flightDelay.flightdelayapi.shared.UpdateFromJson;
 
+public interface DepartureAdditionalTimeService extends UpdateFromJson {
+
+    void save(DepartureAdditionalTime departureAdditionalTime);
 }

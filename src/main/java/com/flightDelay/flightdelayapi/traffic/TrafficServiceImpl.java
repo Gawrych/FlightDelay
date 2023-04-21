@@ -3,8 +3,7 @@ package com.flightDelay.flightdelayapi.traffic;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flightDelay.flightdelayapi.airport.AirportServiceImpl;
-import com.flightDelay.flightdelayapi.shared.UpdateFromJson;
+import com.flightDelay.flightdelayapi.airport.AirportService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,10 +14,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TrafficServiceImpl implements TrafficService, UpdateFromJson {
+public class TrafficServiceImpl implements TrafficService {
 
     private final TrafficRepository trafficRepository;
-    private final AirportServiceImpl airportService;
+    private final AirportService airportService;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -34,6 +33,7 @@ public class TrafficServiceImpl implements TrafficService, UpdateFromJson {
         return new ResponseEntity<>("New data has been added to the database", HttpStatus.CREATED);
     }
 
+    @Override
     public void save(Traffic traffic) {
         if (!trafficRepository.existsByGeneratedId(traffic.generateId())) {
             traffic.setAirportBidirectionalRelationshipByCode(traffic.getAirportCode(), airportService);

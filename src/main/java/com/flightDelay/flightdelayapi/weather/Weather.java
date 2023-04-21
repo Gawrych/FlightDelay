@@ -1,36 +1,46 @@
 package com.flightDelay.flightdelayapi.weather;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Weather {
-    private String latitude;
-    private String longitude;
 
-    @JsonProperty("hourly_units")
-    private HourlyUnits hourlyUnits;
-    private Hourly hourly;
+    @JsonProperty("time")
+    private String time;
 
-    @Getter
-    @Setter
-    public static class Hourly {
-        private String[] time;
-        private float[] temperature_2m;
-    }
+    @JsonProperty("is_day")
+    private boolean isDay;
 
-    @Getter
-    @Setter
-    public static class HourlyUnits {
-        private String temperature_2m;
-        private String windspeed_10m;
-    }
+    @JsonProperty("temperature_2m")
+    private float temperature;
+
+    @JsonProperty("dewpoint_2m")
+    private float dewPoint;
+
+    @JsonProperty("rain")
+    private float rain;
+
+    @JsonProperty("cloudcover")
+    private int cloudCover;
+
+    @JsonProperty("visibility")
+    private float visibility;
+
+    @JsonProperty("windspeed_10m")
+    private float windSpeed;
+
+    @JsonProperty("winddirection_10m")
+    private int windDirection;
+
+    @JsonProperty("windgusts_10m")
+    private float windGusts;
+
 }
 
 

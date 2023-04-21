@@ -1,5 +1,8 @@
 package com.flightDelay.flightdelayapi.preDepartureDelay;
 
-public interface PreDepartureDelayService {
+import com.flightDelay.flightdelayapi.shared.UpdateFromJson;
 
+public interface PreDepartureDelayService extends UpdateFromJson {
+
+    void save(PreDepartureDelay preDepartureDelay);
 }

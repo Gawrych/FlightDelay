@@ -3,6 +3,7 @@ package com.flightDelay.flightdelayapi.preDepartureDelay;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flightDelay.flightdelayapi.airport.AirportService;
 import com.flightDelay.flightdelayapi.airport.AirportServiceImpl;
 import com.flightDelay.flightdelayapi.shared.UpdateFromJson;
 import jakarta.transaction.Transactional;
@@ -15,11 +16,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PreDepartureDelayServiceImpl implements PreDepartureDelayService, UpdateFromJson {
+public class PreDepartureDelayServiceImpl implements PreDepartureDelayService {
 
     private final PreDepartureDelayRepository preDepartureDelayRepository;
 
-    private final AirportServiceImpl airportService;
+    private final AirportService airportService;
 
     private final ObjectMapper objectMapper;
 
@@ -36,6 +37,7 @@ public class PreDepartureDelayServiceImpl implements PreDepartureDelayService, U
         return new ResponseEntity<>("New data has been added to the database", HttpStatus.CREATED);
     }
 
+    @Override
     public void save(PreDepartureDelay preDepartureDelay) {
         if (!preDepartureDelayRepository.existsByGeneratedId(preDepartureDelay.generateId())) {
             preDepartureDelay.setAirportBidirectionalRelationshipByCode(preDepartureDelay.getAirportCode(), airportService);

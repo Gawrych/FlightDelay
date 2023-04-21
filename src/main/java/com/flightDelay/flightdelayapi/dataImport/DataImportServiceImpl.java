@@ -21,6 +21,7 @@ public class DataImportServiceImpl implements DataImportService {
     public static final String PRE_DEPARTURE_DELAY_SCRIPT_NAME = "PreDepartureDelayScript.py";
     public static final String TRAFFIC_SCRIPT_NAME = "TrafficScript.py";
 
+    @Override
     public ResponseEntity<String> importFromFile(UpdateFromJson entityAbleToBeUpdatedByJson, String scriptName) {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("python3", CONVERTER_BASE_PATH+scriptName);

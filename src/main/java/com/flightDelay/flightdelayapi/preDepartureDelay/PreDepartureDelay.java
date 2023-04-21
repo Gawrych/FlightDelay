@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.flightDelay.flightdelayapi.airport.Airport;
-import com.flightDelay.flightdelayapi.airport.AirportServiceImpl;
+import com.flightDelay.flightdelayapi.airport.AirportService;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -55,7 +55,7 @@ public class PreDepartureDelay {
         return this.flightDate + "-" + this.airportCode;
     }
 
-    public void setAirportBidirectionalRelationshipByCode(String airportCode, AirportServiceImpl airportService) {
+    public void setAirportBidirectionalRelationshipByCode(String airportCode, AirportService airportService) {
         Airport airport = airportService.findByAirportIdent(airportCode);
         if (airport != null) {
             this.setAirport(airport);

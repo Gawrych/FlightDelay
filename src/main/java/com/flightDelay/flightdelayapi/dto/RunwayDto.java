@@ -1,34 +1,25 @@
 package com.flightDelay.flightdelayapi.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
+@RequiredArgsConstructor
 public class RunwayDto {
 
-    @JsonProperty("lighted")
+    @NotNull
     private Boolean lighted;
 
-    @Column(nullable = false)
-    @JsonProperty("le_elevation_ft")
+    @NotNull
     private Integer leElevationFt;
 
-    @Column(nullable = false)
-    @JsonProperty("le_heading_degT")
+    @NotNull
     private Integer leHeadingDegT;
 
-    @Column(nullable = false)
-    @JsonProperty("he_elevation_ft")
+    @NotNull
     private Integer heElevationFt;
 
-    @Column(nullable = false)
-    @JsonProperty("he_heading_degT")
+    @NotNull
     private Integer heHeadingDegT;
 }

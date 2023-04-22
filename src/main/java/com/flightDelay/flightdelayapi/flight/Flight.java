@@ -7,18 +7,13 @@ import lombok.*;
 
 import java.util.Date;
 
-@Getter
-@ToString
-@AllArgsConstructor
-public class Flight {
+public record Flight (
+        @NonNull
+        String airportIdent,
 
-    @NonNull
-    private String airportIdent;
+        @NonNull
+        @DateTimeFormat(pattern = DateProcessor.DATE_WITH_TIME_PATTERN)
+        Date date,
 
-    @NonNull
-    @DateTimeFormat(pattern = DateProcessor.DATE_WITH_TIME_PATTERN)
-    private Date date;
-
-    @EnumValidator(enumClass = FlightPhase.class, message = "Flight phase must be one of: {enumClass}")
-    private FlightPhase phase;
-}
+        @EnumValidator(enumClass = FlightPhase.class, message = "Flight phase must be one of: {enumClass}")
+        FlightPhase phase) {}

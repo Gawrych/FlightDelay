@@ -30,8 +30,15 @@ public class DelayFactorServiceImpl implements DelayFactorService {
     @Override
     public List<DelayFactor> getFactorsByHour(Flight flight) {
         AirportWeatherDto airportWeatherDto = airportWeatherService.getAirportWeather(flight);
+        System.out.println(airportWeatherDto.getAirportIdent());
         System.out.println(airportWeatherDto.getDewPoint());
-        System.out.println(flight.getPhase().name());
+        System.out.println(airportWeatherDto.getVisibility());
+        System.out.println(airportWeatherDto.getRunwaysDTO().size());
+        System.out.println(airportWeatherDto.getRunwaysDTO().get(0).getHeHeadingDegT());
+        System.out.println(airportWeatherDto.getRunwaysDTO().get(0).getLighted());
+        System.out.println(airportWeatherDto.getRunwaysDTO().get(0).getLeElevationFt());
+        System.out.println(airportWeatherDto.getRunwaysDTO().get(0).getHeElevationFt());
+        System.out.println(flight.phase().name());
         List<DelayFactor> delayFactors = new ArrayList<>();
 //        delayFactors.addAll(createWeatherFactors(flight));
         return delayFactors;

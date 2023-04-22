@@ -20,15 +20,15 @@ public class AirportWeatherServiceImpl implements AirportWeatherService {
     private final ModelMapper modelMapper;
 
     public AirportWeatherDto getAirportWeather(Flight flight) {
-        List<Runway> runways = runwayService.findByAirportIdent(flight.getAirportIdent());
-        Weather weather = weatherAPIService.getWeather(flight.getAirportIdent(), flight.getDate().getTime());
+        List<Runway> runways = runwayService.findByAirportIdent(flight.airportIdent());
+        Weather weather = weatherAPIService.getWeather(flight.airportIdent(), flight.date().getTime());
 
-        List<RunwayDto> runwayDto = runways.stream()
+        List<RunwayDto> runwaysDto = runways.stream()
                 .map(runway -> modelMapper.map(runway, RunwayDto.class)).toList();
 
         AirportWeatherDto airportWeatherDto = modelMapper.map(weather, AirportWeatherDto.class);
-        airportWeatherDto.setAirportIdent(flight.getAirportIdent());
-        airportWeatherDto.setRunwaysDTO(runwayDto);
+        airportWeatherDto.setAirportIdent(flight.airportIdent());
+        airportWeatherDto.setRunwaysDTO(runwaysDto);
         return airportWeatherDto;
     }
 

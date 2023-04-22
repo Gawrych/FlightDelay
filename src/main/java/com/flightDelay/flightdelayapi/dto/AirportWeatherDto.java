@@ -8,9 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AirportWeatherDto {
 
     @Column(nullable = false)

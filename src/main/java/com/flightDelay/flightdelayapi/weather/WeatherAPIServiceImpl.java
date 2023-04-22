@@ -6,6 +6,7 @@ import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
 import com.flightDelay.flightdelayapi.shared.DateProcessor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -17,10 +18,8 @@ import static com.flightDelay.flightdelayapi.shared.DateProcessor.WEATHER_API_PA
 @RequiredArgsConstructor
 public class WeatherAPIServiceImpl implements WeatherAPIService {
 
-    private static final String baseUrl = "https://api.open-meteo.com/v1/forecast?latitude=%.2f&" +
-            "longitude=%.2f&hourly=temperature_2m,dewpoint_2m,rain,cloudcover,cloudcover_low,visibility," +
-            "windspeed_10m,winddirection_10m,windgusts_10m,cloudcover_1000hPa,cloudcover_975hPa,is_day&windspeed_unit=kn&" +
-            "start_date=%3$s&end_date=%3$s&timezone=auto";
+    @Value("${api.openmeteo.base}")
+    private String baseUrl;
     private final ObjectMapper objectMapper;
     private final AirportService airportService;
 

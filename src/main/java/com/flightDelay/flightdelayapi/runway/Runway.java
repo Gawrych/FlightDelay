@@ -41,12 +41,15 @@ public class Runway {
     @JsonProperty("le_ident")
     private String leIdent;
 
+    @Column(nullable = false)
     @JsonProperty("le_latitude_deg")
     private Double leLatitudeDeg;
 
+    @Column(nullable = false)
     @JsonProperty("le_longitude_deg")
     private Double leLongitudeDeg;
 
+    @Column(nullable = false)
     @JsonProperty("le_elevation_ft")
     private Integer leElevationFt;
 
@@ -58,12 +61,15 @@ public class Runway {
     @JsonProperty("he_ident")
     private String heIdent;
 
+    @Column(nullable = false)
     @JsonProperty("he_latitude_deg")
     private Double heLatitudeDeg;
 
+    @Column(nullable = false)
     @JsonProperty("he_longitude_deg")
     private Double heLongitudeDeg;
 
+    @Column(nullable = false)
     @JsonProperty("he_elevation_ft")
     private Integer heElevationFt;
 

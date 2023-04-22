@@ -1,6 +1,6 @@
 package com.flightDelay.flightdelayapi.weather;
 
-public interface InstrumentLandingSystemService {
+public interface InstrumentLandingSystemCalculator {
 
     int getCategory(Weather weather, int elevation);
 }

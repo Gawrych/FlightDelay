@@ -1,22 +1,28 @@
 package com.flightDelay.flightdelayapi.flight;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.flightDelay.flightdelayapi.enumValidation.EnumValidator;
+import com.flightDelay.flightdelayapi.shared.DateProcessor;
+import org.springframework.format.annotation.DateTimeFormat;
 import lombok.*;
+
+import java.util.Date;
 
 @Getter
 @ToString
 @AllArgsConstructor
 public class Flight {
 
-    @JsonProperty("departure_airport_ident")
-    private String departureAirportIdent;
+    @NonNull
+    @JsonProperty("airport_ident")
+    private String airportIdent;
 
-    @JsonProperty("departure_date")
-    private long departureDate;
+    @NonNull
+    @DateTimeFormat(pattern = DateProcessor.DATE_WITH_TIME_PATTERN)
+    @JsonProperty("date")
+    private Date date;
 
-    @JsonProperty("arrival_airport_ident")
-    private String arrivalAirportIdent;
-
-    @JsonProperty("arrival_date")
-    private long arrivalDate;
+    @EnumValidator(enumClass = FlightPhase.class, message = "Flight phase must be one of: {enumClass}")
+    @JsonProperty("flight_phase")
+    private FlightPhase phase;
 }

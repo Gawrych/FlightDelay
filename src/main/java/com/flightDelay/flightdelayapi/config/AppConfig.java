@@ -2,9 +2,11 @@ package com.flightDelay.flightdelayapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 @Configuration
+@PropertySource("classpath:api/weatherApi.properties")
 public class AppConfig {
 
     @Bean

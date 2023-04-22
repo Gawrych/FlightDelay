@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface DelayFactorService {
 
-    List<DelayFactor> getFactorsByHour(String airportIdent, Date time);
+    List<DelayFactor> getFactorsByHour(Flight flight);
 }
+

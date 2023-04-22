@@ -1,19 +1,16 @@
 package com.flightDelay.flightdelayapi.DelayFactor;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.flight.Flight;
 import com.flightDelay.flightdelayapi.shared.DateProcessor;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -27,16 +24,10 @@ public class DelayFactorController {
     private final DelayFactorService delayFactorService;
 
     @PostMapping("/hour")
-    public ResponseEntity<?> getFactorsToSpecifyTime(
-            @RequestParam("airport") String airportIdent,
-            @RequestParam("time") @DateTimeFormat(pattern = DateProcessor.WEATHER_API_DATE_WITH_T_PATTERN) Date time,
-            @RequestHeader("Accept-Language") String acceptLanguage) {
-
+    public List<DelayFactor> getFactorsToSpecifyTime(@RequestBody @Validated Flight flight,
+                                                     @RequestHeader("Accept-Language") String acceptLanguage) {
         LocaleContextHolder.setLocale(Locale.forLanguageTag(acceptLanguage));
-
-        List<DelayFactor> delayFactors = delayFactorService.getFactorsByHour(airportIdent, time);
-
-        return new ResponseEntity<>(delayFactors, HttpStatus.OK);
+        return delayFactorService.getFactorsByHour(flight);
     }
 
 //    @PostMapping("/day")

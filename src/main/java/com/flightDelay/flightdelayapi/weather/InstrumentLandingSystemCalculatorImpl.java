@@ -1,11 +1,11 @@
 package com.flightDelay.flightdelayapi.weather;
 import com.flightDelay.flightdelayapi.shared.UnitConverter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class InstrumentLandingSystemServiceImpl implements InstrumentLandingSystemService {
+public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingSystemCalculator {
 
     private static final int MAX_RVR_CATEGORY_1 = 4000;
     private static final int MAX_RVR_CATEGORY_2 = 1800;

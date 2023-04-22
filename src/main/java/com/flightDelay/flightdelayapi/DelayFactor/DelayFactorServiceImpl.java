@@ -2,52 +2,76 @@ package com.flightDelay.flightdelayapi.DelayFactor;
 
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
+import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.flight.Flight;
-import com.flightDelay.flightdelayapi.weather.LandingLimitsService;
-import com.flightDelay.flightdelayapi.weather.Weather;
-import com.flightDelay.flightdelayapi.weather.WeatherService;
+import com.flightDelay.flightdelayapi.flight.FlightPhase;
+import com.flightDelay.flightdelayapi.runway.Runway;
+import com.flightDelay.flightdelayapi.runway.RunwayService;
+import com.flightDelay.flightdelayapi.weather.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class DelayFactorServiceImpl implements DelayFactorService {
 
     private final ResourceBundleMessageSource messageSource;
-    private final LandingLimitsService landingLimitsService;
-    private final WeatherService weatherService;
-    private final AirportService airportService;
+    private final LandingLimits landingLimits;
+    private final TakingOffLimits takingOff;
+    private final WeatherCalculator weatherCalculator;
+    private final AirportWeatherService airportWeatherService;
 
     @Override
-    public List<DelayFactor> getFactorsByHour(String airportIdent, Date time) {
-        Airport airport = airportService.findByAirportIdent(airportIdent);
-        weatherService.setWeather(airport.getAirportIdent(), time.getTime());
-        weatherService.setAirport(airport);
+    public List<DelayFactor> getFactorsByHour(Flight flight) {
+        AirportWeatherDto airportWeatherDto = airportWeatherService.getAirportWeather(flight);
 
         List<DelayFactor> delayFactors = new ArrayList<>();
-        delayFactors.add(getCrossWindFactor());
+        delayFactors.addAll(createWeatherFactors(flight));
         return delayFactors;
     }
 
-    public DelayFactor getCrossWindFactor() {
-        int crossWind = weatherService.getCrossWind();
-        int ilsCategory = weatherService.getIlsCategory();
-        int influence = landingLimitsService.checkCrossWindLimits(crossWind, ilsCategory);
+    public List<DelayFactor> createWeatherFactors(Flight flight) {
+        List<DelayFactor> delayFactors = new ArrayList<>();
 
 
+        Map<FactorName, Integer> conditions = weatherCalculator.getConditions(flight);
+        for (Map.Entry<FactorName, Integer> condition : conditions.entrySet()) {
+            int factorInfluence = checkFlightLimit(flight.getPhase(), condition.getKey(), condition.getValue());
+            delayFactors.add(createFactor(condition.getKey(), condition.getValue(), factorInfluence));
+        }
+
+        return delayFactors;
+    }
+
+    private int checkFlightLimit(Flight flight, FlightPhase phase, FactorName name, int value) {
+        if (phase == FlightPhase.ARRIVAL) {
+            return landingLimits.checkLimits(flight, name, value).getValue();
+
+        } else if (phase == FlightPhase.DEPARTURE) {
+            return takingOffLimits.checkLimits(name, value).getValue();
+
+        } else {
+            // TODO: Handle the exception
+            throw new UnsupportedFlightPhaseException();
+        }
+    }
+
+    private DelayFactor createFactor(FactorName factorName, int value, int influence) {
         return DelayFactor.builder()
-                .title(getMessage("crossWind"))
+                .title(getMessage(factorName.name()))
                 .influenceOnDelay(influence)
-                .value(crossWind)
+                .value(value)
                 .build();
     }
 
     public String getMessage(String title) {
+        // TODO: Handle the exception
         return messageSource.getMessage(title, null, LocaleContextHolder.getLocale());
     }
 }

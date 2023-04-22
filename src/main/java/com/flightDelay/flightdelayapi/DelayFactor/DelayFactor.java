@@ -9,10 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DelayFactor {
-//TODO: Change name to Factor
-    public static final int INFLUENCE_LOW = 0;
-    public static final int INFLUENCE_MEDIUM = 1;
-    public static final int INFLUENCE_HIGH = 2;
 
     @JsonProperty("title")
     private String title;

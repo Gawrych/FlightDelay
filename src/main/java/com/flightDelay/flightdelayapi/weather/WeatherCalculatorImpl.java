@@ -5,6 +5,8 @@ import com.flightDelay.flightdelayapi.airport.AirportService;
 import com.flightDelay.flightdelayapi.flight.Flight;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -14,9 +16,10 @@ public class WeatherCalculatorImpl implements WeatherCalculator {
     private final InstrumentLandingSystemCalculator instrumentLandingSystemCalculator;
 
     public Map<FactorName, Integer> getConditions(Flight flight) {
-        return Map.of(
-                FactorName.CROSSWIND, getCrossWind(airport, weather),
-                FactorName.HEADWIND, getHeadWind(airport, weather));
+        return new HashMap<>();
+//        return Map.of(
+//                FactorName.CROSSWIND, getCrossWind(airport, weather),
+//                FactorName.HEADWIND, getHeadWind(airport, weather));
     }
 
     public int getIlsCategory(Airport airport, Weather weather) {

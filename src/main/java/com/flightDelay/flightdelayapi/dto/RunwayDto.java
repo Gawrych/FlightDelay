@@ -22,4 +22,7 @@ public class RunwayDto {
 
     @NotNull
     private Integer heHeadingDegT;
+
+    @NotNull
+    private Integer averageElevationFt;
 }

@@ -1,36 +1,30 @@
 package com.flightDelay.flightdelayapi.weather;
-import com.flightDelay.flightdelayapi.DelayFactor.FactorName;
-import com.flightDelay.flightdelayapi.airport.Airport;
-import com.flightDelay.flightdelayapi.airport.AirportService;
-import com.flightDelay.flightdelayapi.flight.Flight;
+
+import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class WeatherCalculatorImpl implements WeatherCalculator {
 
-    private final InstrumentLandingSystemCalculator instrumentLandingSystemCalculator;
-
-    public Map<FactorName, Integer> getConditions(Flight flight) {
-        return new HashMap<>();
-//        return Map.of(
-//                FactorName.CROSSWIND, getCrossWind(airport, weather),
-//                FactorName.HEADWIND, getHeadWind(airport, weather));
+    public int getCrossWind(AirportWeatherDto airportWeatherDto) {
+        return 23;
     }
 
-    public int getIlsCategory(Airport airport, Weather weather) {
-        return instrumentLandingSystemCalculator.getCategory(weather, airport.getElevationFt());
+    public int getHeadWind(AirportWeatherDto airportWeatherDto) {
+        return 20;
     }
 
-    public int getCrossWind(Airport airport, Weather weather) {
-        return 0;
+    public int calculateRunwayVisualRange(float visibility, boolean isDay) {
+        double multiplier = 1.6;
+        if (isDay) {
+            multiplier = 1.3;
+        }
+        return (int) Math.round((visibility * multiplier));
     }
 
-    public int getHeadWind(Airport airport, Weather weather) {
-        return 0;
+    public int calculateCloudBase(float temperature, float dewPoint, int elevation) {
+        return Math.round((temperature - dewPoint) / 10 * 1247 + elevation);
     }
 }

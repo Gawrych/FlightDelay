@@ -1,6 +1,7 @@
 package com.flightDelay.flightdelayapi.DelayFactor;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.flightDelay.flightdelayapi.shared.FactorInfluence;
 import lombok.*;
 
 @Getter
@@ -17,5 +18,5 @@ public class DelayFactor {
     private int value;
 
     @JsonProperty("influence_on_delay")
-    private int influenceOnDelay;
+    private FactorInfluence influenceOnDelay;
 }

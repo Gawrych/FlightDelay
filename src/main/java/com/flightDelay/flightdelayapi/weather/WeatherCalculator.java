@@ -1,18 +1,18 @@
 package com.flightDelay.flightdelayapi.weather;
 
-import com.flightDelay.flightdelayapi.DelayFactor.FactorName;
-import com.flightDelay.flightdelayapi.airport.Airport;
-import com.flightDelay.flightdelayapi.flight.Flight;
+import com.flightDelay.flightdelayapi.shared.FactorName;
+import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
+import com.flightDelay.flightdelayapi.shared.IlsCategory;
 
 import java.util.Map;
 
 public interface WeatherCalculator {
 
-    Map<FactorName, Integer> getConditions(Flight flight);
+    int getCrossWind(AirportWeatherDto airportWeatherDto);
 
-    int getIlsCategory(Airport airport, Weather weather);
+    int getHeadWind(AirportWeatherDto airportWeatherDto);
 
-    int getCrossWind(Airport airport, Weather weather);
+    int calculateRunwayVisualRange(float visibility, boolean isDay);
 
-    int getHeadWind(Airport airport, Weather weather);
+    int calculateCloudBase(float temperature, float dewPoint, int elevation);
 }

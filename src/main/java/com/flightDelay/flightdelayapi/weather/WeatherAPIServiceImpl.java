@@ -24,6 +24,7 @@ public class WeatherAPIServiceImpl implements WeatherAPIService {
     private final AirportService airportService;
 
     public Weather getWeather(String airportIdent, long date) {
+        // TODO: Check if weather is correctly collected, not null or 0
         String populatedURL = populateBaseUrlWithVariables(airportIdent, date);
         System.out.println(populatedURL);
         try {

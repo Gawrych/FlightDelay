@@ -26,6 +26,9 @@ public class AirportWeatherServiceImpl implements AirportWeatherService {
         List<RunwayDto> runwaysDto = runways.stream()
                 .map(runway -> modelMapper.map(runway, RunwayDto.class)).toList();
 
+        runwaysDto.forEach(runwayDto ->
+                runwayDto.setAverageElevationFt((runwayDto.getHeElevationFt() + runwayDto.getLeElevationFt()) / 2));
+
         AirportWeatherDto airportWeatherDto = modelMapper.map(weather, AirportWeatherDto.class);
         airportWeatherDto.setAirportIdent(flight.airportIdent());
         airportWeatherDto.setRunwaysDTO(runwaysDto);

@@ -1,5 +1,6 @@
 package com.flightDelay.flightdelayapi.config;
 
+import com.flightDelay.flightdelayapi.dto.AirportWeatherMapper;
 import com.flightDelay.flightdelayapi.enumValidation.EnumValidatorConstraint;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

@@ -40,7 +40,6 @@ public class Weather {
 
     @JsonProperty("windgusts_10m")
     private float windGusts;
-
 }
 
 

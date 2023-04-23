@@ -3,7 +3,7 @@ package com.flightDelay.flightdelayapi.weather;
 import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.flight.Flight;
 
-public interface AirportWeatherService {
+public interface AirportWeatherCreator  {
 
-    AirportWeatherDto getAirportWeather(Flight flight);
+    AirportWeatherDto mapFrom(Flight flight);
 }

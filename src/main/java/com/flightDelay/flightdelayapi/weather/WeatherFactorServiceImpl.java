@@ -27,14 +27,14 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
 
     private final DelayFactorCreator delayFactorCreator;
 
-    public List<DelayFactor> getWeatherFactors(AirportWeatherDto airportWeatherDto, Flight flight) {
+    public List<DelayFactor> getWeatherFactors(AirportWeatherDto airportWeatherDto) {
         List<DelayFactor> delayFactors = new ArrayList<>();
 
         IlsCategory ilsCategory = instrumentLandingSystemCalculator.getCategory(airportWeatherDto);
 
         Map<FactorName, Integer> conditions = getConditions(airportWeatherDto);
         for (Map.Entry<FactorName, Integer> condition : conditions.entrySet()) {
-            FactorInfluence factorInfluence = checkPhaseLimit(ilsCategory, flight.phase(), condition.getKey(), condition.getValue());
+            FactorInfluence factorInfluence = checkPhaseLimit(ilsCategory, airportWeatherDto.getPhase(), condition.getKey(), condition.getValue());
             delayFactors.add(delayFactorCreator.createFactor(condition.getKey(), condition.getValue(), factorInfluence));
         }
 

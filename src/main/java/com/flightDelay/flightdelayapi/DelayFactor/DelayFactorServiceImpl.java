@@ -2,7 +2,7 @@ package com.flightDelay.flightdelayapi.DelayFactor;
 
 import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.flight.Flight;
-import com.flightDelay.flightdelayapi.weather.AirportWeatherService;
+import com.flightDelay.flightdelayapi.weather.AirportWeatherCreator;
 import com.flightDelay.flightdelayapi.weather.WeatherFactorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,15 +16,14 @@ public class DelayFactorServiceImpl implements DelayFactorService {
 
     private final WeatherFactorService weatherFactorService;
 
-    private final AirportWeatherService airportWeatherService;
-
+    private final AirportWeatherCreator airportWeatherCreator;
 
     @Override
     public List<DelayFactor> getFactorsByHour(Flight flight) {
-        AirportWeatherDto airportWeatherDto = airportWeatherService.getAirportWeather(flight);
+        AirportWeatherDto airportWeatherDto = airportWeatherCreator.mapFrom(flight);
 
         List<DelayFactor> delayFactors = new ArrayList<>();
-        delayFactors.addAll(weatherFactorService.getWeatherFactors(airportWeatherDto, flight));
+        delayFactors.addAll(weatherFactorService.getWeatherFactors(airportWeatherDto));
 
         return delayFactors;
     }

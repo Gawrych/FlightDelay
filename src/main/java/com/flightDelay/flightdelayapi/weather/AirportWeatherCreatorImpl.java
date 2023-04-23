@@ -1,25 +1,31 @@
 package com.flightDelay.flightdelayapi.weather;
 
 import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
+import com.flightDelay.flightdelayapi.dto.AirportWeatherMapper;
 import com.flightDelay.flightdelayapi.dto.RunwayDto;
 import com.flightDelay.flightdelayapi.flight.Flight;
 import com.flightDelay.flightdelayapi.runway.Runway;
 import com.flightDelay.flightdelayapi.runway.RunwayService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class AirportWeatherServiceImpl implements AirportWeatherService {
+public class AirportWeatherCreatorImpl implements AirportWeatherCreator {
 
     private final WeatherAPIService weatherAPIService;
+
     private final RunwayService runwayService;
+
     private final ModelMapper modelMapper;
 
-    public AirportWeatherDto getAirportWeather(Flight flight) {
+    private final AirportWeatherMapper airportWeatherMapper;
+
+    public AirportWeatherDto mapFrom(Flight flight) {
         List<Runway> runways = runwayService.findByAirportIdent(flight.airportIdent());
         Weather weather = weatherAPIService.getWeather(flight.airportIdent(), flight.date().getTime());
 
@@ -29,11 +35,6 @@ public class AirportWeatherServiceImpl implements AirportWeatherService {
         runwaysDto.forEach(runwayDto ->
                 runwayDto.setAverageElevationFt((runwayDto.getHeElevationFt() + runwayDto.getLeElevationFt()) / 2));
 
-        AirportWeatherDto airportWeatherDto = modelMapper.map(weather, AirportWeatherDto.class);
-        airportWeatherDto.setAirportIdent(flight.airportIdent());
-        airportWeatherDto.setRunwaysDTO(runwaysDto);
-        return airportWeatherDto;
+        return airportWeatherMapper.mapFrom(weather, runwaysDto, flight);
     }
-
-
 }

@@ -20,7 +20,7 @@ public class LandingLimitsImpl implements LandingLimits {
     private final static int STANDARD_SAFETY_HEADWIND_LIMIT_IN_KTS = 18;
 
     public FactorInfluence checkLimits(FactorName name, int factorValue, IlsCategory ilsCategory) {
-        // TODO: Log always why unknown
+        // TODO: Log always why unknown "Support for this factor do not exist"
         FactorInfluence influence = FactorInfluence.UNKNOWN;
 
         if (ilsCategory == IlsCategory.UNKNOWN) {

@@ -1,7 +1,7 @@
 package com.flightDelay.flightdelayapi.weather;
 
 import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
-import com.flightDelay.flightdelayapi.flight.Flight;
+import com.flightDelay.flightdelayapi.shared.Flight;
 
 public interface AirportWeatherCreator  {
 

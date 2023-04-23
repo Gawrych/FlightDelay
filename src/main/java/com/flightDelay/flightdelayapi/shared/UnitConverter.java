@@ -2,11 +2,11 @@ package com.flightDelay.flightdelayapi.shared;
 
 public class UnitConverter {
 
-    public static double metersToFeet(int meter) {
-        return (3.281 * meter);
+    public static int metersToFeet(int meter) {
+        return (int) Math.round((3.281 * meter));
     }
 
-    public static double feetToMeters(int feet) {
-        return (feet / 3.281);
+    public static int feetToMeters(int feet) {
+        return (int) Math.round((feet / 3.281));
     }
 }

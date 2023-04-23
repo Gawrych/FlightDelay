@@ -9,20 +9,17 @@ import lombok.*;
 public class RunwayDto {
 
     @NotNull
-    private Boolean lighted;
+    private Long id;
 
-    @NotNull
-    private Integer leElevationFt;
+    private boolean lighted;
 
-    @NotNull
-    private Integer leHeadingDegT;
+    private int leElevationFt;
 
-    @NotNull
-    private Integer heElevationFt;
+    private int leHeadingDegT;
 
-    @NotNull
-    private Integer heHeadingDegT;
+    private int heElevationFt;
 
-    @NotNull
-    private Integer averageElevationFt;
+    private int heHeadingDegT;
+
+    private int averageElevationFt;
 }

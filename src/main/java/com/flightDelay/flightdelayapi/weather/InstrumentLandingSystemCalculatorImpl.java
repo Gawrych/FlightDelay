@@ -4,6 +4,7 @@ import com.flightDelay.flightdelayapi.dto.RunwayDto;
 import com.flightDelay.flightdelayapi.shared.IlsCategory;
 import com.flightDelay.flightdelayapi.shared.UnitConverter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingSystemCalculator {
 
@@ -27,16 +29,12 @@ public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingS
     public IlsCategory getCategory(AirportWeatherDto airportWeatherDto) {
         List<IlsCategory> ilsCategoriesBasedOnRunway = new ArrayList<>();
 
+        int rvrFt = getRunwayVisualRange(airportWeatherDto);
+
         for (RunwayDto runway : airportWeatherDto.getRunwaysDTO()) {
-            int elevation = (int) Math.round(UnitConverter.feetToMeters(runway.getAverageElevationFt()));
+            int cloudBaseFt = getCloudBaseFt(airportWeatherDto, runway.getAverageElevationFt());
 
-            int runwayVisualRange = weatherCalculator.calculateRunwayVisualRange(airportWeatherDto.getVisibility(), airportWeatherDto.isDay());
-            int cloudBase = weatherCalculator.calculateCloudBase(airportWeatherDto.getTemperature(), airportWeatherDto.getDewPoint(), elevation);
-
-            int rvrFt = (int) Math.round(UnitConverter.metersToFeet(runwayVisualRange));
-            int cloudBaseFt = (int) Math.round(UnitConverter.metersToFeet(cloudBase));
-
-            IlsCategory ilsCategory = IlsCategory.UNKNOWN;
+            IlsCategory ilsCategory = null;
 
             if ((rvrFt > MAX_RVR_ILS_CATEGORY_1_IN_FT) && (cloudBaseFt > MAX_CLOUD_BASE_IN_FT)) {
                 ilsCategory = IlsCategory.CATEGORY_0;
@@ -49,7 +47,14 @@ public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingS
 
             } else if (rvrFt > MIN_RVR_CATEGORY_3_IN_FT) {
                 ilsCategory = IlsCategory.CATEGORY_3A;
+            }
 
+            if (ilsCategory == null) {
+                log.warn("Unable to calculate an ILS category for runway with id: {} in airport with id: {} " +
+                        "when runway visual range is {} ft, and cloud base is {} ft", runway.getId(),
+                        airportWeatherDto.getAirportIdent(), rvrFt, cloudBaseFt);
+
+                continue;
             }
 
             ilsCategoriesBasedOnRunway.add(ilsCategory);
@@ -57,9 +62,19 @@ public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingS
 
         Optional<IlsCategory> minRequiredILS = ilsCategoriesBasedOnRunway
                 .stream()
-                .dropWhile(ilsCategory -> ilsCategory == IlsCategory.UNKNOWN)
                 .min(Comparator.comparing(IlsCategory::getValue));
 
-        return minRequiredILS.orElse(IlsCategory.UNKNOWN);
+        return minRequiredILS.orElseThrow(() -> new IllegalStateException("Unable to calculate ILS category"));
+    }
+
+    private int getCloudBaseFt(AirportWeatherDto airportWeatherDto, int elevationFt) {
+        int elevation = UnitConverter.feetToMeters(elevationFt);
+        int cloudBase = weatherCalculator.calculateCloudBase(airportWeatherDto.getTemperature(), airportWeatherDto.getDewPoint(), elevation);
+        return UnitConverter.metersToFeet(cloudBase);
+    }
+
+    private int getRunwayVisualRange(AirportWeatherDto airportWeatherDto) {
+        int runwayVisualRange = weatherCalculator.calculateRunwayVisualRange(airportWeatherDto.getVisibility(), airportWeatherDto.isDay());
+        return UnitConverter.metersToFeet(runwayVisualRange);
     }
 }

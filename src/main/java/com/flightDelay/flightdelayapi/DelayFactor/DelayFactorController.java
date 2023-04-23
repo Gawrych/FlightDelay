@@ -1,17 +1,12 @@
 package com.flightDelay.flightdelayapi.DelayFactor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flightDelay.flightdelayapi.flight.Flight;
-import com.flightDelay.flightdelayapi.shared.DateProcessor;
+import com.flightDelay.flightdelayapi.shared.Flight;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 

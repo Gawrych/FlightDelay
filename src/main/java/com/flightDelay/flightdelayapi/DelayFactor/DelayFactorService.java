@@ -1,8 +1,7 @@
 package com.flightDelay.flightdelayapi.DelayFactor;
 
-import com.flightDelay.flightdelayapi.flight.Flight;
+import com.flightDelay.flightdelayapi.shared.Flight;
 
-import java.util.Date;
 import java.util.List;
 
 public interface DelayFactorService {

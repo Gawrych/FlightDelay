@@ -1,6 +1,6 @@
 package com.flightDelay.flightdelayapi.dto;
 
-import com.flightDelay.flightdelayapi.flight.Flight;
+import com.flightDelay.flightdelayapi.shared.Flight;
 import com.flightDelay.flightdelayapi.weather.Weather;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

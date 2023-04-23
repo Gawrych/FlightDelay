@@ -1,6 +1,6 @@
 package com.flightDelay.flightdelayapi.dto;
 
-import com.flightDelay.flightdelayapi.flight.FlightPhase;
+import com.flightDelay.flightdelayapi.shared.FlightPhase;
 import lombok.*;
 
 import java.util.List;

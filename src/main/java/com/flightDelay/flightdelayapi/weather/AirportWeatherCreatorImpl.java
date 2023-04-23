@@ -3,12 +3,11 @@ package com.flightDelay.flightdelayapi.weather;
 import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.dto.AirportWeatherMapper;
 import com.flightDelay.flightdelayapi.dto.RunwayDto;
-import com.flightDelay.flightdelayapi.flight.Flight;
+import com.flightDelay.flightdelayapi.shared.Flight;
 import com.flightDelay.flightdelayapi.runway.Runway;
 import com.flightDelay.flightdelayapi.runway.RunwayService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

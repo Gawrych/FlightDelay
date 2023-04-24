@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.flightDelay.flightdelayapi.shared.FactorName.CROSSWIND;
-import static com.flightDelay.flightdelayapi.shared.FactorName.HEADWIND;
+import static com.flightDelay.flightdelayapi.shared.FactorName.*;
 
 @Slf4j
 @Service
@@ -32,7 +31,7 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
     private final DelayFactorCreator delayFactorCreator;
 
     public List<DelayFactor> getWeatherFactors(AirportWeatherDto airportWeatherDto) {
-        IlsCategory ilsCategory = instrumentLandingSystemCalculator.getCategory(airportWeatherDto);
+        IlsCategory ilsCategory = instrumentLandingSystemCalculator.getMinRequiredCategory(airportWeatherDto);
 
         List<DelayFactor> delayFactors = new ArrayList<>();
         Map<FactorName, Integer> conditions = getConditions(airportWeatherDto);
@@ -48,7 +47,7 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
     private Map<FactorName, Integer> getConditions(AirportWeatherDto airportWeatherDto) {
         return Map.of(
                 CROSSWIND, weatherCalculator.getCrossWind(airportWeatherDto),
-                HEADWIND, weatherCalculator.getHeadWind(airportWeatherDto));
+                TAILWIND, weatherCalculator.getTailwind(airportWeatherDto));
     }
 
     private FactorInfluence checkPhaseLimit(IlsCategory ilsCategory, FlightPhase phase, FactorName name, int value) {

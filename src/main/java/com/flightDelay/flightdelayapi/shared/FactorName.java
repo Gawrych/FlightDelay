@@ -2,5 +2,5 @@ package com.flightDelay.flightdelayapi.shared;
 
 public enum FactorName {
     CROSSWIND,
-    HEADWIND
+    TAILWIND
 }

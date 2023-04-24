@@ -5,5 +5,5 @@ import com.flightDelay.flightdelayapi.shared.IlsCategory;
 
 public interface InstrumentLandingSystemCalculator {
 
-    IlsCategory getCategory(AirportWeatherDto airportWeatherDto);
+    IlsCategory getMinRequiredCategory(AirportWeatherDto airportWeatherDto);
 }

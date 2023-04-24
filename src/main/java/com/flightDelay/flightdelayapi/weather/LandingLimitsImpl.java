@@ -31,7 +31,7 @@ public class LandingLimitsImpl implements LandingLimits {
     public FactorInfluence checkLimits(FactorName factorName, int factorValue, IlsCategory ilsCategory) {
         return switch (factorName) {
             case CROSSWIND -> checkCrosswindLimits(ilsCategory, factorValue);
-            case HEADWIND -> checkHeadwindLimits(ilsCategory, factorValue);
+            case TAILWIND -> checkTailwindLimits(ilsCategory, factorValue);
         };
     }
 
@@ -45,13 +45,13 @@ public class LandingLimitsImpl implements LandingLimits {
                     LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_WITH_ILS_1_KTS,
                     UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_WITH_ILS_1_KTS);
 
-            case CATEGORY_2, CATEGORY_3A -> calculateLimit(crosswind,
+            case CATEGORY_2, CATEGORY_3A, CATEGORY_3B, CATEGORY_3C -> calculateLimit(crosswind,
                     LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_WITH_ILS_2_3A_KTS,
                     UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_WITH_ILS_2_3A_KTS);
         };
     }
 
-    private FactorInfluence checkHeadwindLimits(IlsCategory ilsCategory, int headwind) {
+    private FactorInfluence checkTailwindLimits(IlsCategory ilsCategory, int headwind) {
         if (ilsCategory.getValue() >= IlsCategory.CATEGORY_2.getValue()) {
             return calculateLimit(headwind,
                     LOWER_THRESHOLD_OF_ENHANCED_HEADWIND_WITH_ILS_2_3A_KTS,

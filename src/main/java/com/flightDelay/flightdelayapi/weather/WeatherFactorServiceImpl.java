@@ -24,7 +24,7 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
 
     private final InstrumentLandingSystemCalculator instrumentLandingSystemCalculator;
 
-    private final WeatherCalculator weatherCalculator;
+    private final WindCalculator windCalculator;
 
     private final LandingLimits landingLimits;
 
@@ -46,8 +46,8 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
 
     private Map<FactorName, Integer> getConditions(AirportWeatherDto airportWeatherDto) {
         return Map.of(
-                CROSSWIND, weatherCalculator.getCrossWind(airportWeatherDto),
-                TAILWIND, weatherCalculator.getTailwind(airportWeatherDto));
+                CROSSWIND, windCalculator.getCrossWind(airportWeatherDto),
+                TAILWIND, windCalculator.getTailwind(airportWeatherDto));
     }
 
     private FactorInfluence checkPhaseLimit(IlsCategory ilsCategory, FlightPhase phase, FactorName name, int value) {

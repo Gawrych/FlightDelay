@@ -1,10 +1,9 @@
 package com.flightDelay.flightdelayapi.weather;
 
-import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.shared.IlsCategory;
 import com.flightDelay.flightdelayapi.shared.UnitConverter;
 
-class WeatherCalculatorTestImpl implements  WeatherCalculator {
+class RunwayWeatherCalculatorTestImpl implements RunwayWeatherCalculator {
 
     private int rvr = 0;
 
@@ -16,22 +15,12 @@ class WeatherCalculatorTestImpl implements  WeatherCalculator {
     }
 
     @Override
-    public int getCrossWind(AirportWeatherDto airportWeatherDto) {
-        return 0;
-    }
-
-    @Override
-    public int getTailwind(AirportWeatherDto airportWeatherDto) {
-        return 0;
-    }
-
-    @Override
     public int calculateRunwayVisualRange(float visibility, boolean isDay) {
         return UnitConverter.feetToMeters(rvr);
     }
 
     @Override
-    public int calculateCloudBase(float temperature, float dewPoint, int elevation) {
+    public int calculateCloudBaseAboveRunway(float temperature, float dewPoint, int elevation) {
         return UnitConverter.feetToMeters(cloudBase);
     }
 }

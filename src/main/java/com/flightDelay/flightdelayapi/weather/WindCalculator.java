@@ -2,13 +2,9 @@ package com.flightDelay.flightdelayapi.weather;
 
 import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
 
-public interface WeatherCalculator {
+public interface WindCalculator {
 
     int getCrossWind(AirportWeatherDto airportWeatherDto);
 
     int getTailwind(AirportWeatherDto airportWeatherDto);
-
-    int calculateRunwayVisualRange(float visibility, boolean isDay);
-
-    int calculateCloudBase(float temperature, float dewPoint, int elevation);
 }

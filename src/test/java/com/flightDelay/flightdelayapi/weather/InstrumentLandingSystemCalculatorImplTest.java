@@ -17,7 +17,7 @@ import java.util.List;
 @SpringBootTest
 class InstrumentLandingSystemCalculatorImplTest {
 
-    private WeatherCalculatorTestImpl weatherCalculatorTest;
+    private RunwayWeatherCalculatorTestImpl weatherCalculatorTest;
 
     private AirportWeatherDto airportWeatherDto;
 
@@ -26,7 +26,7 @@ class InstrumentLandingSystemCalculatorImplTest {
         RunwayDto runwayDto = new RunwayDto();
         runwayDto.setId(1L);
 
-        weatherCalculatorTest = new WeatherCalculatorTestImpl();
+        weatherCalculatorTest = new RunwayWeatherCalculatorTestImpl();
         airportWeatherDto = new AirportWeatherDto();
         airportWeatherDto.setRunwaysDTO(List.of(runwayDto));
     }

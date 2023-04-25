@@ -5,7 +5,6 @@ import com.flightDelay.flightdelayapi.shared.IlsCategory;
 import com.flightDelay.flightdelayapi.shared.UnitConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -15,7 +14,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingSystemCalculator {
 
-    private final WeatherCalculator weatherCalculator;
+    private final RunwayWeatherCalculator runwayWeatherCalculator;
 
     public IlsCategory getMinRequiredCategory(AirportWeatherDto airportWeatherDto) {
         int rvrFt = getRunwayVisualRange(airportWeatherDto);
@@ -49,12 +48,14 @@ public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingS
 
     private int getCloudBaseFt(AirportWeatherDto airportWeatherDto, int elevationFt) {
         int elevation = UnitConverter.feetToMeters(elevationFt);
-        int cloudBase = weatherCalculator.calculateCloudBase(airportWeatherDto.getTemperature(), airportWeatherDto.getDewPoint(), elevation);
+        int cloudBase = runwayWeatherCalculator.calculateCloudBaseAboveRunway(
+                airportWeatherDto.getTemperature(), airportWeatherDto.getDewPoint(), elevation);
         return UnitConverter.metersToFeet(cloudBase);
     }
 
     private int getRunwayVisualRange(AirportWeatherDto airportWeatherDto) {
-        int runwayVisualRange = weatherCalculator.calculateRunwayVisualRange(airportWeatherDto.getVisibility(), airportWeatherDto.isDay());
+        int runwayVisualRange = runwayWeatherCalculator.calculateRunwayVisualRange(
+                airportWeatherDto.getVisibility(), airportWeatherDto.isDay());
         return UnitConverter.metersToFeet(runwayVisualRange);
     }
 }

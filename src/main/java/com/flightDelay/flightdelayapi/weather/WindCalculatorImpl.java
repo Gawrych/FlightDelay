@@ -2,7 +2,7 @@ package com.flightDelay.flightdelayapi.weather;
 
 import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.dto.RunwayDto;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -11,16 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.*;
+import static java.lang.Math.toRadians;
 
 @Component
-@RequiredArgsConstructor
-public class WeatherCalculatorImpl implements WeatherCalculator {
+@NoArgsConstructor
+public class WindCalculatorImpl implements WindCalculator {
 
+    @Override
     public int getCrossWind(AirportWeatherDto airportWeatherDto) {
         return calculateWindSpeedByRadian(airportWeatherDto, (windSpeed, windDirection, runwayHeadingDeg) ->
                 windSpeed * sin(toRadians(runwayHeadingDeg - windDirection)));
     }
 
+    @Override
     public int getTailwind(AirportWeatherDto airportWeatherDto) {
         return calculateWindSpeedByRadian(airportWeatherDto, (windSpeed, windDirection, runwayHeadingDeg) ->
                 windSpeed * cos(toRadians(runwayHeadingDeg - windDirection)));
@@ -35,25 +38,13 @@ public class WeatherCalculatorImpl implements WeatherCalculator {
         for (RunwayDto runwayDto : airportWeatherDto.getRunwaysDTO()) {
             crosswindSpeedByRunway.add(BigDecimal.valueOf(
                             windFormula.formula(windSpeed, windDirection, runwayDto.getHeHeadingDegT()))
-                            .setScale(0, RoundingMode.UP)
-                            .abs()
-                            .intValue());
+                    .setScale(0, RoundingMode.UP)
+                    .abs()
+                    .intValue());
         }
 
         //TODO: Exception; Create custom exception and change type of this exception
-        return crosswindSpeedByRunway.stream().min(Integer::compare)
+        return crosswindSpeedByRunway.stream().max(Integer::compare)
                 .orElseThrow(() ->  new IllegalStateException("Unable to calculate wind speed"));
-    }
-
-    public int calculateRunwayVisualRange(float visibility, boolean isDay) {
-        double multiplier = 1.6;
-        if (isDay) {
-            multiplier = 1.3;
-        }
-        return (int) Math.round((visibility * multiplier));
-    }
-
-    public int calculateCloudBase(float temperature, float dewPoint, int elevation) {
-        return Math.round((temperature - dewPoint) / 10 * 1247 + elevation);
     }
 }

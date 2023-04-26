@@ -14,6 +14,7 @@ public interface AirportWeatherMapper {
     @Mappings({
             @Mapping(source = "weather.day", target = "day"),
             @Mapping(source = "weather.rain", target = "rain"),
+            @Mapping(source = "elevationMeters", target = "elevationMeters"),
             @Mapping(source = "weather.temperature", target = "temperature"),
             @Mapping(source = "weather.dewPoint", target = "dewPoint"),
             @Mapping(source = "weather.visibility", target = "visibility"),
@@ -24,5 +25,5 @@ public interface AirportWeatherMapper {
             @Mapping(source = "flight.phase", target = "phase"),
             @Mapping(source = "runwaysDto", target = "runwaysDTO")
     })
-    AirportWeatherDto mapFrom(Weather weather, List<RunwayDto> runwaysDto, Flight flight);
+    AirportWeatherDto mapFrom(Weather weather, List<RunwayDto> runwaysDto, Flight flight, int elevationMeters);
 }

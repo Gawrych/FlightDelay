@@ -1,13 +1,12 @@
-package com.flightDelay.flightdelayapi.weather;
+package com.flightDelay.flightdelayapi.weather.properties;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @RequiredArgsConstructor
-@ConfigurationProperties(prefix = "takeoff")
-public class TakeoffLimitsProperties implements FlightPhaseProperties {
+@ConfigurationProperties(prefix = "landing")
+public class LandingLimitsProperties implements FlightPhaseProperties {
 
     private final int upperThresholdOfCrosswindKts;
 
@@ -29,7 +28,11 @@ public class TakeoffLimitsProperties implements FlightPhaseProperties {
 
     private final int lowerThresholdOfRainMm;
 
-    private final int upperThresholdOfCrosswindInstrumentKts;
+    private final int upperThresholdOfCrosswindIls1Kts;
 
-    private final int lowerThresholdOfCrosswindInstrumentKts;
+    private final int lowerThresholdOfCrosswindIls1Kts;
+
+    private final int upperThresholdOfCrosswindIls2And3AKts;
+
+    private final int lowerThresholdOfCrosswindIls2And3AKts;
 }

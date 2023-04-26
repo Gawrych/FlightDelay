@@ -1,4 +1,4 @@
-package com.flightDelay.flightdelayapi.weather;
+package com.flightDelay.flightdelayapi.weather.properties;
 
 public interface FlightPhaseProperties {
 

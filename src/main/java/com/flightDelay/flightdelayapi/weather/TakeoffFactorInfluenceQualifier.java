@@ -2,6 +2,7 @@ package com.flightDelay.flightdelayapi.weather;
 
 import com.flightDelay.flightdelayapi.shared.FactorInfluence;
 import com.flightDelay.flightdelayapi.shared.IlsCategory;
+import com.flightDelay.flightdelayapi.weather.properties.TakeoffLimitsProperties;
 import org.springframework.stereotype.Component;
 
 @Component("takeoffFactorInfluenceQualifier")

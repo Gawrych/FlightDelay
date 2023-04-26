@@ -2,7 +2,7 @@ package com.flightDelay.flightdelayapi.DelayFactor;
 
 import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.shared.Flight;
-import com.flightDelay.flightdelayapi.weather.AirportWeatherCreator;
+import com.flightDelay.flightdelayapi.dto.AirportWeatherCreator;
 import com.flightDelay.flightdelayapi.weather.WeatherFactorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

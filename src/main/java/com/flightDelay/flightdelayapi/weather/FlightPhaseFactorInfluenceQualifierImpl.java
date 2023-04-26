@@ -3,6 +3,7 @@ package com.flightDelay.flightdelayapi.weather;
 import com.flightDelay.flightdelayapi.shared.FactorInfluence;
 import com.flightDelay.flightdelayapi.shared.FactorName;
 import com.flightDelay.flightdelayapi.shared.IlsCategory;
+import com.flightDelay.flightdelayapi.weather.properties.FlightPhaseProperties;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,5 +1,6 @@
 package com.flightDelay.flightdelayapi.weather;
 
+import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,8 @@ public class RunwayWeatherCalculatorImpl implements RunwayWeatherCalculator {
     }
 
     @Override
-    public int calculateCloudBaseAboveRunway(float temperature, float dewPoint, int elevation) {
-        return Math.round((temperature - dewPoint) / 10 * 1247 + elevation);
+    public int calculateCloudBaseAboveRunway(AirportWeatherDto airportWeatherDto, int elevation) {
+        return Math.round(
+                (airportWeatherDto.getTemperature() - airportWeatherDto.getDewPoint()) / 10 * 1247 + elevation);
     }
 }

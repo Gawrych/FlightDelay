@@ -33,10 +33,10 @@ class InstrumentLandingSystemCalculatorImplTest {
 
     @Test
     void whenConditionsAreEnoughForIls0_thenReturnIlsCategory0() {
-        weatherCalculatorTest.setCategoryValues(IlsCategory.CATEGORY_0);
+        weatherCalculatorTest.setCategoryValues(IlsCategory.NONPRECISION);
         InstrumentLandingSystemCalculatorImpl instrumentLandingSystemCalculator = new InstrumentLandingSystemCalculatorImpl(weatherCalculatorTest);
         IlsCategory ilsCategory = instrumentLandingSystemCalculator.getMinRequiredCategory(airportWeatherDto);
-        assertThat(ilsCategory).isEqualTo(IlsCategory.CATEGORY_0);
+        assertThat(ilsCategory).isEqualTo(IlsCategory.NONPRECISION);
     }
 
     @Test

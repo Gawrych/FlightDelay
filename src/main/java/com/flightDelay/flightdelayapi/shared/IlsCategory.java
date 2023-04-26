@@ -2,11 +2,11 @@ package com.flightDelay.flightdelayapi.shared;
 
 public enum IlsCategory {
 
-    CATEGORY_0(0, 2500, 200),
+    NONPRECISION(0, 2400, 300),
 
     CATEGORY_1(1, 1800, 200),
 
-    CATEGORY_2(2, 1200, 100),
+    CATEGORY_2(2, 1000, 100),
 
     CATEGORY_3A(3, 700, 0),
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.lang.Math.*;
@@ -19,8 +20,8 @@ public class WindCalculatorImpl implements WindCalculator {
 
     @Override
     public int getCrossWind(AirportWeatherDto airportWeatherDto) {
-        return calculateWindSpeedByRadian(airportWeatherDto, (windSpeed, windDirection, runwayHeadingDeg) ->
-                windSpeed * sin(toRadians(runwayHeadingDeg - windDirection)));
+        return Math.abs(calculateWindSpeedByRadian(airportWeatherDto, (windSpeed, windDirection, runwayHeadingDeg) ->
+                windSpeed * sin(toRadians(runwayHeadingDeg - windDirection))));
     }
 
     @Override
@@ -36,11 +37,13 @@ public class WindCalculatorImpl implements WindCalculator {
         List<Integer> crosswindSpeedByRunway = new ArrayList<>();
 
         for (RunwayDto runwayDto : airportWeatherDto.getRunwaysDTO()) {
-            crosswindSpeedByRunway.add(BigDecimal.valueOf(
+            int heHeadingDegResult = BigDecimal.valueOf(
                             windFormula.formula(windSpeed, windDirection, runwayDto.getHeHeadingDegT()))
                     .setScale(0, RoundingMode.UP)
                     .abs()
-                    .intValue());
+                    .intValue();
+
+            crosswindSpeedByRunway.add(heHeadingDegResult);
         }
 
         //TODO: Exception; Create custom exception and change type of this exception

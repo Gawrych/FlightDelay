@@ -20,6 +20,7 @@ public class DelayFactorServiceImpl implements DelayFactorService {
 
     @Override
     public List<DelayFactor> getFactorsByHour(Flight flight) {
+        // TODO: Check if this airport is in database
         AirportWeatherDto airportWeatherDto = airportWeatherCreator.mapFrom(flight);
 
         List<DelayFactor> delayFactors = new ArrayList<>();

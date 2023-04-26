@@ -28,6 +28,8 @@ public class AirportWeatherDto {
 
     private float windGusts;
 
+    private float rain;
+
     @NonNull
     private FlightPhase phase;
 

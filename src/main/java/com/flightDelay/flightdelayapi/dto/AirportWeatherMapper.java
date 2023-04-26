@@ -13,6 +13,7 @@ public interface AirportWeatherMapper {
 
     @Mappings({
             @Mapping(source = "weather.day", target = "day"),
+            @Mapping(source = "weather.rain", target = "rain"),
             @Mapping(source = "weather.temperature", target = "temperature"),
             @Mapping(source = "weather.dewPoint", target = "dewPoint"),
             @Mapping(source = "weather.visibility", target = "visibility"),

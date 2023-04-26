@@ -28,6 +28,8 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
 
     private final LandingLimits landingLimits;
 
+    private final TakeoffLimits takeoffLimits;
+
     private final DelayFactorCreator delayFactorCreator;
 
     public List<DelayFactor> getWeatherFactors(AirportWeatherDto airportWeatherDto) {
@@ -53,7 +55,7 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
     private FactorInfluence checkPhaseLimit(IlsCategory ilsCategory, FlightPhase phase, FactorName name, int value) {
         return switch (phase) {
             case ARRIVAL -> landingLimits.checkLimits(name, value, ilsCategory);
-            case DEPARTURE -> FactorInfluence.LOW;
+            case DEPARTURE -> takeoffLimits.checkLimits(name, value);
         };
     }
 }

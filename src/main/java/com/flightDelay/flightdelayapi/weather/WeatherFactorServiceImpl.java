@@ -9,6 +9,7 @@ import com.flightDelay.flightdelayapi.shared.FactorName;
 import com.flightDelay.flightdelayapi.shared.IlsCategory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,9 +27,11 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
 
     private final WindCalculator windCalculator;
 
-    private final LandingLimits landingLimits;
+    @Qualifier("landingLimits")
+    private final FlightPhaseLimits landingLimits;
 
-    private final TakeoffLimits takeoffLimits;
+    @Qualifier("takeoffLimits")
+    private final FlightPhaseLimits takeoffLimits;
 
     private final DelayFactorCreator delayFactorCreator;
 
@@ -55,7 +58,7 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
     private FactorInfluence checkPhaseLimit(IlsCategory ilsCategory, FlightPhase phase, FactorName name, int value) {
         return switch (phase) {
             case ARRIVAL -> landingLimits.checkLimits(name, value, ilsCategory);
-            case DEPARTURE -> takeoffLimits.checkLimits(name, value);
+            case DEPARTURE -> takeoffLimits.checkLimits(name, value, ilsCategory);
         };
     }
 }

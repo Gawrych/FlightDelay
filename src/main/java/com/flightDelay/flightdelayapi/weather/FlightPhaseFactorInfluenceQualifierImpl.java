@@ -6,28 +6,15 @@ import com.flightDelay.flightdelayapi.shared.IlsCategory;
 import org.springframework.stereotype.Component;
 
 @Component
-public abstract class FlightPhaseLimitsImpl implements FlightPhaseLimits {
+public abstract class FlightPhaseFactorInfluenceQualifierImpl implements FlightPhaseFactorInfluenceQualifier {
 
-    protected int upperThresholdOfCrosswind;
+    private final FlightPhaseProperties flightPhaseProperties;
 
-    protected int lowerThresholdOfCrosswind;
+    public FlightPhaseFactorInfluenceQualifierImpl(FlightPhaseProperties flightPhaseProperties) {
+        this.flightPhaseProperties = flightPhaseProperties;
+    }
 
-    protected int upperThresholdOfTailwind;
-
-    protected int lowerThresholdOfTailwind;
-
-    protected int upperThresholdOfVisibility;
-
-    protected int lowerThresholdOfVisibility;
-
-    protected int upperThresholdOfCloudBase;
-
-    protected int lowerThresholdOfCloudBase;
-
-    protected int upperThresholdOfRain;
-
-    protected int lowerThresholdOfRain;
-
+    @Override
     public FactorInfluence checkLimits(FactorName factorName, int factorValue, IlsCategory ilsCategory) {
         return switch (factorName) {
             case CROSSWIND -> checkCrosswindLimits(ilsCategory, factorValue);
@@ -68,56 +55,36 @@ public abstract class FlightPhaseLimitsImpl implements FlightPhaseLimits {
 
     @Override
     public FactorInfluence checkCrosswindLimits(IlsCategory ilsCategory, int factorValue) {
-        setCrosswindThresholds();
         return calculateRangeForValuesThatShouldBeSmall(factorValue,
-                lowerThresholdOfCrosswind,
-                upperThresholdOfCrosswind);
+                flightPhaseProperties.getLowerThresholdOfCrosswindKts(),
+                flightPhaseProperties.getUpperThresholdOfCrosswindKts());
     }
 
     @Override
     public FactorInfluence checkTailwindLimits(int factorValue) {
-        setTailwindThresholds();
         return calculateRangeForValuesThatShouldBeSmall(factorValue,
-                lowerThresholdOfTailwind,
-                upperThresholdOfTailwind);
+                flightPhaseProperties.getLowerThresholdOfTailwindKts(),
+                flightPhaseProperties.getUpperThresholdOfTailwindKts());
     }
 
     @Override
     public FactorInfluence checkVisibilityLimits(int factorValue) {
-        setVisibilityThresholds();
         return calculateRangeForValuesThatShouldBeLarge(factorValue,
-                lowerThresholdOfVisibility,
-                upperThresholdOfVisibility);
+                flightPhaseProperties.getLowerThresholdOfVisibilityMeters(),
+                flightPhaseProperties.getUpperThresholdOfVisibilityMeters());
     }
 
     @Override
     public FactorInfluence checkCloudbaseLimits(int factorValue) {
-        setCloudBaseThresholds();
         return calculateRangeForValuesThatShouldBeLarge(factorValue,
-                lowerThresholdOfCloudBase,
-                upperThresholdOfCloudBase);
+                flightPhaseProperties.getLowerThresholdOfCloudBaseMeters(),
+                flightPhaseProperties.getUpperThresholdOfCloudBaseMeters());
     }
 
     @Override
     public FactorInfluence checkRainLimits(int factorValue) {
-        setRainThresholds();
         return calculateRangeForValuesThatShouldBeSmall(factorValue,
-                lowerThresholdOfRain,
-                upperThresholdOfRain);
+                flightPhaseProperties.getLowerThresholdOfRainMm(),
+                flightPhaseProperties.getUpperThresholdOfRainMm());
     }
-
-    @Override
-    public abstract void setCrosswindThresholds();
-
-    @Override
-    public abstract void setTailwindThresholds();
-
-    @Override
-    public abstract void setVisibilityThresholds();
-
-    @Override
-    public abstract void setCloudBaseThresholds();
-
-    @Override
-    public abstract void setRainThresholds();
 }

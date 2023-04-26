@@ -4,7 +4,7 @@ import com.flightDelay.flightdelayapi.shared.FactorInfluence;
 import com.flightDelay.flightdelayapi.shared.FactorName;
 import com.flightDelay.flightdelayapi.shared.IlsCategory;
 
-public interface FlightPhaseLimits {
+public interface FlightPhaseFactorInfluenceQualifier {
 
     FactorInfluence checkLimits(FactorName name, int value, IlsCategory ilsCategory);
 
@@ -18,13 +18,5 @@ public interface FlightPhaseLimits {
 
     FactorInfluence checkRainLimits(int factorValue);
 
-    void setCrosswindThresholds();
 
-    void setTailwindThresholds();
-
-    void setVisibilityThresholds();
-
-    void setCloudBaseThresholds();
-
-    void setRainThresholds();
 }

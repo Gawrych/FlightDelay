@@ -25,15 +25,15 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
 
     private final InstrumentLandingSystemCalculator instrumentLandingSystemCalculator;
 
-    private final WindCalculator windCalculator;
+    @Qualifier("landingFactorInfluenceQualifier")
+    private final FlightPhaseFactorInfluenceQualifier landingFactorInfluenceQualifier;
 
-    @Qualifier("landingLimits")
-    private final FlightPhaseLimits landingLimits;
-
-    @Qualifier("takeoffLimits")
-    private final FlightPhaseLimits takeoffLimits;
+    @Qualifier("takeoffFactorInfluenceQualifier")
+    private final FlightPhaseFactorInfluenceQualifier takeoffFactorInfluenceQualifier;
 
     private final DelayFactorCreator delayFactorCreator;
+
+    private final WindCalculator windCalculator;
 
     public List<DelayFactor> getWeatherFactors(AirportWeatherDto airportWeatherDto) {
         IlsCategory ilsCategory = instrumentLandingSystemCalculator.getMinRequiredCategory(airportWeatherDto);
@@ -57,8 +57,8 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
 
     private FactorInfluence checkPhaseLimit(IlsCategory ilsCategory, FlightPhase phase, FactorName name, int value) {
         return switch (phase) {
-            case ARRIVAL -> landingLimits.checkLimits(name, value, ilsCategory);
-            case DEPARTURE -> takeoffLimits.checkLimits(name, value, ilsCategory);
+            case ARRIVAL -> landingFactorInfluenceQualifier.checkLimits(name, value, ilsCategory);
+            case DEPARTURE -> takeoffFactorInfluenceQualifier.checkLimits(name, value, ilsCategory);
         };
     }
 }

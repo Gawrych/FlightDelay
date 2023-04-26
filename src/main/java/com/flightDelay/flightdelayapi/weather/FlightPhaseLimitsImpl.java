@@ -3,51 +3,30 @@ package com.flightDelay.flightdelayapi.weather;
 import com.flightDelay.flightdelayapi.shared.FactorInfluence;
 import com.flightDelay.flightdelayapi.shared.FactorName;
 import com.flightDelay.flightdelayapi.shared.IlsCategory;
+import org.springframework.stereotype.Component;
 
+@Component
 public abstract class FlightPhaseLimitsImpl implements FlightPhaseLimits {
 
-    private final int UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS;
+    protected int upperThresholdOfCrosswind;
 
-    private final int LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS;
+    protected int lowerThresholdOfCrosswind;
 
-    private final int UPPER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS;
+    protected int upperThresholdOfTailwind;
 
-    private final int LOWER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS;
+    protected int lowerThresholdOfTailwind;
 
-    private final int UPPER_THRESHOLD_OF_VISIBILITY_METERS;
+    protected int upperThresholdOfVisibility;
 
-    private final int LOWER_THRESHOLD_OF_VISIBILITY_METERS;
+    protected int lowerThresholdOfVisibility;
 
-    private final int UPPER_THRESHOLD_OF_CLOUDBASE_METERS;
+    protected int upperThresholdOfCloudBase;
 
-    private final int LOWER_THRESHOLD_OF_CLOUDBASE_METERS;
+    protected int lowerThresholdOfCloudBase;
 
-    private final int UPPER_THRESHOLD_OF_RAIN_MM;
+    protected int upperThresholdOfRain;
 
-    private final int LOWER_THRESHOLD_OF_RAIN_MM;
-
-    public FlightPhaseLimitsImpl(int UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS,
-                                 int LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS,
-                                 int UPPER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS,
-                                 int LOWER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS,
-                                 int UPPER_THRESHOLD_OF_VISIBILITY_METERS,
-                                 int LOWER_THRESHOLD_OF_VISIBILITY_METERS,
-                                 int UPPER_THRESHOLD_OF_CLOUDBASE_METERS,
-                                 int LOWER_THRESHOLD_OF_CLOUDBASE_METERS,
-                                 int UPPER_THRESHOLD_OF_RAIN_MM,
-                                 int LOWER_THRESHOLD_OF_RAIN_MM) {
-
-        this.UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS = UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS;
-        this.LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS = LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS;
-        this.UPPER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS = UPPER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS;
-        this.LOWER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS = LOWER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS;
-        this.UPPER_THRESHOLD_OF_VISIBILITY_METERS = UPPER_THRESHOLD_OF_VISIBILITY_METERS;
-        this.LOWER_THRESHOLD_OF_VISIBILITY_METERS = LOWER_THRESHOLD_OF_VISIBILITY_METERS;
-        this.UPPER_THRESHOLD_OF_CLOUDBASE_METERS = UPPER_THRESHOLD_OF_CLOUDBASE_METERS;
-        this.LOWER_THRESHOLD_OF_CLOUDBASE_METERS = LOWER_THRESHOLD_OF_CLOUDBASE_METERS;
-        this.UPPER_THRESHOLD_OF_RAIN_MM = UPPER_THRESHOLD_OF_RAIN_MM;
-        this.LOWER_THRESHOLD_OF_RAIN_MM = LOWER_THRESHOLD_OF_RAIN_MM;
-    }
+    protected int lowerThresholdOfRain;
 
     public FactorInfluence checkLimits(FactorName factorName, int factorValue, IlsCategory ilsCategory) {
         return switch (factorName) {
@@ -63,7 +42,7 @@ public abstract class FlightPhaseLimitsImpl implements FlightPhaseLimits {
         };
     }
 
-    protected FactorInfluence calculateIncreasingValuesLimit(int value, int lowerLimit, int upperLimit) {
+    protected FactorInfluence calculateRangeForValuesThatShouldBeSmall(int value, int lowerLimit, int upperLimit) {
         if ((lowerLimit <= value) && (value < upperLimit)) {
             return FactorInfluence.MEDIUM;
 
@@ -75,7 +54,7 @@ public abstract class FlightPhaseLimitsImpl implements FlightPhaseLimits {
         return FactorInfluence.LOW;
     }
 
-    protected FactorInfluence calculateDecreasingValuesLimit(int value, int lowerLimit, int upperLimit) {
+    protected FactorInfluence calculateRangeForValuesThatShouldBeLarge(int value, int lowerLimit, int upperLimit) {
         if ((lowerLimit < value) && (value < upperLimit)) {
             return FactorInfluence.MEDIUM;
 
@@ -88,30 +67,57 @@ public abstract class FlightPhaseLimitsImpl implements FlightPhaseLimits {
     }
 
     @Override
+    public FactorInfluence checkCrosswindLimits(IlsCategory ilsCategory, int factorValue) {
+        setCrosswindThresholds();
+        return calculateRangeForValuesThatShouldBeSmall(factorValue,
+                lowerThresholdOfCrosswind,
+                upperThresholdOfCrosswind);
+    }
+
+    @Override
     public FactorInfluence checkTailwindLimits(int factorValue) {
-        return calculateIncreasingValuesLimit(factorValue,
-                LOWER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS,
-                UPPER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS);
+        setTailwindThresholds();
+        return calculateRangeForValuesThatShouldBeSmall(factorValue,
+                lowerThresholdOfTailwind,
+                upperThresholdOfTailwind);
     }
 
     @Override
     public FactorInfluence checkVisibilityLimits(int factorValue) {
-        return calculateDecreasingValuesLimit(factorValue,
-                LOWER_THRESHOLD_OF_VISIBILITY_METERS,
-                UPPER_THRESHOLD_OF_VISIBILITY_METERS);
+        setVisibilityThresholds();
+        return calculateRangeForValuesThatShouldBeLarge(factorValue,
+                lowerThresholdOfVisibility,
+                upperThresholdOfVisibility);
     }
 
     @Override
     public FactorInfluence checkCloudbaseLimits(int factorValue) {
-        return calculateDecreasingValuesLimit(factorValue,
-                LOWER_THRESHOLD_OF_CLOUDBASE_METERS,
-                UPPER_THRESHOLD_OF_CLOUDBASE_METERS);
+        setCloudBaseThresholds();
+        return calculateRangeForValuesThatShouldBeLarge(factorValue,
+                lowerThresholdOfCloudBase,
+                upperThresholdOfCloudBase);
     }
 
     @Override
     public FactorInfluence checkRainLimits(int factorValue) {
-        return calculateIncreasingValuesLimit(factorValue,
-                LOWER_THRESHOLD_OF_RAIN_MM,
-                UPPER_THRESHOLD_OF_RAIN_MM);
+        setRainThresholds();
+        return calculateRangeForValuesThatShouldBeSmall(factorValue,
+                lowerThresholdOfRain,
+                upperThresholdOfRain);
     }
+
+    @Override
+    public abstract void setCrosswindThresholds();
+
+    @Override
+    public abstract void setTailwindThresholds();
+
+    @Override
+    public abstract void setVisibilityThresholds();
+
+    @Override
+    public abstract void setCloudBaseThresholds();
+
+    @Override
+    public abstract void setRainThresholds();
 }

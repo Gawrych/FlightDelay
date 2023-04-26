@@ -17,4 +17,14 @@ public interface FlightPhaseLimits {
     FactorInfluence checkCloudbaseLimits(int factorValue);
 
     FactorInfluence checkRainLimits(int factorValue);
+
+    void setCrosswindThresholds();
+
+    void setTailwindThresholds();
+
+    void setVisibilityThresholds();
+
+    void setCloudBaseThresholds();
+
+    void setRainThresholds();
 }

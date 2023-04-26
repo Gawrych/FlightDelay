@@ -2,7 +2,6 @@ package com.flightDelay.flightdelayapi.weather;
 
 import com.flightDelay.flightdelayapi.shared.FactorInfluence;
 import com.flightDelay.flightdelayapi.shared.IlsCategory;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -35,29 +34,46 @@ public class TakeoffLimits extends FlightPhaseLimitsImpl {
 
     private final static int LOWER_THRESHOLD_OF_RAIN_MM = 7;
 
-    public TakeoffLimits() {
-        super(UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS,
-                LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS,
-                UPPER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS,
-                LOWER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS,
-                UPPER_THRESHOLD_OF_VISIBILITY_METERS,
-                LOWER_THRESHOLD_OF_VISIBILITY_METERS,
-                UPPER_THRESHOLD_OF_CLOUDBASE_METERS,
-                LOWER_THRESHOLD_OF_CLOUDBASE_METERS,
-                UPPER_THRESHOLD_OF_RAIN_MM,
-                LOWER_THRESHOLD_OF_RAIN_MM);
-    }
-
     @Override
     public FactorInfluence checkCrosswindLimits(IlsCategory ilsCategory, int factorValue) {
         if (ilsCategory.getValue() > IlsCategory.NONPRECISION.getValue()) {
-            return calculateIncreasingValuesLimit(factorValue,
+            return calculateRangeForValuesThatShouldBeSmall(factorValue,
                     LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_INSTRUMENT_KTS,
                     UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_INSTRUMENT_KTS);
         }
 
-        return calculateIncreasingValuesLimit(factorValue,
+        return calculateRangeForValuesThatShouldBeSmall(factorValue,
                 LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS,
                 UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS);
+    }
+
+    @Override
+    public void setCrosswindThresholds() {
+        this.upperThresholdOfCrosswind = UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS;
+        this.lowerThresholdOfCrosswind = LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONINSTRUMENT_KTS;
+    }
+
+    @Override
+    public void setTailwindThresholds() {
+        this.upperThresholdOfTailwind = UPPER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS;
+        this.lowerThresholdOfTailwind = LOWER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS;
+    }
+
+    @Override
+    public void setVisibilityThresholds() {
+        this.upperThresholdOfVisibility = UPPER_THRESHOLD_OF_VISIBILITY_METERS;
+        this.lowerThresholdOfVisibility = LOWER_THRESHOLD_OF_VISIBILITY_METERS;
+    }
+
+    @Override
+    public void setCloudBaseThresholds() {
+        this.upperThresholdOfCloudBase = UPPER_THRESHOLD_OF_CLOUDBASE_METERS;
+        this.lowerThresholdOfCloudBase = LOWER_THRESHOLD_OF_CLOUDBASE_METERS;
+    }
+
+    @Override
+    public void setRainThresholds() {
+        this.upperThresholdOfRain = UPPER_THRESHOLD_OF_RAIN_MM;
+        this.lowerThresholdOfRain = LOWER_THRESHOLD_OF_RAIN_MM;
     }
 }

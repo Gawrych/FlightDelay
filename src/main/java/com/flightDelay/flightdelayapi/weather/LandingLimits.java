@@ -39,35 +39,52 @@ public class LandingLimits extends FlightPhaseLimitsImpl {
 
     private final static int LOWER_THRESHOLD_OF_RAIN_MM = 7;
 
-    public LandingLimits() {
-        super(UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONPRECISION_KTS,
-                LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONPRECISION_KTS,
-                UPPER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS,
-                LOWER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS,
-                UPPER_THRESHOLD_OF_VISIBILITY_METERS,
-                LOWER_THRESHOLD_OF_VISIBILITY_METERS,
-                UPPER_THRESHOLD_OF_CLOUDBASE_METERS,
-                LOWER_THRESHOLD_OF_CLOUDBASE_METERS,
-                UPPER_THRESHOLD_OF_RAIN_MM,
-                LOWER_THRESHOLD_OF_RAIN_MM);
-    }
-
     @Override
     public FactorInfluence checkCrosswindLimits(IlsCategory ilsCategory, int crosswind) {
         return switch (ilsCategory) {
-            case NONPRECISION -> calculateIncreasingValuesLimit(crosswind,
+            case NONPRECISION -> calculateRangeForValuesThatShouldBeSmall(crosswind,
                     LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONPRECISION_KTS,
                     UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONPRECISION_KTS);
 
-            case CATEGORY_1 -> calculateIncreasingValuesLimit(crosswind,
+            case CATEGORY_1 -> calculateRangeForValuesThatShouldBeSmall(crosswind,
                     LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_WITH_ILS_1_KTS,
                     UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_WITH_ILS_1_KTS);
 
-            case CATEGORY_2, CATEGORY_3A -> calculateIncreasingValuesLimit(crosswind,
+            case CATEGORY_2, CATEGORY_3A -> calculateRangeForValuesThatShouldBeSmall(crosswind,
                     LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_WITH_ILS_2_3A_KTS,
                     UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_WITH_ILS_2_3A_KTS);
 
             case CATEGORY_3B, CATEGORY_3C -> FactorInfluence.HIGH; // The most airports do not support ILS category greater than 3A
         };
+    }
+
+    @Override
+    public void setCrosswindThresholds() {
+        this.upperThresholdOfCrosswind = UPPER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONPRECISION_KTS;
+        this.lowerThresholdOfCrosswind = LOWER_THRESHOLD_OF_ENHANCED_CROSSWIND_NONPRECISION_KTS;
+    }
+
+    @Override
+    public void setTailwindThresholds() {
+        this.upperThresholdOfTailwind = UPPER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS;
+        this.lowerThresholdOfTailwind = LOWER_THRESHOLD_OF_ENHANCED_TAILWIND_KTS;
+    }
+
+    @Override
+    public void setVisibilityThresholds() {
+        this.upperThresholdOfVisibility = UPPER_THRESHOLD_OF_VISIBILITY_METERS;
+        this.lowerThresholdOfVisibility = LOWER_THRESHOLD_OF_VISIBILITY_METERS;
+    }
+
+    @Override
+    public void setCloudBaseThresholds() {
+        this.upperThresholdOfCloudBase = UPPER_THRESHOLD_OF_CLOUDBASE_METERS;
+        this.lowerThresholdOfCloudBase = LOWER_THRESHOLD_OF_CLOUDBASE_METERS;
+    }
+
+    @Override
+    public void setRainThresholds() {
+        this.upperThresholdOfRain = UPPER_THRESHOLD_OF_RAIN_MM;
+        this.lowerThresholdOfRain = LOWER_THRESHOLD_OF_RAIN_MM;
     }
 }

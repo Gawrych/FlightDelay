@@ -1,13 +1,23 @@
 package com.flightDelay.flightdelayapi.shared;
 
 public enum FactorName {
-    CROSSWIND,
+    CROSSWIND("kt"),
 
-    TAILWIND,
+    TAILWIND("kt"),
 
-    VISIBILITY,
+    VISIBILITY("m"),
 
-    CLOUDBASE,
+    CLOUDBASE("m"),
 
-    RAIN
+    RAIN("mm");
+
+    private final String unit;
+
+    FactorName(String unit) {
+        this.unit = unit;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
 }

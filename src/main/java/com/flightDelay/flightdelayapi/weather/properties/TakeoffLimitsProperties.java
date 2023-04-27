@@ -9,13 +9,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "takeoff")
 public class TakeoffLimitsProperties implements FlightPhaseProperties {
 
-    private final int upperThresholdOfCrosswindKts;
+    private final int upperThresholdOfCrosswindKt;
 
-    private final int lowerThresholdOfCrosswindKts;
+    private final int lowerThresholdOfCrosswindKt;
 
-    private final int upperThresholdOfTailwindKts;
+    private final int upperThresholdOfTailwindKt;
 
-    private final int lowerThresholdOfTailwindKts;
+    private final int lowerThresholdOfTailwindKt;
 
     private final int upperThresholdOfVisibilityMeters;
 
@@ -29,7 +29,7 @@ public class TakeoffLimitsProperties implements FlightPhaseProperties {
 
     private final int lowerThresholdOfRainMm;
 
-    private final int upperThresholdOfCrosswindInstrumentKts;
+    private final int upperThresholdOfCrosswindInstrumentKt;
 
-    private final int lowerThresholdOfCrosswindInstrumentKts;
+    private final int lowerThresholdOfCrosswindInstrumentKt;
 }

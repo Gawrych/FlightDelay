@@ -2,13 +2,13 @@ package com.flightDelay.flightdelayapi.weather.properties;
 
 public interface FlightPhaseProperties {
 
-     int getUpperThresholdOfCrosswindKts();
+     int getUpperThresholdOfCrosswindKt();
 
-     int getLowerThresholdOfCrosswindKts();
+     int getLowerThresholdOfCrosswindKt();
 
-     int getUpperThresholdOfTailwindKts();
+     int getUpperThresholdOfTailwindKt();
 
-     int getLowerThresholdOfTailwindKts();
+     int getLowerThresholdOfTailwindKt();
 
      int getUpperThresholdOfVisibilityMeters();
 

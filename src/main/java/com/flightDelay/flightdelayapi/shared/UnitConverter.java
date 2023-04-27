@@ -9,4 +9,8 @@ public class UnitConverter {
     public static int feetToMeters(int feet) {
         return (int) Math.round((feet / 3.281));
     }
+
+    public static int knotsToKmPerHour(int knots) {
+        return (int) Math.round((knots * 1.852));
+    }
 }

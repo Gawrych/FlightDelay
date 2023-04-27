@@ -19,13 +19,9 @@ public abstract class FlightPhaseFactorInfluenceQualifierImpl implements FlightP
     public FactorInfluence checkLimits(FactorName factorName, int factorValue, IlsCategory ilsCategory) {
         return switch (factorName) {
             case CROSSWIND -> checkCrosswindLimits(ilsCategory, factorValue);
-
             case TAILWIND -> checkTailwindLimits(factorValue);
-
             case VISIBILITY -> checkVisibilityLimits(factorValue);
-
             case CLOUDBASE -> checkCloudbaseLimits(factorValue);
-
             case RAIN -> checkRainLimits(factorValue);
         };
     }
@@ -57,15 +53,15 @@ public abstract class FlightPhaseFactorInfluenceQualifierImpl implements FlightP
     @Override
     public FactorInfluence checkCrosswindLimits(IlsCategory ilsCategory, int factorValue) {
         return calculateRangeForValuesThatShouldBeSmall(factorValue,
-                flightPhaseProperties.getLowerThresholdOfCrosswindKts(),
-                flightPhaseProperties.getUpperThresholdOfCrosswindKts());
+                flightPhaseProperties.getLowerThresholdOfCrosswindKt(),
+                flightPhaseProperties.getUpperThresholdOfCrosswindKt());
     }
 
     @Override
     public FactorInfluence checkTailwindLimits(int factorValue) {
         return calculateRangeForValuesThatShouldBeSmall(factorValue,
-                flightPhaseProperties.getLowerThresholdOfTailwindKts(),
-                flightPhaseProperties.getUpperThresholdOfTailwindKts());
+                flightPhaseProperties.getLowerThresholdOfTailwindKt(),
+                flightPhaseProperties.getUpperThresholdOfTailwindKt());
     }
 
     @Override

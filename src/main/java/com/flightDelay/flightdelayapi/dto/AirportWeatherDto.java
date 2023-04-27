@@ -8,10 +8,8 @@ import java.util.List;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@NoArgsConstructor
 public class AirportWeatherDto {
 
-    @NonNull
     private String airportIdent;
 
     private boolean isDay;
@@ -32,9 +30,7 @@ public class AirportWeatherDto {
 
     private int elevationMeters;
 
-    @NonNull
     private FlightPhase phase;
 
-    @NonNull
     private List<RunwayDto> runwaysDTO;
 }

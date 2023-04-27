@@ -23,29 +23,31 @@ import static com.flightDelay.flightdelayapi.shared.FactorName.*;
 @RequiredArgsConstructor
 public class WeatherFactorServiceImpl implements WeatherFactorService {
 
-    private final InstrumentLandingSystemCalculator instrumentLandingSystemCalculator;
-
     @Qualifier("landingFactorInfluenceQualifier")
     private final FlightPhaseFactorInfluenceQualifier landingFactorInfluenceQualifier;
 
     @Qualifier("takeoffFactorInfluenceQualifier")
     private final FlightPhaseFactorInfluenceQualifier takeoffFactorInfluenceQualifier;
 
+    private final InstrumentLandingSystemCalculator instrumentLandingSystemCalculator;
+
+    private final RunwayWeatherCalculator runwayWeatherCalculator;
+
     private final DelayFactorCreator delayFactorCreator;
 
     private final WindCalculator windCalculator;
-
-    private final RunwayWeatherCalculator runwayWeatherCalculator;
 
     public List<DelayFactor> getWeatherFactors(AirportWeatherDto airportWeatherDto) {
         IlsCategory ilsCategory = instrumentLandingSystemCalculator.getMinRequiredCategory(airportWeatherDto);
 
         List<DelayFactor> delayFactors = new ArrayList<>();
-        Map<FactorName, Integer> conditions = getConditions(airportWeatherDto);
 
-        for (Map.Entry<FactorName, Integer> condition : conditions.entrySet()) {
-            FactorInfluence factorInfluence = checkPhaseLimit(ilsCategory, airportWeatherDto.getPhase(), condition.getKey(), condition.getValue());
-            delayFactors.add(delayFactorCreator.createFactor(condition.getKey(), condition.getValue(), factorInfluence));
+        for (Map.Entry<FactorName, Integer> condition : getConditions(airportWeatherDto).entrySet()) {
+            FactorName factorName = condition.getKey();
+            int value = condition.getValue();
+
+            FactorInfluence factorInfluence = checkPhaseLimit(ilsCategory, airportWeatherDto.getPhase(), factorName, value);
+            delayFactors.add(delayFactorCreator.createFactor(factorName, value, factorName.getUnit(), factorInfluence));
         }
 
         return delayFactors;

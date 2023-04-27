@@ -11,6 +11,8 @@ import lombok.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Weather {
 
+    // TODO: Add unit for every condition
+
     @JsonProperty("time")
     private String time;
 

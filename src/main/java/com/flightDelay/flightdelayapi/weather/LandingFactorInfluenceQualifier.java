@@ -19,16 +19,16 @@ public class LandingFactorInfluenceQualifier extends FlightPhaseFactorInfluenceQ
     public FactorInfluence checkCrosswindLimits(IlsCategory ilsCategory, int crosswind) {
         return switch (ilsCategory) {
             case NONPRECISION -> calculateRangeForValuesThatShouldBeSmall(crosswind,
-                    landingLimitsProperties.getLowerThresholdOfCrosswindKts(),
-                    landingLimitsProperties.getUpperThresholdOfCrosswindKts());
+                    landingLimitsProperties.getLowerThresholdOfCrosswindKt(),
+                    landingLimitsProperties.getUpperThresholdOfCrosswindKt());
 
             case CATEGORY_1 -> calculateRangeForValuesThatShouldBeSmall(crosswind,
-                    landingLimitsProperties.getLowerThresholdOfCrosswindIls1Kts(),
-                    landingLimitsProperties.getUpperThresholdOfCrosswindIls1Kts());
+                    landingLimitsProperties.getLowerThresholdOfCrosswindIls1Kt(),
+                    landingLimitsProperties.getUpperThresholdOfCrosswindIls1Kt());
 
             case CATEGORY_2, CATEGORY_3A -> calculateRangeForValuesThatShouldBeSmall(crosswind,
-                    landingLimitsProperties.getLowerThresholdOfCrosswindIls2And3AKts(),
-                    landingLimitsProperties.getUpperThresholdOfCrosswindIls2And3AKts());
+                    landingLimitsProperties.getLowerThresholdOfCrosswindIls2And3AKt(),
+                    landingLimitsProperties.getUpperThresholdOfCrosswindIls2And3AKt());
 
             case CATEGORY_3B, CATEGORY_3C -> FactorInfluence.HIGH; // The most airports do not support ILS category greater than 3A
         };

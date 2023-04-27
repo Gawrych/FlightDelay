@@ -13,15 +13,16 @@ public class DelayFactorCreatorImpl implements DelayFactorCreator {
 
     private final ResourceBundleMessageSource messageSource;
 
-    // TODO: Create data validation
     @Override
-    public DelayFactor createFactor(FactorName factorName, int value, FactorInfluence influence) {
+    public DelayFactor createFactor(FactorName factorName, int value, String unit, FactorInfluence influence) {
         return DelayFactor.builder()
                 .title(getMessage(factorName.name()))
                 .influenceOnDelay(influence)
                 .value(value)
+                .unit(unit)
                 .build();
     }
+    // TODO: Create data validation
 
     @Override
     public String getMessage(String title) {

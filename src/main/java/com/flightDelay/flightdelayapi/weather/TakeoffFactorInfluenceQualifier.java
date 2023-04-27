@@ -19,12 +19,12 @@ public class TakeoffFactorInfluenceQualifier extends FlightPhaseFactorInfluenceQ
     public FactorInfluence checkCrosswindLimits(IlsCategory ilsCategory, int factorValue) {
         if (ilsCategory.getValue() == IlsCategory.NONPRECISION.getValue()) {
             return calculateRangeForValuesThatShouldBeSmall(factorValue,
-                    takeoffLimitsProperties.getLowerThresholdOfCrosswindKts(),
-                    takeoffLimitsProperties.getUpperThresholdOfCrosswindKts());
+                    takeoffLimitsProperties.getLowerThresholdOfCrosswindKt(),
+                    takeoffLimitsProperties.getUpperThresholdOfCrosswindKt());
         }
 
         return calculateRangeForValuesThatShouldBeSmall(factorValue,
-                takeoffLimitsProperties.getLowerThresholdOfCrosswindInstrumentKts(),
-                takeoffLimitsProperties.getUpperThresholdOfCrosswindInstrumentKts());
+                takeoffLimitsProperties.getLowerThresholdOfCrosswindInstrumentKt(),
+                takeoffLimitsProperties.getUpperThresholdOfCrosswindInstrumentKt());
     }
 }

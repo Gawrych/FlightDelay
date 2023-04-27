@@ -17,6 +17,9 @@ public class DelayFactor {
     @JsonProperty("value")
     private int value;
 
+    @JsonProperty("unit")
+    private String unit;
+
     @JsonProperty("influence_on_delay")
     private FactorInfluence influenceOnDelay;
 }

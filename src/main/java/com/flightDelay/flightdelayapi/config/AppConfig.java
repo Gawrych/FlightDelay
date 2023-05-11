@@ -10,8 +10,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 @Configuration
 @PropertySource("classpath:api/weatherApi.properties")
 @PropertySource("classpath:flightPhasesLimits.properties")
-@PropertySource("classpath:api/apiKeys.properties")
-@PropertySource("classpath:api/weatherApi.properties")
 public class AppConfig {
 
     @Bean

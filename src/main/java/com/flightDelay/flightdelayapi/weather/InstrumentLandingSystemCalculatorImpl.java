@@ -21,7 +21,7 @@ public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingS
 
         List<IlsCategory> ilsCategoriesBasedOnRunway = new ArrayList<>();
 
-        for (RunwayDto runway : airportWeatherDto.runwaysDTO()) {
+        for (RunwayDto runway : airportWeatherDto.getRunwaysDTO()) {
             int cloudBaseFt = getCloudBaseFt(airportWeatherDto, runway.getAverageElevationFt());
 
             Optional<IlsCategory> category = Arrays.stream(IlsCategory.class.getEnumConstants())
@@ -46,9 +46,15 @@ public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingS
         return (rvrFt > rvrThreshold) && (cloudBaseFt > cloudBaseThreshold);
     }
 
+    private int getCloudBaseFt(AirportWeatherDto airportWeatherDto, int elevationFt) {
+        int elevation = UnitConverter.feetToMeters(elevationFt);
+        int cloudBase = runwayWeatherCalculator.calculateCloudBaseAboveRunway(airportWeatherDto, elevation);
+        return UnitConverter.metersToFeet(cloudBase);
+    }
+
     private int getRunwayVisualRange(AirportWeatherDto airportWeatherDto) {
         int runwayVisualRange = runwayWeatherCalculator.calculateRunwayVisualRange(
-                airportWeatherDto.weather().getVisibilityM(), airportWeatherDto.weather().isDay());
+                airportWeatherDto.getVisibility(), airportWeatherDto.isDay());
         return UnitConverter.metersToFeet(runwayVisualRange);
     }
 }

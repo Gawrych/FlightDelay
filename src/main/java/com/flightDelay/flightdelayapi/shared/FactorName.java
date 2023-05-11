@@ -1,6 +1,6 @@
 package com.flightDelay.flightdelayapi.shared;
 
-public enum WeatherFactor {
+public enum FactorName {
     CROSSWIND("kt"),
 
     TAILWIND("kt"),
@@ -13,7 +13,7 @@ public enum WeatherFactor {
 
     private final String unit;
 
-    WeatherFactor(String unit) {
+    FactorName(String unit) {
         this.unit = unit;
     }
 

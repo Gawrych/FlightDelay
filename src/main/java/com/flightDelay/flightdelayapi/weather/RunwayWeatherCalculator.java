@@ -1,8 +1,10 @@
 package com.flightDelay.flightdelayapi.weather;
 
+import com.flightDelay.flightdelayapi.dto.AirportWeatherDto;
+
 public interface RunwayWeatherCalculator {
 
-    int calculateRunwayVisualRange(int visibility, boolean isDay);
+    int calculateRunwayVisualRange(float visibility, boolean isDay);
 
-    int calculateCeilingAboveRunway(float temperature, float dewPoint, int elevation);
+    int calculateCloudBaseAboveRunway(AirportWeatherDto airportWeatherDto, int elevationMeters);
 }

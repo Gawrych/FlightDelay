@@ -1,7 +1,7 @@
 package com.flightDelay.flightdelayapi.weather;
 
 import com.flightDelay.flightdelayapi.shared.FactorInfluence;
-import com.flightDelay.flightdelayapi.shared.WeatherFactor;
+import com.flightDelay.flightdelayapi.shared.FactorName;
 import com.flightDelay.flightdelayapi.shared.IlsCategory;
 import com.flightDelay.flightdelayapi.weather.properties.FlightPhaseProperties;
 import org.springframework.stereotype.Component;
@@ -16,8 +16,8 @@ public abstract class FlightPhaseFactorInfluenceQualifierImpl implements FlightP
     }
 
     @Override
-    public FactorInfluence checkLimits(WeatherFactor weatherFactor, int factorValue, IlsCategory ilsCategory) {
-        return switch (weatherFactor) {
+    public FactorInfluence checkLimits(FactorName factorName, int factorValue, IlsCategory ilsCategory) {
+        return switch (factorName) {
             case CROSSWIND -> checkCrosswindLimits(ilsCategory, factorValue);
             case TAILWIND -> checkTailwindLimits(factorValue);
             case VISIBILITY -> checkVisibilityLimits(factorValue);

@@ -2,7 +2,6 @@ package com.flightDelay.flightdelayapi.DelayFactor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.shared.Flight;
-import com.flightDelay.flightdelayapi.weather.Weather;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -26,12 +25,18 @@ public class DelayFactorController {
         return delayFactorService.getFactorsByHour(flight);
     }
 
-    @PostMapping("/day")
-    public Weather getFactorsToNextDay(@RequestBody @Validated Flight flight,
-                                       @RequestHeader("Accept-Language") String acceptLanguage) {
-        LocaleContextHolder.setLocale(Locale.forLanguageTag(acceptLanguage));
-        return delayFactorService.getFactorsByDay(flight);
-    }
+//    @PostMapping("/day")
+//    public ResponseEntity<?> getFactorsToNextDay(@RequestBody String flightData,
+//                                                       @RequestHeader(value="Accept-Language") String acceptLanguage) {
+//        LocaleContextHolder.setLocale(Locale.forLanguageTag(acceptLanguage));
+//        try {
+//            Flight flightToCheck = objectMapper.readValue(flightData, Flight.class);
+//            List<DelayFactor> factors = delayFactorService.calculateFactors(flightToCheck);
+//            return new ResponseEntity<>("factors", HttpStatus.OK);
+//        } catch (JsonProcessingException e) {
+//            return new ResponseEntity<>("Error processing JSON data " + e, HttpStatus.BAD_REQUEST);
+//        }
+//    }
 //
 //    @PostMapping("/weeks")
 //    public ResponseEntity<?> getFactorsToNext16Days(@RequestBody String flightData,

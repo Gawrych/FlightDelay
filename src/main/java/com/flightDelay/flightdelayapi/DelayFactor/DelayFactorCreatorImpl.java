@@ -1,7 +1,7 @@
 package com.flightDelay.flightdelayapi.DelayFactor;
 
 import com.flightDelay.flightdelayapi.shared.FactorInfluence;
-import com.flightDelay.flightdelayapi.shared.FactorName;
+import com.flightDelay.flightdelayapi.shared.WeatherFactor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -14,9 +14,9 @@ public class DelayFactorCreatorImpl implements DelayFactorCreator {
     private final ResourceBundleMessageSource messageSource;
 
     @Override
-    public DelayFactor createFactor(FactorName factorName, int value, String unit, FactorInfluence influence) {
+    public DelayFactor createFactor(WeatherFactor weatherFactor, int value, String unit, FactorInfluence influence) {
         return DelayFactor.builder()
-                .title(getMessage(factorName.name()))
+                .title(getMessage(weatherFactor.name()))
                 .influenceOnDelay(influence)
                 .value(value)
                 .unit(unit)

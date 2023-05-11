@@ -20,7 +20,7 @@ class RunwayWeatherCalculatorTestImpl implements RunwayWeatherCalculator {
     }
 
     @Override
-    public int calculateCloudBaseAboveRunway(float temperature, float dewPoint, int elevation) {
+    public int calculateCeilingAboveRunway(float temperature, float dewPoint, int elevation) {
         return UnitConverter.feetToMeters(cloudBase);
     }
 }

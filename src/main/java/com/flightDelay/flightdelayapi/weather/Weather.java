@@ -1,47 +1,26 @@
 package com.flightDelay.flightdelayapi.weather;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-@Builder
-@NoArgsConstructor
+@SuperBuilder
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
 public class Weather {
 
-    // TODO: Add unit for every condition
-
-    @JsonProperty("time")
     private String time;
 
-    @JsonProperty("is_day")
     private boolean isDay;
 
-    @JsonProperty("temperature_2m")
-    private float temperature;
-
-    @JsonProperty("dewpoint_2m")
-    private float dewPoint;
-
-    @JsonProperty("rain")
     private float rain;
 
-    @JsonProperty("cloudcover")
-    private int cloudCover;
+    private int visibilityM;
 
-    @JsonProperty("visibility")
-    private float visibility;
+    private float windSpeedKn;
 
-    @JsonProperty("windspeed_10m")
-    private float windSpeed;
-
-    @JsonProperty("winddirection_10m")
     private int windDirection;
-
-    @JsonProperty("windgusts_10m")
-    private float windGusts;
 }
+
 
 

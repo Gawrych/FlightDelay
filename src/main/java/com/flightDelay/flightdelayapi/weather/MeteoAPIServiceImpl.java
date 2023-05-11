@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
 import com.flightDelay.flightdelayapi.shared.DateProcessor;
+import com.flightDelay.flightdelayapi.weather.meteo.MeteoMapper;
+import com.flightDelay.flightdelayapi.weather.meteo.MeteoWeather;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,9 @@ import java.net.URL;
 
 import static com.flightDelay.flightdelayapi.shared.DateProcessorImpl.WEATHER_API_PATTERN;
 
-@Service
+@Service("meteoApiServiceImpl")
 @RequiredArgsConstructor
-public class WeatherAPIServiceImpl implements WeatherAPIService {
+public class MeteoAPIServiceImpl implements MeteoAPIService {
 
     @Value("${api.openmeteo.base}")
     private String baseUrl;
@@ -25,18 +27,19 @@ public class WeatherAPIServiceImpl implements WeatherAPIService {
 
     private final AirportService airportService;
 
-    private final WeatherMapper weatherMapper;
+    private final MeteoMapper meteoMapper;
 
     private final DateProcessor dateProcessor;
 
-    public Weather getWeather(String airportIdent, long date) {
+
+    public MeteoWeather getWeather(String airportIdent, long date) {
         String populatedURL = populateBaseUrlWithVariables(airportIdent, date);
         int hour = dateProcessor.getHour(date);
 
         try {
             URL url = new URL(populatedURL);
             JsonNode rootNode = objectMapper.readTree(url);
-            return weatherMapper.mapFrom(rootNode, hour);
+            return meteoMapper.mapFromMeteoJson(rootNode, hour);
 
         } catch (IOException e) {
             // TODO: Create custom exception

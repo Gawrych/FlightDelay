@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class RunwayWeatherCalculatorImpl implements RunwayWeatherCalculator {
 
     @Override
-    public int calculateRunwayVisualRange(float visibility, boolean isDay) {
+    public int calculateRunwayVisualRange(int visibility, boolean isDay) {
         double multiplier = 1.6;
         if (isDay) {
             multiplier = 1.3;
@@ -18,8 +18,7 @@ public class RunwayWeatherCalculatorImpl implements RunwayWeatherCalculator {
     }
 
     @Override
-    public int calculateCloudBaseAboveRunway(AirportWeatherDto airportWeatherDto, int elevation) {
-        return Math.round(
-                (airportWeatherDto.getTemperature() - airportWeatherDto.getDewPoint()) / 10 * 1247 + elevation);
+    public int calculateCeilingAboveRunway(float temperature, float dewPoint, int elevation) {
+        return Math.round((temperature - dewPoint) / 10 * 1247 + elevation);
     }
 }

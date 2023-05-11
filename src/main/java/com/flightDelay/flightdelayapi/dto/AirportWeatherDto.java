@@ -1,36 +1,22 @@
 package com.flightDelay.flightdelayapi.dto;
 
 import com.flightDelay.flightdelayapi.shared.FlightPhase;
-import lombok.*;
+import com.flightDelay.flightdelayapi.weather.Weather;
 
 import java.util.List;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
-public class AirportWeatherDto {
 
-    private String airportIdent;
+public record AirportWeatherDto (
 
-    private boolean isDay;
+        String airportIdent,
 
-    private float temperature;
+        String time,
 
-    private float dewPoint;
+        Weather weather,
 
-    private float visibility;
+        int ceilingFt,
 
-    private float windSpeed;
+        FlightPhase phase,
 
-    private int windDirection;
+        List<RunwayDto> runwaysDTO) {}
 
-    private float windGusts;
-
-    private float rain;
-
-    private int elevationMeters;
-
-    private FlightPhase phase;
-
-    private List<RunwayDto> runwaysDTO;
-}

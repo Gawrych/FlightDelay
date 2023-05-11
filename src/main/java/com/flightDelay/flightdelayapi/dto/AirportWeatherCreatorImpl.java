@@ -6,19 +6,25 @@ import com.flightDelay.flightdelayapi.shared.Flight;
 import com.flightDelay.flightdelayapi.runway.Runway;
 import com.flightDelay.flightdelayapi.runway.RunwayService;
 import com.flightDelay.flightdelayapi.shared.UnitConverter;
-import com.flightDelay.flightdelayapi.weather.Weather;
-import com.flightDelay.flightdelayapi.weather.WeatherAPIService;
+import com.flightDelay.flightdelayapi.tafApi.TafApiService;
+import com.flightDelay.flightdelayapi.weather.RunwayWeatherCalculator;
+import com.flightDelay.flightdelayapi.weather.MeteoAPIService;
+import com.flightDelay.flightdelayapi.weather.meteo.MeteoWeather;
+import com.flightDelay.flightdelayapi.weather.taf.TafWeather;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class AirportWeatherCreatorImpl implements AirportWeatherCreator {
 
-    private final WeatherAPIService weatherAPIService;
+    private final MeteoAPIService meteoAPIService;
+
+    private final TafApiService tafApiService;
 
     private final RunwayService runwayService;
 
@@ -28,12 +34,13 @@ public class AirportWeatherCreatorImpl implements AirportWeatherCreator {
 
     private final AirportWeatherMapper airportWeatherMapper;
 
+    private final RunwayWeatherCalculator runwayWeatherCalculator;
+
     public AirportWeatherDto mapFrom(Flight flight) {
         Airport airport = airportService.findByAirportIdent(flight.airportIdent());
-        int elevationMeters = UnitConverter.feetToMeters(airport.getElevationFt());
+        int elevationM = UnitConverter.feetToMeters(airport.getElevationFt());
 
         List<Runway> runways = runwayService.findByAirportIdent(flight.airportIdent());
-        Weather weather = weatherAPIService.getWeather(flight.airportIdent(), flight.date().getTime());
 
         List<RunwayDto> runwaysDto = runways.stream()
                 .map(runway -> modelMapper.map(runway, RunwayDto.class)).toList();
@@ -41,6 +48,36 @@ public class AirportWeatherCreatorImpl implements AirportWeatherCreator {
         runwaysDto.forEach(runwayDto ->
                 runwayDto.setAverageElevationFt((runwayDto.getHeElevationFt() + runwayDto.getLeElevationFt()) / 2));
 
-        return airportWeatherMapper.mapFrom(weather, runwaysDto, flight, elevationMeters);
+        MeteoWeather weather = meteoAPIService.getWeather(flight.airportIdent(), flight.date().getTime());
+
+        int ceilingFt = getCeilingFt(weather.getTemperature(), weather.getDewPoint(), elevationM);
+
+        return airportWeatherMapper.mapFrom(weather, runwaysDto, flight, ceilingFt);
+    }
+
+    @Override
+    public List<AirportWeatherDto> mapAllDay(Flight flight) {
+        Airport airport = airportService.findByAirportIdent(flight.airportIdent());
+        int elevationM = UnitConverter.feetToMeters(airport.getElevationFt());
+
+        List<Runway> runways = runwayService.findByAirportIdent(flight.airportIdent());
+
+        List<RunwayDto> runwaysDto = runways.stream()
+                .map(runway -> modelMapper.map(runway, RunwayDto.class)).toList();
+
+        runwaysDto.forEach(runwayDto ->
+                runwayDto.setAverageElevationFt((runwayDto.getHeElevationFt() + runwayDto.getLeElevationFt()) / 2));
+
+        List<TafWeather> weatherForEachHour = tafApiService.getWeather(flight.airportIdent());
+
+        return weatherForEachHour.stream().map(tafWeather ->  airportWeatherMapper
+                .mapFrom(tafWeather, runwaysDto, flight, tafWeather.getCeilingFt()))
+                .collect(Collectors.toList());
+    }
+
+    private int getCeilingFt(float temperature, float dewPoint, int elevationFt) {
+        int elevation = UnitConverter.feetToMeters(elevationFt);
+        int ceiling = runwayWeatherCalculator.calculateCeilingAboveRunway(temperature, dewPoint, elevation);
+        return UnitConverter.metersToFeet(ceiling);
     }
 }

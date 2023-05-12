@@ -1,6 +1,6 @@
 package com.flightDelay.flightdelayapi.weatherFactors;
 
-import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
+import com.flightDelay.flightdelayapi.weatherFactors.dtos.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.runway.RunwayDto;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.IlsCategory;
 import com.flightDelay.flightdelayapi.weatherFactors.calculators.InstrumentLandingSystemCalculatorImpl;
@@ -28,7 +28,8 @@ class InstrumentLandingSystemCalculatorImplTest {
         runwayDto.setId(1L);
 
         weatherCalculatorTest = new RunwayWeatherCalculatorTestImpl();
-        airportWeatherDto = new AirportWeatherDto(null, null, 0, null, null);
+        airportWeatherDto = new AirportWeatherDto();
+        airportWeatherDto.setRunwaysDTO(List.of(runwayDto));
     }
 
     @Test

@@ -1,6 +1,6 @@
 package com.flightDelay.flightdelayapi.weatherFactors.calculators;
 
-import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
+import com.flightDelay.flightdelayapi.weatherFactors.dtos.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.runway.RunwayDto;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -30,12 +30,12 @@ public class WindCalculatorImpl implements WindCalculator {
     }
 
     private int calculateWindSpeedByRadian(AirportWeatherDto airportWeatherDto, WindFormula windFormula) {
-        int windDirection = airportWeatherDto.weather().getWindDirection();
-        float windSpeed = airportWeatherDto.weather().getWindSpeedKn();
+        int windDirection = airportWeatherDto.getWeather().getWindDirection();
+        float windSpeed = airportWeatherDto.getWeather().getWindSpeedKn();
 
         List<Integer> crosswindSpeedByRunway = new ArrayList<>();
 
-        for (RunwayDto runwayDto : airportWeatherDto.runwaysDTO()) {
+        for (RunwayDto runwayDto : airportWeatherDto.getRunwaysDTO()) {
             int heHeadingDegResult = BigDecimal.valueOf(
                             windFormula.formula(windSpeed, windDirection, runwayDto.getHeHeadingDegT()))
                     .setScale(0, RoundingMode.UP)

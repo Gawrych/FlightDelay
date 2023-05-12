@@ -1,5 +1,5 @@
 package com.flightDelay.flightdelayapi.weatherFactors.calculators;
-import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
+import com.flightDelay.flightdelayapi.weatherFactors.dtos.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.runway.RunwayDto;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.IlsCategory;
 import com.flightDelay.flightdelayapi.shared.UnitConverter;
@@ -21,7 +21,7 @@ public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingS
 
         List<IlsCategory> ilsCategoriesBasedOnRunway = new ArrayList<>();
 
-        for (RunwayDto runway : airportWeatherDto.runwaysDTO()) {
+        for (RunwayDto runway : airportWeatherDto.getRunwaysDTO()) {
             int cloudBaseFt = getCloudBaseFt(airportWeatherDto, runway.getAverageElevationFt());
 
             Optional<IlsCategory> category = Arrays.stream(IlsCategory.class.getEnumConstants())
@@ -54,7 +54,7 @@ public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingS
 
     private int getRunwayVisualRange(AirportWeatherDto airportWeatherDto) {
         int runwayVisualRange = runwayWeatherCalculator.calculateRunwayVisualRange(
-                airportWeatherDto.weather().getVisibilityM(), airportWeatherDto.weather().isDay());
+                airportWeatherDto.getWeather().getVisibilityM(), airportWeatherDto.getWeather().isDay());
         return UnitConverter.metersToFeet(runwayVisualRange);
     }
 }

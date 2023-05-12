@@ -7,7 +7,7 @@ import com.flightDelay.flightdelayapi.shared.Flight;
 import com.flightDelay.flightdelayapi.runway.Runway;
 import com.flightDelay.flightdelayapi.runway.RunwayService;
 import com.flightDelay.flightdelayapi.shared.UnitConverter;
-import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
+import com.flightDelay.flightdelayapi.weatherFactors.dtos.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.weatherFactors.models.Weather;
 import com.flightDelay.flightdelayapi.weatherFactors.mappers.AirportWeatherMapper;
 import com.flightDelay.flightdelayapi.weatherFactors.services.WeatherAPIService;

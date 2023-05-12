@@ -2,7 +2,7 @@ package com.flightDelay.flightdelayapi.weatherFactors.services;
 
 import com.flightDelay.flightdelayapi.delayFactor.DelayFactor;
 import com.flightDelay.flightdelayapi.delayFactor.DelayFactorCreator;
-import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
+import com.flightDelay.flightdelayapi.weatherFactors.dtos.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
 import com.flightDelay.flightdelayapi.shared.enums.FactorInfluence;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.FactorName;
@@ -50,7 +50,7 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
             FactorName factorName = condition.getKey();
             int value = condition.getValue();
 
-            FactorInfluence factorInfluence = checkPhaseLimit(ilsCategory, airportWeatherDto.phase(), factorName, value);
+            FactorInfluence factorInfluence = checkPhaseLimit(ilsCategory, airportWeatherDto.getPhase(), factorName, value);
             delayFactors.add(delayFactorCreator.createFactor(factorName, value, factorName.getUnit(), factorInfluence));
         }
 
@@ -61,9 +61,9 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
         return Map.of(
                 CROSSWIND, windCalculator.getCrossWind(airportWeatherDto),
                 TAILWIND, windCalculator.getTailwind(airportWeatherDto),
-                VISIBILITY, Math.round(airportWeatherDto.weather().getVisibilityM()),
-                RAIN, Math.round(airportWeatherDto.weather().getRainMm()),
-                CLOUDBASE, runwayWeatherCalculator.calculateCloudBase(airportWeatherDto, airportWeatherDto.elevationM()));
+                VISIBILITY, Math.round(airportWeatherDto.getWeather().getVisibilityM()),
+                RAIN, Math.round(airportWeatherDto.getWeather().getRainMm()),
+                CLOUDBASE, runwayWeatherCalculator.calculateCloudBase(airportWeatherDto, airportWeatherDto.getElevationM()));
     }
 
     private FactorInfluence checkPhaseLimit(IlsCategory ilsCategory, FlightPhase phase, FactorName name, int value) {

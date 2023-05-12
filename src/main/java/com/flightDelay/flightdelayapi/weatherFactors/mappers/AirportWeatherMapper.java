@@ -1,6 +1,6 @@
 package com.flightDelay.flightdelayapi.weatherFactors.mappers;
 
-import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
+import com.flightDelay.flightdelayapi.weatherFactors.dtos.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.runway.RunwayDto;
 import com.flightDelay.flightdelayapi.shared.Flight;
 import com.flightDelay.flightdelayapi.weatherFactors.models.Weather;

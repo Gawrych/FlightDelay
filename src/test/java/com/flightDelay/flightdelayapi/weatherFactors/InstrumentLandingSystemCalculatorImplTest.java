@@ -28,7 +28,8 @@ class InstrumentLandingSystemCalculatorImplTest {
         runwayDto.setId(1L);
 
         weatherCalculatorTest = new RunwayWeatherCalculatorTestImpl();
-        airportWeatherDto = new AirportWeatherDto(null, null, 0, null, null);
+        airportWeatherDto = new AirportWeatherDto();
+        airportWeatherDto.setRunwaysDTO(List.of(runwayDto));
     }
 
     @Test

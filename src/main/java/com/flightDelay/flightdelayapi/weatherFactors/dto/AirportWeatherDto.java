@@ -3,20 +3,24 @@ package com.flightDelay.flightdelayapi.weatherFactors.dto;
 import com.flightDelay.flightdelayapi.runway.RunwayDto;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
 import com.flightDelay.flightdelayapi.weatherFactors.models.Weather;
+import lombok.*;
 
 import java.util.List;
 
-public record AirportWeatherDto (
+@Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class AirportWeatherDto {
 
-    String airportIdent,
+    private String airportIdent;
 
-    Weather weather,
+    private Weather weather;
 
-    int elevationM,
+    private int elevationM;
 
-    FlightPhase phase,
+    private FlightPhase phase;
 
-    List<RunwayDto> runwaysDTO
-
-) {}
-
+    private List<RunwayDto> runwaysDTO;
+}

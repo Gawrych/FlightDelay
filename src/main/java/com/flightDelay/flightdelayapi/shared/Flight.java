@@ -1,13 +1,14 @@
 package com.flightDelay.flightdelayapi.shared;
 
-import com.flightDelay.flightdelayapi.enumValidation.EnumValidator;
+import com.flightDelay.flightdelayapi.shared.validators.EnumValidator;
+import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import lombok.*;
 
 import java.util.Date;
 
-import static com.flightDelay.flightdelayapi.shared.DateProcessorImpl.DATE_WITH_TIME_PATTERN;
+import static com.flightDelay.flightdelayapi.dateProcessor.DateProcessorImpl.DATE_WITH_TIME_PATTERN;
 
 public record Flight (
         @NonNull

@@ -1,6 +1,6 @@
 package com.flightDelay.flightdelayapi.config;
 
-import com.flightDelay.flightdelayapi.enumValidation.EnumValidatorConstraint;
+import com.flightDelay.flightdelayapi.shared.validators.EnumValidatorConstraint;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

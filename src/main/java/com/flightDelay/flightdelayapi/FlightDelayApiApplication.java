@@ -1,7 +1,7 @@
 package com.flightDelay.flightdelayapi;
 
-import com.flightDelay.flightdelayapi.weather.properties.LandingLimitsProperties;
-import com.flightDelay.flightdelayapi.weather.properties.TakeoffLimitsProperties;
+import com.flightDelay.flightdelayapi.weatherFactors.properties.LandingLimitsProperties;
+import com.flightDelay.flightdelayapi.weatherFactors.properties.TakeoffLimitsProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

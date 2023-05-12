@@ -31,12 +31,12 @@ public class WindCalculatorImpl implements WindCalculator {
     }
 
     private int calculateWindSpeedByRadian(AirportWeatherDto airportWeatherDto, WindFormula windFormula) {
-        int windDirection = airportWeatherDto.getWindDirection();
-        float windSpeed = airportWeatherDto.getWindSpeed();
+        int windDirection = airportWeatherDto.weather().getWindDirection();
+        float windSpeed = airportWeatherDto.weather().getWindSpeedKn();
 
         List<Integer> crosswindSpeedByRunway = new ArrayList<>();
 
-        for (RunwayDto runwayDto : airportWeatherDto.getRunwaysDTO()) {
+        for (RunwayDto runwayDto : airportWeatherDto.runwaysDTO()) {
             int heHeadingDegResult = BigDecimal.valueOf(
                             windFormula.formula(windSpeed, windDirection, runwayDto.getHeHeadingDegT()))
                     .setScale(0, RoundingMode.UP)

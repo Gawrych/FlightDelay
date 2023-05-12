@@ -18,8 +18,8 @@ public class RunwayWeatherCalculatorImpl implements RunwayWeatherCalculator {
     }
 
     @Override
-    public int calculateCloudBaseAboveRunway(AirportWeatherDto airportWeatherDto, int elevation) {
+    public int calculateCloudBase(AirportWeatherDto airportWeatherDto, int elevation) {
         return Math.round(
-                (airportWeatherDto.getTemperature() - airportWeatherDto.getDewPoint()) / 10 * 1247 + elevation);
+                (airportWeatherDto.weather().getTemperature() - airportWeatherDto.weather().getDewPoint()) / 10 * 1247 + elevation);
     }
 }

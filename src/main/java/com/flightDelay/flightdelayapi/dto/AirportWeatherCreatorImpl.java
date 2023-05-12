@@ -28,19 +28,56 @@ public class AirportWeatherCreatorImpl implements AirportWeatherCreator {
 
     private final AirportWeatherMapper airportWeatherMapper;
 
-    public AirportWeatherDto mapFrom(Flight flight) {
-        Airport airport = airportService.findByAirportIdent(flight.airportIdent());
-        int elevationMeters = UnitConverter.feetToMeters(airport.getElevationFt());
+    @Override
+    public AirportWeatherDto mapBySingleHour(Flight flight) {
+        String airportIdent = flight.airportIdent();
 
-        List<Runway> runways = runwayService.findByAirportIdent(flight.airportIdent());
-        Weather weather = weatherAPIService.getWeather(flight.airportIdent(), flight.date().getTime());
+        checkIfAirportFromUserIsInDatabase(airportIdent);
+
+        int elevationM = getElevationM(airportIdent);
+        List<RunwayDto> runwaysDto = calculateAverageElevationFt(airportIdent);
+
+        Weather weather = weatherAPIService.getWeather(airportIdent, flight.date());
+
+        return airportWeatherMapper.mapFrom(weather, runwaysDto, flight, elevationM);
+    }
+
+    @Override
+    public List<AirportWeatherDto> mapAllNextDayInPeriods(Flight flight) {
+        String airportIdent = flight.airportIdent();
+
+        checkIfAirportFromUserIsInDatabase(airportIdent);
+
+        int elevationM = getElevationM(airportIdent);
+        List<RunwayDto> runwaysDto = calculateAverageElevationFt(airportIdent);
+
+        return weatherAPIService.getAllNextDayWeatherInPeriods(airportIdent).stream()
+                .map(weather -> airportWeatherMapper.mapFrom(weather, runwaysDto, flight, elevationM))
+                .toList();
+    }
+
+    private void checkIfAirportFromUserIsInDatabase(String airportIdent) {
+        if (!airportService.existsByAirportIdent(airportIdent)) {
+            // TODO: Create custom exception
+            throw new RuntimeException("Airport with icao code: " + airportIdent + " not found");
+        }
+    }
+
+    private int getElevationM(String airportIdent) {
+        Airport airport = airportService.findByAirportIdent(airportIdent);
+        return UnitConverter.feetToMeters(airport.getElevationFt());
+    }
+
+    private List<RunwayDto> calculateAverageElevationFt(String airportIdent) {
+        List<Runway> runways = runwayService.findByAirportIdent(airportIdent);
 
         List<RunwayDto> runwaysDto = runways.stream()
-                .map(runway -> modelMapper.map(runway, RunwayDto.class)).toList();
+                .map(runway -> modelMapper.map(runway, RunwayDto.class))
+                .toList();
 
         runwaysDto.forEach(runwayDto ->
                 runwayDto.setAverageElevationFt((runwayDto.getHeElevationFt() + runwayDto.getLeElevationFt()) / 2));
 
-        return airportWeatherMapper.mapFrom(weather, runwaysDto, flight, elevationMeters);
+        return runwaysDto;
     }
 }

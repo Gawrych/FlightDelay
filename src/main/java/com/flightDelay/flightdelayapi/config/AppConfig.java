@@ -10,6 +10,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 @Configuration
 @PropertySource("classpath:api/weatherApi.properties")
 @PropertySource("classpath:flightPhasesLimits.properties")
+@PropertySource("classpath:weatherSettings.properties")
 public class AppConfig {
 
     @Bean
@@ -30,5 +31,4 @@ public class AppConfig {
     public EnumValidatorConstraint enumValidator() {
         return new EnumValidatorConstraint();
     }
-
 }

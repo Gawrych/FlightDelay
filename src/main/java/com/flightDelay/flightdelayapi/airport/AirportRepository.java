@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 public interface AirportRepository extends ListCrudRepository<Airport, Long> {
 
     Airport findByAirportIdent(String airportIdent);
+
+    boolean existsByAirportIdent(String airportIdent);
 }

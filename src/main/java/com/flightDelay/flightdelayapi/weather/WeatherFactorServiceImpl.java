@@ -46,7 +46,7 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
             FactorName factorName = condition.getKey();
             int value = condition.getValue();
 
-            FactorInfluence factorInfluence = checkPhaseLimit(ilsCategory, airportWeatherDto.getPhase(), factorName, value);
+            FactorInfluence factorInfluence = checkPhaseLimit(ilsCategory, airportWeatherDto.phase(), factorName, value);
             delayFactors.add(delayFactorCreator.createFactor(factorName, value, factorName.getUnit(), factorInfluence));
         }
 
@@ -57,10 +57,9 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
         return Map.of(
                 CROSSWIND, windCalculator.getCrossWind(airportWeatherDto),
                 TAILWIND, windCalculator.getTailwind(airportWeatherDto),
-                VISIBILITY, Math.round(airportWeatherDto.getVisibility()),
-                RAIN, Math.round(airportWeatherDto.getRain()),
-                CLOUDBASE, runwayWeatherCalculator
-                        .calculateCloudBaseAboveRunway(airportWeatherDto, airportWeatherDto.getElevationMeters()));
+                VISIBILITY, Math.round(airportWeatherDto.weather().getVisibilityM()),
+                RAIN, Math.round(airportWeatherDto.weather().getRainMm()),
+                CLOUDBASE, runwayWeatherCalculator.calculateCloudBase(airportWeatherDto, airportWeatherDto.elevationM()));
     }
 
     private FactorInfluence checkPhaseLimit(IlsCategory ilsCategory, FlightPhase phase, FactorName name, int value) {

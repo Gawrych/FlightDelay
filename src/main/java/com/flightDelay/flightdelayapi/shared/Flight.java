@@ -1,6 +1,7 @@
 package com.flightDelay.flightdelayapi.shared;
 
 import com.flightDelay.flightdelayapi.enumValidation.EnumValidator;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import lombok.*;
 
@@ -10,6 +11,7 @@ import static com.flightDelay.flightdelayapi.shared.DateProcessorImpl.DATE_WITH_
 
 public record Flight (
         @NonNull
+        @Length(min = 4, max = 4)
         String airportIdent,
 
         @NonNull

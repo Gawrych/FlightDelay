@@ -5,4 +5,6 @@ public interface AirportService {
     Airport findByAirportIdent(String airportIdent);
 
     void save(Airport airport);
+
+    boolean existsByAirportIdent(String airportIdent);
 }

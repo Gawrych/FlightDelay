@@ -11,8 +11,6 @@ import lombok.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Weather {
 
-    // TODO: Add unit for every condition
-
     @JsonProperty("time")
     private String time;
 
@@ -26,22 +24,16 @@ public class Weather {
     private float dewPoint;
 
     @JsonProperty("rain")
-    private float rain;
-
-    @JsonProperty("cloudcover")
-    private int cloudCover;
+    private float rainMm;
 
     @JsonProperty("visibility")
-    private float visibility;
+    private float visibilityM;
 
     @JsonProperty("windspeed_10m")
-    private float windSpeed;
+    private float windSpeedKn;
 
     @JsonProperty("winddirection_10m")
     private int windDirection;
-
-    @JsonProperty("windgusts_10m")
-    private float windGusts;
 }
 
 

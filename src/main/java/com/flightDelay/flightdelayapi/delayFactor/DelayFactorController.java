@@ -12,7 +12,7 @@ import java.util.Locale;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/factors")
+@RequestMapping("/api/v1/factors")
 public class DelayFactorController {
 
     private final ObjectMapper objectMapper;

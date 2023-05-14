@@ -3,10 +3,10 @@ package com.flightDelay.flightdelayapi.airport;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface AirportRepository extends ListCrudRepository<Airport, Long> {
 
-    Airport findByAirportIdent(String airportIdent);
-
-    boolean existsByAirportIdent(String airportIdent);
+    Optional<Airport> findByAirportIdent(String airportIdent);
 }

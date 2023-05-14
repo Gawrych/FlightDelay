@@ -15,7 +15,6 @@ import java.util.Locale;
 @RequestMapping("/api/v1/factors")
 public class DelayFactorController {
 
-    private final ObjectMapper objectMapper;
     private final DelayFactorService delayFactorService;
 
     @PostMapping("/hour")

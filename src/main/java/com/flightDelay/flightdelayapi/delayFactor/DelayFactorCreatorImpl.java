@@ -14,19 +14,17 @@ public class DelayFactorCreatorImpl implements DelayFactorCreator {
     private final ResourceBundleMessageSource messageSource;
 
     @Override
-    public DelayFactor createFactor(FactorName factorName, int value, String unit, FactorInfluence influence) {
+    public DelayFactor createFactor(FactorName factorName, int value, FactorInfluence influence) {
         return DelayFactor.builder()
-                .title(getMessage(factorName.name()))
+                .title(getMessage(factorName))
+                .unit(factorName.getUnit())
                 .influenceOnDelay(influence)
                 .value(value)
-                .unit(unit)
                 .build();
     }
-    // TODO: Create data validation
 
     @Override
-    public String getMessage(String title) {
-        // TODO: Handle the exception
-        return messageSource.getMessage(title, null, LocaleContextHolder.getLocale());
+    public String getMessage(FactorName factorName) {
+        return messageSource.getMessage(factorName.name(), null, LocaleContextHolder.getLocale());
     }
 }

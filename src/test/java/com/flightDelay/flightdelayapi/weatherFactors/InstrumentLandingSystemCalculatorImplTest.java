@@ -1,9 +1,9 @@
 package com.flightDelay.flightdelayapi.weatherFactors;
 
-import com.flightDelay.flightdelayapi.weatherFactors.dtos.AirportWeatherDto;
+import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.runway.RunwayDto;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.IlsCategory;
-import com.flightDelay.flightdelayapi.weatherFactors.calculators.InstrumentLandingSystemCalculatorImpl;
+import com.flightDelay.flightdelayapi.weatherFactors.calculator.InstrumentLandingSystemCalculatorImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

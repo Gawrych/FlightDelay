@@ -1,5 +1,6 @@
 package com.flightDelay.flightdelayapi.airport;
 
+import com.flightDelay.flightdelayapi.shared.exception.AirportNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,7 @@ public class AirportServiceImpl implements AirportService {
 
     @Override
     public Airport findByAirportIdent(String airportIdent) {
-        return airportRepository.findByAirportIdent(airportIdent);
-    }
-
-    @Override
-    public boolean existsByAirportIdent(String airportIdent) {
-        return airportRepository.existsByAirportIdent(airportIdent);
+        return airportRepository.findByAirportIdent(airportIdent)
+                .orElseThrow(() -> new AirportNotFoundException(airportIdent));
     }
 }

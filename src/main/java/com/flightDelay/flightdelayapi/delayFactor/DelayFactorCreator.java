@@ -5,7 +5,7 @@ import com.flightDelay.flightdelayapi.weatherFactors.enums.FactorName;
 
 public interface DelayFactorCreator {
 
-    DelayFactor createFactor(FactorName factorName, int value, String unit, FactorInfluence influence);
+    DelayFactor createFactor(FactorName factorName, int value, FactorInfluence influence);
 
-    String getMessage(String title);
+    String getMessage(FactorName factorName);
 }

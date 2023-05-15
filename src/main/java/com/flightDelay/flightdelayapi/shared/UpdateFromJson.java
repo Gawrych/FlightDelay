@@ -4,5 +4,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface UpdateFromJson {
 
-    ResponseEntity<String> updateFromJson(String newDataInJsonString);
+    String updateFromJson(String newDataInJsonString);
 }

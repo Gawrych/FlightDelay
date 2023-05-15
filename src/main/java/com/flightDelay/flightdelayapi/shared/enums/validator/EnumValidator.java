@@ -18,7 +18,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface EnumValidator {
     Class<? extends Enum<?>> enumClass();
 
-    String message() default "api.error.message.incorrectEnumType";
+    String message() default "error.message.incorrectEnumType";
 
     Class<?>[] groups() default {};
 

@@ -12,12 +12,13 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 @PropertySource("classpath:flightPhasesLimits.properties")
 @PropertySource("classpath:weatherSettings.properties")
 @PropertySource("classpath:dateAndTimePatterns.properties")
+@PropertySource("classpath:importDataFromFile.properties")
 public class AppConfig {
 
     @Bean
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
-        resourceBundleMessageSource.setBasenames("lang/factors", "lang/api_error_messages");
+        resourceBundleMessageSource.setBasenames("lang/factors", "lang/error_messages", "lang/messages");
         resourceBundleMessageSource.setDefaultEncoding("UTF-8");
         resourceBundleMessageSource.setCacheSeconds(600);
         return resourceBundleMessageSource;

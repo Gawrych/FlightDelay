@@ -5,6 +5,6 @@ import com.flightDelay.flightdelayapi.shared.exception.LackOfCrucialDataExceptio
 public class WeatherApiConnectionFailedException extends LackOfCrucialDataException {
 
     public WeatherApiConnectionFailedException() {
-        super("api.error.message.connectionWithWeatherApiFailed", new Object[]{});
+        super("error.message.connectionWithWeatherApiFailed", new Object[]{});
     }
 }

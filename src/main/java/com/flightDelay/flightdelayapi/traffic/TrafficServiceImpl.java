@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.AirportService;
+import com.flightDelay.flightdelayapi.arrivalDelay.ArrivalDelayServiceImpl;
+import com.flightDelay.flightdelayapi.shared.exception.importData.ProcessingJsonDataFailedException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,15 +24,17 @@ public class TrafficServiceImpl implements TrafficService {
 
     @Override
     @Transactional
-    public ResponseEntity<String> updateFromJson(String newDataInJsonString) {
+    public String updateFromJson(String newDataInJsonString) {
         try {
             TypeReference<List<Traffic>> typeReference = new TypeReference<>(){};
             List<Traffic> trafficReports = objectMapper.readValue(newDataInJsonString, typeReference);
             trafficReports.forEach(this::save);
+
         } catch (JsonProcessingException e) {
-            return new ResponseEntity<>("Error processing JSON data " + e, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ProcessingJsonDataFailedException(ArrivalDelayServiceImpl.class.getName());
         }
-        return new ResponseEntity<>("New data has been added to the database", HttpStatus.CREATED);
+
+        return newDataInJsonString;
     }
 
     @Override

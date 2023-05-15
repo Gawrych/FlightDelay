@@ -1,6 +1,6 @@
 package com.flightDelay.flightdelayapi.airport;
 
-import com.flightDelay.flightdelayapi.shared.exception.AirportNotFoundException;
+import com.flightDelay.flightdelayapi.shared.exception.resource.AirportNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

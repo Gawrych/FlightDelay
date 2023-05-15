@@ -1,5 +1,8 @@
 package com.flightDelay.flightdelayapi.shared.exception;
 
+import com.flightDelay.flightdelayapi.shared.exception.importData.JsonFileImportException;
+import com.flightDelay.flightdelayapi.shared.exception.request.RequestValidationException;
+import com.flightDelay.flightdelayapi.shared.exception.resource.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -21,8 +24,8 @@ public class ApiExceptionHandler {
     private final ResourceBundleMessageSource messageSource;
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiError> handleException(ResourceNotFoundException exception,
-                                                    HttpServletRequest request) {
+    public ResponseEntity<ApiError> handleNotFoundException(CustomRuntimeException exception,
+                                                            HttpServletRequest request) {
         return getApiErrorResponseEntity(
                 exception,
                 request,
@@ -32,8 +35,8 @@ public class ApiExceptionHandler {
 
 
     @ExceptionHandler(RequestValidationException.class)
-    public ResponseEntity<ApiError> handleException(RequestValidationException exception,
-                                                    HttpServletRequest request) {
+    public ResponseEntity<ApiError> handleBadRequestException(CustomRuntimeException exception,
+                                                              HttpServletRequest request) {
         return getApiErrorResponseEntity(
                 exception,
                 request,
@@ -41,9 +44,9 @@ public class ApiExceptionHandler {
                 getLangMessage(exception));
     }
 
-    @ExceptionHandler(LackOfCrucialDataException.class)
-    public ResponseEntity<ApiError> handleException(LackOfCrucialDataException exception,
-                                                    HttpServletRequest request) {
+    @ExceptionHandler({LackOfCrucialDataException.class, JsonFileImportException.class})
+    public ResponseEntity<ApiError> handleInternalServerErrorException(CustomRuntimeException exception,
+                                                                       HttpServletRequest request) {
         return getApiErrorResponseEntity(
                 exception,
                 request,

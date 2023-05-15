@@ -5,6 +5,6 @@ import com.flightDelay.flightdelayapi.shared.exception.LackOfCrucialDataExceptio
 public class InstrumentLandingSystemCalculationFailedException extends LackOfCrucialDataException {
 
     public InstrumentLandingSystemCalculationFailedException() {
-        super("api.error.message.failedToCalculateInstrumentLandingSystem", new Object[]{});
+        super("error.message.failedToCalculateInstrumentLandingSystem", new Object[]{});
     }
 }

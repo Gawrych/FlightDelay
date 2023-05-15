@@ -1,8 +1,8 @@
-package com.flightDelay.flightdelayapi.shared.exception;
+package com.flightDelay.flightdelayapi.shared.exception.resource;
 
 public class AirportNotFoundException extends ResourceNotFoundException {
 
     public AirportNotFoundException(String airportIcaoCode) {
-        super("api.error.message.airportNotFound", new Object[]{airportIcaoCode});
+        super("error.message.airportNotFound", new Object[]{airportIcaoCode});
     }
 }

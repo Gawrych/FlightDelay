@@ -5,6 +5,6 @@ import com.flightDelay.flightdelayapi.shared.exception.LackOfCrucialDataExceptio
 public class WindSpeedCalculationFailedException extends LackOfCrucialDataException {
 
     public WindSpeedCalculationFailedException() {
-        super("api.error.message.failedToCalculateWindSpeed", new Object[]{});
+        super("error.message.failedToCalculateWindSpeed", new Object[]{});
     }
 }

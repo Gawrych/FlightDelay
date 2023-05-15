@@ -1,4 +1,6 @@
-package com.flightDelay.flightdelayapi.shared.exception;
+package com.flightDelay.flightdelayapi.shared.exception.request;
+
+import com.flightDelay.flightdelayapi.shared.exception.CustomRuntimeException;
 
 public class RequestValidationException extends CustomRuntimeException {
 

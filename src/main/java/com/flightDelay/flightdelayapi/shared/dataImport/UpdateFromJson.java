@@ -1,4 +1,4 @@
-package com.flightDelay.flightdelayapi.shared;
+package com.flightDelay.flightdelayapi.shared.dataImport;
 
 import org.springframework.http.ResponseEntity;
 

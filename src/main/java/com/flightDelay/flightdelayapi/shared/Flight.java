@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 public record Flight (
         @NonNull
-        @Length(min = 4, max = 4, message = "{api.error.message.icaoCodeLength}")
+        @Length(min = 4, max = 4, message = "{error.message.icaoCodeLength}")
         String airportIdent,
 
         @NonNull
@@ -21,5 +21,5 @@ public record Flight (
 
         @NonNull
         @JsonDeserialize(using = FlightPhaseEnumDeserializer.class)
-        @EnumValidator(enumClass = FlightPhase.class, message = "{api.error.message.incorrectPhase}")
+        @EnumValidator(enumClass = FlightPhase.class, message = "{error.message.incorrectPhase}")
         FlightPhase phase) {}

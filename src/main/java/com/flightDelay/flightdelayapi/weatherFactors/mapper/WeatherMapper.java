@@ -11,9 +11,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public abstract class WeatherMapper {
 
-    @Value("${weather.periods.amountOfPeriods}")
-    private int amountOfPeriods;
-
     @Value("${weather.periods.amountOfHoursInOnePeriod}")
     private int amountOfHoursInOnePeriod;
 
@@ -31,10 +28,11 @@ public abstract class WeatherMapper {
                 .build();
     }
 
-    public List<Weather> mapAllNextDayInPeriods(JsonNode rootNode, int startHour) {
+    public List<Weather> mapPeriods(JsonNode rootNode, int startHour, int amountOfDays) {
         JsonNode hourNode = rootNode.path("hourly");
         List<Weather> nextDayWeather = new ArrayList<>();
 
+        int amountOfPeriods = (amountOfDays * 24) / amountOfHoursInOnePeriod;
         int endHour = startHour + (amountOfPeriods * amountOfHoursInOnePeriod);
 
         for (int i = startHour; i < endHour; i += amountOfHoursInOnePeriod) {

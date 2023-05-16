@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,9 +25,6 @@ public class WeatherAPIServiceImpl implements WeatherAPIService {
 
     @Value("${api.openmeteo.base}")
     private String baseUrl;
-
-    @Value("${weather.amountOfNextDaysToGetFromApiForecast}")
-    private int amountOfNextDaysToGetFromApiForecast;
 
     @Value("${api.openmeteo.weatherForecastLimitInDays}")
     private int weatherForecastLimitInDays;
@@ -46,24 +42,27 @@ public class WeatherAPIServiceImpl implements WeatherAPIService {
     public Weather getWeather(String airportIdent, LocalDateTime date) {
         checkRangeOfTheDate(date);
 
-        String populatedURL = populateBaseUrl(airportIdent, date);
+        String populatedURL = populateBaseUrl(airportIdent, date, date);
         JsonNode jsonNode = getJsonNodeFromApi(populatedURL);
 
         int hour = date.getHour();
 
         return weatherMapper.mapSingleHour(jsonNode, hour);
-
     }
 
     @Override
-    public List<Weather> getAllNextDayWeatherInPeriods(String airportIdent) {
+    public List<Weather> getWeatherPeriods(String airportIdent, int amountOfDays) {
         LocalDateTime currentTime = LocalDateTime.now();
-        String populatedURL = populateBaseUrl(airportIdent, currentTime);
+        LocalDateTime endDate = currentTime.plusDays(amountOfDays);
+
+        checkRangeOfTheDate(endDate);
+
+        String populatedURL = populateBaseUrl(airportIdent, currentTime, endDate);
         JsonNode jsonNode = getJsonNodeFromApi(populatedURL);
 
         int startHour = currentTime.getHour();
 
-        return weatherMapper.mapAllNextDayInPeriods(jsonNode, startHour);
+        return weatherMapper.mapPeriods(jsonNode, startHour, amountOfDays);
     }
 
     private JsonNode getJsonNodeFromApi(String populatedUrl) {
@@ -76,7 +75,7 @@ public class WeatherAPIServiceImpl implements WeatherAPIService {
         }
     }
 
-    private String populateBaseUrl(String airportIdent, LocalDateTime date) {
+    private String populateBaseUrl(String airportIdent, LocalDateTime startDate, LocalDateTime endDate) {
         Airport airport = airportService.findByAirportIdent(airportIdent);
 
         Double latitude = airport.getLatitudeDeg();
@@ -84,17 +83,19 @@ public class WeatherAPIServiceImpl implements WeatherAPIService {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(openmeteoDatePattern);
 
-        String startDate = date.format(formatter);
-        String endDate = date.plusDays(amountOfNextDaysToGetFromApiForecast).format(formatter);
-
-        return String.format(baseUrl, latitude, longitude, startDate, endDate);
+        return String.format(
+                baseUrl,
+                latitude,
+                longitude,
+                startDate.format(formatter),
+                endDate.format(formatter));
     }
 
     private void checkRangeOfTheDate(LocalDateTime date) {
         LocalDate maxDate = LocalDate.now().plusDays(weatherForecastLimitInDays);
 
         if (date.isAfter(maxDate.atStartOfDay())) {
-            throw new WeatherApiDateOutOfBoundsException(date.toString(), maxDate.toString());
+            throw new WeatherApiDateOutOfBoundsException(date.toString(), maxDate.minusDays(1).toString());
         }
     }
 }

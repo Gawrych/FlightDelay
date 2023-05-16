@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AirportWeatherCreator  {
 
-    AirportWeatherDto mapBySingleHour(Flight flight);
+    AirportWeatherDto mapSingleHour(Flight flight);
 
-    List<AirportWeatherDto> mapAllNextDayInPeriods(Flight flight);
+    List<AirportWeatherDto> mapPeriods(Flight flight, int amountOfDays);
 }

@@ -1,11 +1,11 @@
-package com.flightDelay.flightdelayapi.delayFactor;
+package com.flightDelay.flightdelayapi.weatherFactors.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.flightDelay.flightdelayapi.delayFactor.DelayFactor;
+import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactor;
 
 import java.util.List;
 
-public record DelayFactorsPeriod(
+public record WeatherFactorsPeriod(
 
         @JsonProperty("from_time")
         String fromTime,
@@ -14,5 +14,5 @@ public record DelayFactorsPeriod(
         String toTime,
 
         @JsonProperty("factors")
-        List<DelayFactor> factors
+        List<WeatherFactor> factors
 ) {}

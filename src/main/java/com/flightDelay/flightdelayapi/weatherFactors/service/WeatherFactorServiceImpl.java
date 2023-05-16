@@ -1,75 +1,52 @@
 package com.flightDelay.flightdelayapi.weatherFactors.service;
 
-import com.flightDelay.flightdelayapi.delayFactor.DelayFactor;
-import com.flightDelay.flightdelayapi.delayFactor.DelayFactorCreator;
+import com.flightDelay.flightdelayapi.weatherFactors.collector.WeatherFactorCollector;
 import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
-import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
-import com.flightDelay.flightdelayapi.shared.enums.FactorInfluence;
-import com.flightDelay.flightdelayapi.weatherFactors.enums.FactorName;
-import com.flightDelay.flightdelayapi.weatherFactors.enums.IlsCategory;
-import com.flightDelay.flightdelayapi.weatherFactors.calculator.InstrumentLandingSystemCalculator;
-import com.flightDelay.flightdelayapi.weatherFactors.calculator.RunwayWeatherCalculator;
-import com.flightDelay.flightdelayapi.weatherFactors.calculator.WindCalculator;
-import com.flightDelay.flightdelayapi.weatherFactors.qualifier.FlightPhaseFactorInfluenceQualifier;
+import com.flightDelay.flightdelayapi.shared.Flight;
+import com.flightDelay.flightdelayapi.weatherFactors.creator.AirportWeatherCreator;
+import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactor;
+import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactorsPeriod;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 
-import static com.flightDelay.flightdelayapi.weatherFactors.enums.FactorName.*;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WeatherFactorServiceImpl implements WeatherFactorService {
 
-    @Qualifier("landingFactorInfluenceQualifier")
-    private final FlightPhaseFactorInfluenceQualifier landingFactorInfluenceQualifier;
+    @Value("${date.defaultPattern}")
+    private String defaultDatePattern;
 
-    @Qualifier("takeoffFactorInfluenceQualifier")
-    private final FlightPhaseFactorInfluenceQualifier takeoffFactorInfluenceQualifier;
+    private final WeatherFactorCollector weatherFactorCollector;
 
-    private final InstrumentLandingSystemCalculator instrumentLandingSystemCalculator;
+    private final AirportWeatherCreator airportWeatherCreator;
 
-    private final RunwayWeatherCalculator runwayWeatherCalculator;
 
-    private final DelayFactorCreator delayFactorCreator;
+    @Override
+    public List<WeatherFactor> getFactorsByHour(Flight flight) {
+        AirportWeatherDto airportWeatherDto = airportWeatherCreator.mapSingleHour(flight);
 
-    private final WindCalculator windCalculator;
-
-    public List<DelayFactor> getWeatherFactors(AirportWeatherDto airportWeatherDto) {
-        IlsCategory ilsCategory = instrumentLandingSystemCalculator.getMinRequiredCategory(airportWeatherDto);
-
-        List<DelayFactor> delayFactors = new ArrayList<>();
-
-        for (Map.Entry<FactorName, Integer> condition : getConditions(airportWeatherDto).entrySet()) {
-            FactorName factorName = condition.getKey();
-            int value = condition.getValue();
-
-            FactorInfluence factorInfluence = checkPhaseLimit(ilsCategory, airportWeatherDto.getPhase(), factorName, value);
-            delayFactors.add(delayFactorCreator.createFactor(factorName, value, factorInfluence));
-        }
-
-        return delayFactors;
+        return weatherFactorCollector.getWeatherFactors(airportWeatherDto);
     }
 
-    private Map<FactorName, Integer> getConditions(AirportWeatherDto airportWeatherDto) {
-        return Map.of(
-                CROSSWIND, windCalculator.getCrossWind(airportWeatherDto),
-                TAILWIND, windCalculator.getTailwind(airportWeatherDto),
-                VISIBILITY, Math.round(airportWeatherDto.getWeather().getVisibilityM()),
-                RAIN, Math.round(airportWeatherDto.getWeather().getRainMm()),
-                CLOUDBASE, runwayWeatherCalculator.calculateCloudBase(airportWeatherDto, airportWeatherDto.getElevationM()));
-    }
+    @Override
+    public List<WeatherFactorsPeriod> getFactorsInPeriods(Flight flight, int amountOfDays) {
+        List<AirportWeatherDto> airportWeatherInPeriod = airportWeatherCreator.mapPeriods(flight, amountOfDays);
 
-    private FactorInfluence checkPhaseLimit(IlsCategory ilsCategory, FlightPhase phase, FactorName name, int value) {
-        return switch (phase) {
-            case ARRIVAL -> landingFactorInfluenceQualifier.checkLimits(name, value, ilsCategory);
-            case DEPARTURE -> takeoffFactorInfluenceQualifier.checkLimits(name, value, ilsCategory);
-        };
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(defaultDatePattern);
+
+        return airportWeatherInPeriod.stream().map(airportWeatherPeriod -> {
+            LocalDateTime hourOfPeriod = LocalDateTime.parse(airportWeatherPeriod.getWeather().getTime());
+
+            return new WeatherFactorsPeriod(
+                    hourOfPeriod.minusHours(1).format(formatter),
+                    hourOfPeriod.plusHours(2).format(formatter),
+                    weatherFactorCollector.getWeatherFactors(airportWeatherPeriod));
+        }).toList();
     }
 }

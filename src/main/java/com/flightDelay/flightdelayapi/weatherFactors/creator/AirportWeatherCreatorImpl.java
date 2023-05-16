@@ -30,7 +30,7 @@ public class AirportWeatherCreatorImpl implements AirportWeatherCreator {
     private final AirportWeatherMapper airportWeatherMapper;
 
     @Override
-    public AirportWeatherDto mapBySingleHour(Flight flight) {
+    public AirportWeatherDto mapSingleHour(Flight flight) {
         String airportIdent = flight.airportIdent();
         Airport airport = getAirportData(airportIdent);
 
@@ -40,13 +40,13 @@ public class AirportWeatherCreatorImpl implements AirportWeatherCreator {
     }
 
     @Override
-    public List<AirportWeatherDto> mapAllNextDayInPeriods(Flight flight) {
+    public List<AirportWeatherDto> mapPeriods(Flight flight, int amountOfDays) {
         String airportIdent = flight.airportIdent();
         Airport airport = getAirportData(airportIdent);
 
-        List<Weather> nextDayWeather = weatherAPIService.getAllNextDayWeatherInPeriods(airportIdent);
+        List<Weather> weatherInPeriods = weatherAPIService.getWeatherPeriods(airportIdent, amountOfDays);
 
-        return nextDayWeather.stream()
+        return weatherInPeriods.stream()
                 .map(weather -> mapAirportWeatherDto(weather, airport, flight))
                 .toList();
     }

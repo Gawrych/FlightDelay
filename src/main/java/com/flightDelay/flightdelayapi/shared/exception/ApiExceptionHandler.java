@@ -4,6 +4,7 @@ import com.flightDelay.flightdelayapi.shared.exception.importData.JsonFileImport
 import com.flightDelay.flightdelayapi.shared.exception.request.RequestValidationException;
 import com.flightDelay.flightdelayapi.shared.exception.resource.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -52,6 +53,17 @@ public class ApiExceptionHandler {
                 request,
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 getLangMessage(exception));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiError> handleException(ConstraintViolationException exception,
+                                                    HttpServletRequest request) {
+
+        return getApiErrorResponseEntity(
+                exception,
+                request,
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -30,7 +30,6 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
     @Override
     public List<WeatherFactor> getFactorsByHour(Flight flight) {
         AirportWeatherDto airportWeatherDto = airportWeatherCreator.mapSingleHour(flight);
-
         return weatherFactorCollector.getWeatherFactors(airportWeatherDto);
     }
 

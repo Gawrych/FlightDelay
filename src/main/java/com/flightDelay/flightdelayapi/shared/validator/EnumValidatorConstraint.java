@@ -1,4 +1,4 @@
-package com.flightDelay.flightdelayapi.shared.enums.validator;
+package com.flightDelay.flightdelayapi.shared.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

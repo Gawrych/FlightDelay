@@ -1,4 +1,4 @@
-package com.flightDelay.flightdelayapi.shared.enums.deserializer;
+package com.flightDelay.flightdelayapi.shared.deserializer;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

@@ -1,18 +1,17 @@
 package com.flightDelay.flightdelayapi.shared;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.flightDelay.flightdelayapi.shared.enums.deserializer.DateInPatternDeserializer;
-import com.flightDelay.flightdelayapi.shared.enums.deserializer.FlightPhaseEnumDeserializer;
-import com.flightDelay.flightdelayapi.shared.enums.validator.EnumValidator;
+import com.flightDelay.flightdelayapi.shared.deserializer.DateInPatternDeserializer;
+import com.flightDelay.flightdelayapi.shared.deserializer.FlightPhaseEnumDeserializer;
+import com.flightDelay.flightdelayapi.shared.validator.AirportIcaoCodeValidator;
+import com.flightDelay.flightdelayapi.shared.validator.EnumValidator;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
 import lombok.NonNull;
-import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 
 public record Flight (
-        @NonNull
-        @Length(min = 4, max = 4, message = "{error.message.icaoCodeLength}")
+        @AirportIcaoCodeValidator
         String airportIdent,
 
         @NonNull

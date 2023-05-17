@@ -3,6 +3,7 @@ package com.flightDelay.flightdelayapi.traffic;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
 import com.flightDelay.flightdelayapi.arrivalDelay.ArrivalDelayServiceImpl;
 import com.flightDelay.flightdelayapi.shared.exception.importData.ProcessingJsonDataFailedException;
@@ -40,8 +41,22 @@ public class TrafficServiceImpl implements TrafficService {
     @Override
     public void save(Traffic traffic) {
         if (!trafficRepository.existsByGeneratedId(traffic.generateId())) {
-            traffic.setAirportBidirectionalRelationshipByCode(traffic.getAirportCode(), airportService);
-            trafficRepository.save(traffic);
+
+            String airportIdent = traffic.getAirportCode();
+            if (!airportService.existsByAirportIdent(airportIdent)) {
+                traffic = setAirportBidirectionalRelationshipByCode(airportIdent, traffic);
+                trafficRepository.save(traffic);
+            }
         }
+    }
+
+    @Override
+    public Traffic setAirportBidirectionalRelationshipByCode(String airportCode, Traffic traffic) {
+        Airport airport = airportService.findByAirportIdent(airportCode);
+        if (airport != null) {
+            traffic.setAirport(airport);
+            airport.getTrafficReports().add(traffic);
+        }
+        return traffic;
     }
 }

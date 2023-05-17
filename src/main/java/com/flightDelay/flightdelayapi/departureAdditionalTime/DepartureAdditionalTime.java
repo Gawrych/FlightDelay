@@ -63,12 +63,4 @@ public class DepartureAdditionalTime {
     public String generateId() {
         return this.flightDate + "-" + this.airportCode + "-" + this.stage;
     }
-
-    public void setAirportBidirectionalRelationshipByCode(String airportCode, AirportService airportService) {
-        Airport airport = airportService.findByAirportIdent(airportCode);
-        if (airport != null) {
-            this.setAirport(airport);
-            airport.getDepartureAdditionalTimes().add(this);
-        }
-    }
 }

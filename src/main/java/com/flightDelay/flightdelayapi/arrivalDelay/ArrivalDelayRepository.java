@@ -9,10 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ArrivalDelayRepository extends ListCrudRepository<ArrivalDelay, Long> {
-    @Query("SELECT d FROM ArrivalDelay d WHERE d.flightArrivalDelay > :number")
-    List<ArrivalDelay> findByFlightArrivalDelay(@Param("number") int number);
-    List<ArrivalDelay> findAllByAirportCode(String airportCode);
 
     boolean existsByGeneratedId(String generatedId);
-
 }

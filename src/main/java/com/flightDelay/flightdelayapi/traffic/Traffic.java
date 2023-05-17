@@ -74,11 +74,5 @@ public class Traffic {
         return this.flightDate + "-" + this.airportCode;
     }
 
-    public void setAirportBidirectionalRelationshipByCode(String airportCode, AirportService airportService) {
-        Airport airport = airportService.findByAirportIdent(airportCode);
-        if (airport != null) {
-            this.setAirport(airport);
-            airport.getTrafficReports().add(this);
-        }
-    }
+
 }

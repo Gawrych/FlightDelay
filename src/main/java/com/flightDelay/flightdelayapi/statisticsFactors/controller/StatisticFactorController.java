@@ -17,8 +17,7 @@ import java.util.Locale;
 @RequestMapping("/api/v1/statistics")
 public class StatisticFactorController {
 
-
-    @GetMapping("/airport")
+    @PostMapping("/airport")
     public List<WeatherFactor> getFactors(@RequestBody @Validated Flight flight,
                                           @RequestHeader("Language") String language) {
 

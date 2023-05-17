@@ -3,6 +3,7 @@ package com.flightDelay.flightdelayapi.arrivalDelay;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
 import com.flightDelay.flightdelayapi.shared.exception.importData.ProcessingJsonDataFailedException;
 import jakarta.transaction.Transactional;
@@ -46,8 +47,22 @@ public class ArrivalDelayServiceImpl implements ArrivalDelayService {
     @Override
     public void save(ArrivalDelay arrivalDelay) {
         if (!arrivalDelayRepository.existsByGeneratedId(arrivalDelay.generateId())) {
-            arrivalDelay.setAirportBidirectionalRelationshipByCode(arrivalDelay.getAirportCode(), airportService);
-            arrivalDelayRepository.save(arrivalDelay);
+
+            String airportIdent = arrivalDelay.getAirportCode();
+            if (airportService.existsByAirportIdent(airportIdent)) {
+                arrivalDelay = setAirportBidirectionalRelationshipByCode(airportIdent, arrivalDelay);
+                arrivalDelayRepository.save(arrivalDelay);
+            }
         }
+    }
+
+    @Override
+    public ArrivalDelay setAirportBidirectionalRelationshipByCode(String airportCode, ArrivalDelay arrivalDelay) {
+        Airport airport = airportService.findByAirportIdent(airportCode);
+
+        arrivalDelay.setAirport(airport);
+        airport.getArrivalDelays().add(arrivalDelay);
+
+        return arrivalDelay;
     }
 }

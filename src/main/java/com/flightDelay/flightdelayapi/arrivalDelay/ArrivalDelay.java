@@ -39,65 +39,64 @@ public class ArrivalDelay {
     private String airportCode;
 
     @JsonProperty("FLT_ARR_1")
-    private Integer flightArrival;
+    private Integer numberOfArrivals;
 
     @JsonProperty("DLY_APT_ARR_1")
-    private Integer delayedAirportArrival;
+    private Integer minutesOfAirportDelay;
 
-//    TODO: Change these abbreviation letters, and change delayedAirportArrival to causedBy, causedByEquipment
     @JsonProperty("DLY_APT_ARR_A_1")
-    private Integer delayedAirportArrivalA;
+    private Integer delayInMinutesCausedByAccident;
 
     @JsonProperty("DLY_APT_ARR_C_1")
-    private Integer delayedAirportArrivalC;
+    private Integer delayInMinutesCausedByCapacity;
 
     @JsonProperty("DLY_APT_ARR_D_1")
-    private Integer delayedAirportArrivalD;
+    private Integer delayInMinutesCausedByDeicing;
 
     @JsonProperty("DLY_APT_ARR_E_1")
-    private Integer delayedAirportArrivalE;
+    private Integer delayInMinutesCausedByEquipment;
 
     @JsonProperty("DLY_APT_ARR_G_1")
-    private Integer delayedAirportArrivalG;
+    private Integer delayInMinutesCausedByAerodromeCapacity;
 
     @JsonProperty("DLY_APT_ARR_I_1")
-    private Integer delayedAirportArrivalI;
+    private Integer delayInMinutesCausedByIndustrialActionATC;
 
     @JsonProperty("DLY_APT_ARR_M_1")
-    private Integer delayedAirportArrivalM;
+    private Integer delayInMinutesCausedByAirspaceManagement;
 
     @JsonProperty("DLY_APT_ARR_N_1")
-    private Integer delayedAirportArrivalN;
+    private Integer delayInMinutesCausedByIndustrialAction;
 
     @JsonProperty("DLY_APT_ARR_O_1")
-    private Integer delayedAirportArrivalO;
+    private Integer delayInMinutesCausedByOther;
 
     @JsonProperty("DLY_APT_ARR_P_1")
-    private Integer delayedAirportArrivalP;
+    private Integer delayInMinutesCausedBySpecialEvent;
 
     @JsonProperty("DLY_APT_ARR_R_1")
-    private Integer delayedAirportArrivalR;
+    private Integer delayInMinutesCausedByRouteing;
 
     @JsonProperty("DLY_APT_ARR_S_1")
-    private Integer delayedAirportArrivalS;
+    private Integer delayInMinutesCausedByStaffing;
 
     @JsonProperty("DLY_APT_ARR_T_1")
-    private Integer delayedAirportArrivalT;
+    private Integer delayInMinutesCausedByEquipmentATC;
 
     @JsonProperty("DLY_APT_ARR_V_1")
-    private Integer delayedAirportArrivalV;
+    private Integer delayInMinutesCausedByEnvironmentalIssues;
 
     @JsonProperty("DLY_APT_ARR_W_1")
-    private Integer delayedAirportArrivalW;
+    private Integer delayInMinutesCausedByWeather;
 
     @JsonProperty("DLY_APT_ARR_NA_1")
-    private Integer delayedAirportArrivalNA;
+    private Integer delayInMinutesCausedByNotSpecified;
 
     @JsonProperty("FLT_ARR_1_DLY")
-    private Integer flightArrivalDelay;
+    private Integer numberOfDelayedArrivals;
 
     @JsonProperty("FLT_ARR_1_DLY_15")
-    private Integer flightArrivalDelay15;
+    private Integer numberOfDelayedArrivalsAbove15Minutes;
 
     @JsonProperty("FLT_DATE")
     public void setFlightDate(long flightDate) {
@@ -117,13 +116,5 @@ public class ArrivalDelay {
 
     public String generateId() {
         return this.flightDate + "-" + this.airportCode;
-    }
-
-    public void setAirportBidirectionalRelationshipByCode(String airportCode, AirportService airportService) {
-        Airport airport = airportService.findByAirportIdent(airportCode);
-        if (airport != null) {
-            this.setAirport(airport);
-            airport.getArrivalDelays().add(this);
-        }
     }
 }

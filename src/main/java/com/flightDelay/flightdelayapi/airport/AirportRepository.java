@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface AirportRepository extends ListCrudRepository<Airport, Long> {
 
     Optional<Airport> findByAirportIdent(String airportIdent);
+
+    boolean existsByAirportIdent(String airportIdent);
 }

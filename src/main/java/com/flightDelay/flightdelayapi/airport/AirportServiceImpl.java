@@ -20,4 +20,9 @@ public class AirportServiceImpl implements AirportService {
         return airportRepository.findByAirportIdent(airportIdent)
                 .orElseThrow(() -> new AirportNotFoundException(airportIdent));
     }
+
+    @Override
+    public boolean existsByAirportIdent(String airportIdent) {
+        return airportRepository.existsByAirportIdent(airportIdent);
+    }
 }

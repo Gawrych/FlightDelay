@@ -3,6 +3,7 @@ package com.flightDelay.flightdelayapi.departureAdditionalTime;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
 import com.flightDelay.flightdelayapi.arrivalDelay.ArrivalDelayServiceImpl;
 import com.flightDelay.flightdelayapi.shared.exception.importData.ProcessingJsonDataFailedException;
@@ -38,8 +39,22 @@ public class DepartureAdditionalTimeServiceImpl implements DepartureAdditionalTi
     @Override
     public void save(DepartureAdditionalTime departureAdditionalTime) {
         if (!departureAdditionalTimeRepository.existsByGeneratedId(departureAdditionalTime.generateId())) {
-            departureAdditionalTime.setAirportBidirectionalRelationshipByCode(departureAdditionalTime.getAirportCode(), airportService);
-            departureAdditionalTimeRepository.save(departureAdditionalTime);
+
+            String airportIdent = departureAdditionalTime.getAirportCode();
+            if (airportService.existsByAirportIdent(airportIdent)) {
+                departureAdditionalTime = setAirportBidirectionalRelationshipByCode(airportIdent, departureAdditionalTime);
+                departureAdditionalTimeRepository.save(departureAdditionalTime);
+            }
         }
+    }
+
+    @Override
+    public DepartureAdditionalTime setAirportBidirectionalRelationshipByCode(String airportCode, DepartureAdditionalTime departureAdditionalTime) {
+        Airport airport = airportService.findByAirportIdent(airportCode);
+
+        departureAdditionalTime.setAirport(airport);
+        airport.getDepartureAdditionalTimes().add(departureAdditionalTime);
+
+        return departureAdditionalTime;
     }
 }

@@ -46,7 +46,7 @@ class ExcelToJsonConverter:
 
     def __init__(self):
         self.folder_path = 'src/main/resources/data/'
-        self.amountOfMonthsToCollectDataFrom = 4
+        self.amountOfMonthsToCollectDataFrom = 12
         self.today = datetime.date.today()
         self.years = []
         self.months = []

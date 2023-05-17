@@ -3,6 +3,7 @@ package com.flightDelay.flightdelayapi.preDepartureDelay;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
 import com.flightDelay.flightdelayapi.arrivalDelay.ArrivalDelayServiceImpl;
 import com.flightDelay.flightdelayapi.shared.exception.importData.ProcessingJsonDataFailedException;
@@ -40,8 +41,22 @@ public class PreDepartureDelayServiceImpl implements PreDepartureDelayService {
     @Override
     public void save(PreDepartureDelay preDepartureDelay) {
         if (!preDepartureDelayRepository.existsByGeneratedId(preDepartureDelay.generateId())) {
-            preDepartureDelay.setAirportBidirectionalRelationshipByCode(preDepartureDelay.getAirportCode(), airportService);
-            preDepartureDelayRepository.save(preDepartureDelay);
+
+            String airportIdent = preDepartureDelay.getAirportCode();
+            if (airportService.existsByAirportIdent(airportIdent)) {
+                preDepartureDelay = setAirportBidirectionalRelationshipByCode(airportIdent, preDepartureDelay);
+                preDepartureDelayRepository.save(preDepartureDelay);
+            }
         }
+    }
+
+    @Override
+    public PreDepartureDelay setAirportBidirectionalRelationshipByCode(String airportCode, PreDepartureDelay preDepartureDelay) {
+        Airport airport = airportService.findByAirportIdent(airportCode);
+
+        preDepartureDelay.setAirport(airport);
+        airport.getPreDepartureDelays().add(preDepartureDelay);
+
+        return preDepartureDelay;
     }
 }

@@ -1,8 +1,9 @@
 package com.flightDelay.flightdelayapi.weatherFactors.service;
 
+import com.flightDelay.flightdelayapi.shared.Flight;
+import com.flightDelay.flightdelayapi.shared.PrecisionTimeFlight;
 import com.flightDelay.flightdelayapi.weatherFactors.collector.WeatherFactorCollector;
 import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
-import com.flightDelay.flightdelayapi.shared.Flight;
 import com.flightDelay.flightdelayapi.weatherFactors.creator.AirportWeatherCreator;
 import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactor;
 import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactorsPeriod;
@@ -28,8 +29,8 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
 
 
     @Override
-    public List<WeatherFactor> getFactorsByHour(Flight flight) {
-        AirportWeatherDto airportWeatherDto = airportWeatherCreator.mapSingleHour(flight);
+    public List<WeatherFactor> getFactorsByHour(PrecisionTimeFlight precisionTimeFlight) {
+        AirportWeatherDto airportWeatherDto = airportWeatherCreator.mapSingleHour(precisionTimeFlight);
         return weatherFactorCollector.getWeatherFactors(airportWeatherDto);
     }
 

@@ -1,8 +1,9 @@
 package com.flightDelay.flightdelayapi.weatherFactors.mapper;
 
+import com.flightDelay.flightdelayapi.shared.Flight;
+import com.flightDelay.flightdelayapi.shared.PrecisionTimeFlight;
 import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.runway.RunwayDto;
-import com.flightDelay.flightdelayapi.shared.Flight;
 import com.flightDelay.flightdelayapi.weatherFactors.model.Weather;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.flightDelay</groupId>
-	<artifactId>flight-delay-api</artifactId>
+	<artifactId>precisionTimeFlight-delay-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Flight Delay API</name>
 	<description>Delays calculator</description>
@@ -71,7 +71,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
-			<version>6.0.7</version>
+			<version>6.0.9</version>
 		</dependency>
 
 		<dependency>

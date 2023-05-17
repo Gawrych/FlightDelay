@@ -17,13 +17,9 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Flight {
-
-    @AirportIcaoCodeValidator
-    private String airportIdent;
+public class PrecisionTimeFlight extends Flight {
 
     @NotNull
-    @JsonDeserialize(using = FlightPhaseEnumDeserializer.class)
-    @EnumValidator(enumClass = FlightPhase.class, message = "{error.message.incorrectPhase}")
-    private FlightPhase phase;
+    @JsonDeserialize(using = DateInPatternDeserializer.class)
+    private LocalDateTime date;
 }

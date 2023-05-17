@@ -4,6 +4,7 @@ import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
 import com.flightDelay.flightdelayapi.runway.RunwayDto;
 import com.flightDelay.flightdelayapi.shared.Flight;
+import com.flightDelay.flightdelayapi.shared.PrecisionTimeFlight;
 import com.flightDelay.flightdelayapi.runway.Runway;
 import com.flightDelay.flightdelayapi.shared.UnitConverter;
 import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
@@ -30,18 +31,18 @@ public class AirportWeatherCreatorImpl implements AirportWeatherCreator {
     private final AirportWeatherMapper airportWeatherMapper;
 
     @Override
-    public AirportWeatherDto mapSingleHour(Flight flight) {
-        String airportIdent = flight.airportIdent();
+    public AirportWeatherDto mapSingleHour(PrecisionTimeFlight precisionTimeFlight) {
+        String airportIdent = precisionTimeFlight.getAirportIdent();
         Airport airport = getAirportData(airportIdent);
 
-        Weather weather = weatherAPIService.getWeather(airportIdent, flight.date());
+        Weather weather = weatherAPIService.getWeather(airportIdent, precisionTimeFlight.getDate());
 
-        return mapAirportWeatherDto(weather, airport, flight);
+        return mapAirportWeatherDto(weather, airport, precisionTimeFlight);
     }
 
     @Override
     public List<AirportWeatherDto> mapPeriods(Flight flight, int amountOfDays) {
-        String airportIdent = flight.airportIdent();
+        String airportIdent = flight.getAirportIdent();
         Airport airport = getAirportData(airportIdent);
 
         List<Weather> weatherInPeriods = weatherAPIService.getWeatherPeriods(airportIdent, amountOfDays);

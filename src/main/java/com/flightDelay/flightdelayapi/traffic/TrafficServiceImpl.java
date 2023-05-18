@@ -1,62 +1,72 @@
 package com.flightDelay.flightdelayapi.traffic;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
-import com.flightDelay.flightdelayapi.arrivalDelay.ArrivalDelayServiceImpl;
-import com.flightDelay.flightdelayapi.shared.exception.importData.ProcessingJsonDataFailedException;
+import com.flightDelay.flightdelayapi.shared.mapper.EntityMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TrafficServiceImpl implements TrafficService {
 
     private final TrafficRepository trafficRepository;
+
     private final AirportService airportService;
+
+    private final EntityMapper entityMapper;
+
     private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
-    public String updateFromJson(String newDataInJsonString) {
-        try {
-            TypeReference<List<Traffic>> typeReference = new TypeReference<>(){};
-            List<Traffic> trafficReports = objectMapper.readValue(newDataInJsonString, typeReference);
-            trafficReports.forEach(this::save);
-
-        } catch (JsonProcessingException e) {
-            throw new ProcessingJsonDataFailedException(ArrivalDelayServiceImpl.class.getName());
-        }
-
-        return newDataInJsonString;
+    public List<Traffic> updateFromJson(String newDataInJson) {
+        return entityMapper
+                .jsonArrayToList(newDataInJson, Traffic.class, objectMapper)
+                .stream()
+                .filter(this::save).toList();
     }
 
     @Override
-    public void save(Traffic traffic) {
-        if (!trafficRepository.existsByGeneratedId(traffic.generateId())) {
+    public boolean save(Traffic traffic) {
+        String airportIdent = traffic.getAirportCode();
+        String trafficId = traffic.getGeneratedId();
 
-            String airportIdent = traffic.getAirportCode();
-            if (!airportService.existsByAirportIdent(airportIdent)) {
-                traffic = setAirportBidirectionalRelationshipByCode(airportIdent, traffic);
-                trafficRepository.save(traffic);
-            }
+        if (!airportService.existsByAirportIdent(airportIdent)) {
+            log.warn("New Traffic with id: {} have airport ident not matching to any airport in the database: {}",
+                    trafficId,
+                    airportIdent);
+
+
+            return false;
         }
+
+        if (trafficRepository.existsByGeneratedId(trafficId)) {
+            log.info("Traffic with id: {} already exists", trafficId);
+
+            return false;
+        }
+
+        trafficRepository.save(setAirportBidirectionalRelationshipByCode(airportIdent, traffic));
+
+        log.info("New Traffic with id: {} has been created", trafficId);
+
+        return true;
     }
 
     @Override
     public Traffic setAirportBidirectionalRelationshipByCode(String airportCode, Traffic traffic) {
         Airport airport = airportService.findByAirportIdent(airportCode);
-        if (airport != null) {
-            traffic.setAirport(airport);
-            airport.getTrafficReports().add(traffic);
-        }
+
+        traffic.setAirport(airport);
+        airport.getTrafficReports().add(traffic);
+
         return traffic;
     }
 }

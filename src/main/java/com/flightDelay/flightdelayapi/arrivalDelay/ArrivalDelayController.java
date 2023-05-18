@@ -1,9 +1,6 @@
 package com.flightDelay.flightdelayapi.arrivalDelay;
 
-import com.flightDelay.flightdelayapi.airport.AirportRepository;
-import com.flightDelay.flightdelayapi.airport.AirportService;
-import com.flightDelay.flightdelayapi.departureAdditionalTime.DepartureAdditionalTime;
-import com.flightDelay.flightdelayapi.shared.dataImport.DataImportServiceImpl;
+import com.flightDelay.flightdelayapi.shared.dataImport.DataImportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -14,25 +11,25 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/update/delays")
+@RequestMapping("/api/v1/delays")
 public class ArrivalDelayController {
 
     @Value("${import.arrivalDelayConverterName}")
     private String arrivalDelayConverterName;
 
-    private final ArrivalDelayServiceImpl arrivalDelayService;
+    private final ArrivalDelayService arrivalDelayService;
 
-    private final DataImportServiceImpl dataImportService;
+    private final DataImportService dataImportService;
 
     @PutMapping("/file")
-    public ResponseEntity<String> updateFromFile() {
-        String newData = dataImportService.importFromFile(arrivalDelayService, arrivalDelayConverterName);
-        return new ResponseEntity<>(newData, HttpStatus.CREATED);
+    public ResponseEntity<List<?>> updateFromFile() {
+        List<?> addedEntities = dataImportService.importFromFile(arrivalDelayService, arrivalDelayConverterName);
+        return new ResponseEntity<>(addedEntities, HttpStatus.CREATED);
     }
 
     @PutMapping("/json")
-    public ResponseEntity<String> update(@RequestBody String dataInJson) {
-        String newData = arrivalDelayService.updateFromJson(dataInJson);
-        return new ResponseEntity<>(newData, HttpStatus.CREATED);
+    public ResponseEntity<List<?>> update(@RequestBody String dataInJson) {
+        List<?> addedEntities = arrivalDelayService.updateFromJson(dataInJson);
+        return new ResponseEntity<>(addedEntities, HttpStatus.CREATED);
     }
 }

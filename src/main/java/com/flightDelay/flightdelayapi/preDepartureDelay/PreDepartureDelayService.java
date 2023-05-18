@@ -4,7 +4,7 @@ import com.flightDelay.flightdelayapi.shared.dataImport.UpdateFromJson;
 
 public interface PreDepartureDelayService extends UpdateFromJson {
 
-    void save(PreDepartureDelay preDepartureDelay);
+    boolean save(PreDepartureDelay preDepartureDelay);
 
     PreDepartureDelay setAirportBidirectionalRelationshipByCode(String airportCode, PreDepartureDelay preDepartureDelay);
 }

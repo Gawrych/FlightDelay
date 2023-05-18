@@ -2,9 +2,11 @@ package com.flightDelay.flightdelayapi.region;
 
 import org.springframework.data.repository.ListCrudRepository;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface RegionRepository extends ListCrudRepository<Region, Long> {
 
-    List<Region> findAllByIsoCode(String isoCode);
+    Optional<Region> findByIsoCode(String isoCode);
+
+    boolean existsByIsoCode(String isoCode);
 }

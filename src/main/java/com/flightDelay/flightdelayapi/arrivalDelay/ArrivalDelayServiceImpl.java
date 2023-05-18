@@ -1,63 +1,65 @@
 package com.flightDelay.flightdelayapi.arrivalDelay;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
-import com.flightDelay.flightdelayapi.shared.exception.importData.ProcessingJsonDataFailedException;
+import com.flightDelay.flightdelayapi.shared.mapper.EntityMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ArrivalDelayServiceImpl implements ArrivalDelayService {
 
     private final ArrivalDelayRepository arrivalDelayRepository;
 
-    private final ResourceBundleMessageSource messageSource;
-
     private final AirportService airportService;
+
+    private final EntityMapper entityMapper;
 
     private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
-    public String updateFromJson(String newDataInJsonString) {
-        try {
-            TypeReference<List<ArrivalDelay>> typeReference = new TypeReference<>() {};
-            List<ArrivalDelay> arrivalDelayReports = objectMapper.readValue(newDataInJsonString, typeReference);
-            arrivalDelayReports.forEach(this::save);
-
-        } catch (JsonProcessingException e) {
-            throw new ProcessingJsonDataFailedException(ArrivalDelayServiceImpl.class.getName());
-        }
-
-        return newDataInJsonString;
+    public List<ArrivalDelay> updateFromJson(String newDataInJson) {
+        return entityMapper
+                .jsonArrayToList(newDataInJson, ArrivalDelay.class, objectMapper)
+                .stream()
+                .filter(this::save).toList();
     }
 
     @Override
-    public void save(ArrivalDelay arrivalDelay) {
-        if (!arrivalDelayRepository.existsByGeneratedId(arrivalDelay.generateId())) {
+    public boolean save(ArrivalDelay arrivalDelay) {
+        String airportIdent = arrivalDelay.getAirportCode();
+        String arrivalDelayId = arrivalDelay.generateId();
 
-            String airportIdent = arrivalDelay.getAirportCode();
-            if (airportService.existsByAirportIdent(airportIdent)) {
-                arrivalDelay = setAirportBidirectionalRelationshipByCode(airportIdent, arrivalDelay);
-                arrivalDelayRepository.save(arrivalDelay);
-            }
+        if (!airportService.existsByAirportIdent(airportIdent)) {
+            log.warn("New ArrivalDelay with id: {} have airport ident not matching to any airport in the database: {}",
+                    arrivalDelayId,
+                    airportIdent);
+
+            return false;
         }
+
+        if (arrivalDelayRepository.existsByGeneratedId(arrivalDelayId)) {
+            log.info("ArrivalDelay with id: {} already exists", arrivalDelayId);
+
+            return false;
+        }
+
+        arrivalDelayRepository.save(setAirportBidirectionalRelationship(airportIdent, arrivalDelay));
+
+        log.info("New ArrivalDelay with id: {} has been created", arrivalDelayId);
+
+        return true;
     }
 
-    @Override
-    public ArrivalDelay setAirportBidirectionalRelationshipByCode(String airportCode, ArrivalDelay arrivalDelay) {
+    private ArrivalDelay setAirportBidirectionalRelationship(String airportCode, ArrivalDelay arrivalDelay) {
         Airport airport = airportService.findByAirportIdent(airportCode);
 
         arrivalDelay.setAirport(airport);

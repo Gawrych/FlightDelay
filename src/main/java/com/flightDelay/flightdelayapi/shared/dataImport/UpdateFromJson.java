@@ -1,8 +1,8 @@
 package com.flightDelay.flightdelayapi.shared.dataImport;
 
-import org.springframework.http.ResponseEntity;
+import java.util.List;
 
 public interface UpdateFromJson {
 
-    String updateFromJson(String newDataInJsonString);
+    List<?> updateFromJson(String newDataInJson);
 }

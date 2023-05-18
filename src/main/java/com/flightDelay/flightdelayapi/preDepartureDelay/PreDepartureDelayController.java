@@ -7,9 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/pre-departure")
+@RequestMapping("/api/v1/pre-departures")
 public class PreDepartureDelayController {
 
     @Value("${import.preDepartureDelayConverterName}")
@@ -19,15 +21,15 @@ public class PreDepartureDelayController {
 
     private final DataImportServiceImpl dataImportService;
 
-    @PutMapping("/file-update")
-    public ResponseEntity<String> updateFromFile() {
-        String newData = dataImportService.importFromFile(preDepartureDelayService, preDepartureDelayConverterName);
-        return new ResponseEntity<>(newData, HttpStatus.CREATED);
+    @PutMapping("/file")
+    public ResponseEntity<List<?>> updateFromFile() {
+        List<?> addedEntities = dataImportService.importFromFile(preDepartureDelayService, preDepartureDelayConverterName);
+        return new ResponseEntity<>(addedEntities, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<String> update(@RequestBody String dataInJson) {
-        String newData = preDepartureDelayService.updateFromJson(dataInJson);
-        return new ResponseEntity<>(newData, HttpStatus.CREATED);
+    @PutMapping("/json")
+    public ResponseEntity<List<?> > update(@RequestBody String dataInJson) {
+        List<?> addedEntities = preDepartureDelayService.updateFromJson(dataInJson);
+        return new ResponseEntity<>(addedEntities, HttpStatus.CREATED);
     }
 }

@@ -7,4 +7,7 @@ import java.util.List;
 public interface RunwaysRepository extends ListCrudRepository<Runway, Long> {
 
     List<Runway> findAllByAirportCode(String airportCode);
+
+    @Override
+    boolean existsById(Long id);
 }

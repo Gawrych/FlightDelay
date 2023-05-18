@@ -1,7 +1,6 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.controller;
 
 import com.flightDelay.flightdelayapi.shared.Flight;
-import com.flightDelay.flightdelayapi.shared.validator.AirportIcaoCodeValidator;
 import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -19,9 +18,10 @@ public class StatisticFactorController {
 
     @PostMapping("/airport")
     public List<WeatherFactor> getFactors(@RequestBody @Validated Flight flight,
-                                          @RequestHeader("Language") String language) {
+                                          @RequestHeader("Accept-Language") String language) {
 
         LocaleContextHolder.setLocale(Locale.forLanguageTag(language));
+
         return new ArrayList<>();
     }
 }

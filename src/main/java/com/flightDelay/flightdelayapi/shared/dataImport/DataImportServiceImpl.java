@@ -3,14 +3,17 @@ package com.flightDelay.flightdelayapi.shared.dataImport;
 import com.flightDelay.flightdelayapi.shared.exception.importData.JsonFileDataConverterFailed;
 import com.flightDelay.flightdelayapi.shared.exception.importData.JsonFileDataConverterUnexpectedExitCodeException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DataImportServiceImpl implements DataImportService {
@@ -22,9 +25,12 @@ public class DataImportServiceImpl implements DataImportService {
     private String commandToCallConverter;
 
     @Override
-    public String importFromFile(UpdateFromJson entityAbleToBeUpdatedByJson, String scriptName) {
+    public List<?> importFromFile(UpdateFromJson service, String scriptName) {
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder(commandToCallConverter, convertersDirectoryPath+scriptName);
+            ProcessBuilder processBuilder = new ProcessBuilder(
+                    commandToCallConverter,
+                    convertersDirectoryPath + scriptName);
+
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 
@@ -36,10 +42,9 @@ public class DataImportServiceImpl implements DataImportService {
                 throw new JsonFileDataConverterUnexpectedExitCodeException(scriptName, exitCode);
             }
 
-            return entityAbleToBeUpdatedByJson.updateFromJson(newDataInJson);
+            return service.updateFromJson(newDataInJson);
 
         } catch (IOException | InterruptedException e) {
-            // TODO: Log error with e here
             throw new JsonFileDataConverterFailed(scriptName);
         }
     }

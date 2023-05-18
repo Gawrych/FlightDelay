@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.flightDelay.flightdelayapi.airport.Airport;
-import com.flightDelay.flightdelayapi.airport.AirportService;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -73,6 +72,4 @@ public class Traffic {
     public String generateId() {
         return this.flightDate + "-" + this.airportCode;
     }
-
-
 }

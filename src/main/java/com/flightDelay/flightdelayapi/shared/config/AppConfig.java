@@ -1,4 +1,4 @@
-package com.flightDelay.flightdelayapi.config;
+package com.flightDelay.flightdelayapi.shared.config;
 
 import com.flightDelay.flightdelayapi.shared.validator.EnumValidatorConstraint;
 import org.modelmapper.ModelMapper;

@@ -1,18 +1,17 @@
 package com.flightDelay.flightdelayapi.preDepartureDelay;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
-import com.flightDelay.flightdelayapi.arrivalDelay.ArrivalDelayServiceImpl;
-import com.flightDelay.flightdelayapi.shared.exception.importData.ProcessingJsonDataFailedException;
+import com.flightDelay.flightdelayapi.shared.mapper.EntityMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PreDepartureDelayServiceImpl implements PreDepartureDelayService {
@@ -21,33 +20,43 @@ public class PreDepartureDelayServiceImpl implements PreDepartureDelayService {
 
     private final AirportService airportService;
 
+    private final EntityMapper entityMapper;
+
     private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
-    public String updateFromJson(String newDataInJsonString) {
-        try {
-            TypeReference<List<PreDepartureDelay>> typeReference = new TypeReference<>(){};
-            List<PreDepartureDelay> preDepartureDelays = objectMapper.readValue(newDataInJsonString, typeReference);
-            preDepartureDelays.forEach(this::save);
-
-        } catch (JsonProcessingException e) {
-            throw new ProcessingJsonDataFailedException(ArrivalDelayServiceImpl.class.getName());
-        }
-
-        return newDataInJsonString;
+    public List<PreDepartureDelay> updateFromJson(String newDataInJson) {
+        return entityMapper
+                .jsonArrayToList(newDataInJson, PreDepartureDelay.class, objectMapper)
+                .stream()
+                .filter(this::save).toList();
     }
 
     @Override
-    public void save(PreDepartureDelay preDepartureDelay) {
-        if (!preDepartureDelayRepository.existsByGeneratedId(preDepartureDelay.generateId())) {
+    public boolean save(PreDepartureDelay preDepartureDelay) {
+        String airportIdent = preDepartureDelay.getAirportCode();
+        String preDepartureDelayId = preDepartureDelay.generateId();
 
-            String airportIdent = preDepartureDelay.getAirportCode();
-            if (airportService.existsByAirportIdent(airportIdent)) {
-                preDepartureDelay = setAirportBidirectionalRelationshipByCode(airportIdent, preDepartureDelay);
-                preDepartureDelayRepository.save(preDepartureDelay);
-            }
+        if (!airportService.existsByAirportIdent(airportIdent)) {
+            log.warn("New PreDepartureDelay with id: {} have airport ident not matching to any airport in the database: {}",
+                    preDepartureDelayId,
+                    airportIdent);
+
+            return false;
         }
+
+        if (preDepartureDelayRepository.existsByGeneratedId(preDepartureDelayId)) {
+            log.info("PreDepartureDelay with id: {} already exists", preDepartureDelayId);
+
+            return false;
+        }
+
+        preDepartureDelayRepository.save(setAirportBidirectionalRelationshipByCode(airportIdent, preDepartureDelay));
+
+        log.info("New PreDepartureDelay with id: {} has been created", preDepartureDelayId);
+
+        return true;
     }
 
     @Override

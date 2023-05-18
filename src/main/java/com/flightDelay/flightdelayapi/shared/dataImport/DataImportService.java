@@ -1,6 +1,8 @@
 package com.flightDelay.flightdelayapi.shared.dataImport;
 
+import java.util.List;
+
 public interface DataImportService {
 
-    String importFromFile(UpdateFromJson entityAbleToBeUpdatedByJson, String scriptName);
+    List<?> importFromFile(UpdateFromJson entityAbleToBeUpdatedByJson, String scriptName);
 }

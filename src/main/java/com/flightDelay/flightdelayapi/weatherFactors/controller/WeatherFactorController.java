@@ -22,18 +22,20 @@ public class WeatherFactorController {
 
     @PostMapping("/hour")
     public List<WeatherFactor> getFactorsToSpecifyTime(@RequestBody @Validated PrecisionTimeFlight precisionTimeFlight,
-                                                       @RequestHeader("Language") String language) {
+                                                       @RequestHeader("Accept-Language") String language) {
 
         LocaleContextHolder.setLocale(Locale.forLanguageTag(language));
+
         return weatherFactorService.getFactorsByHour(precisionTimeFlight);
     }
 
     @PostMapping("/periods")
     public List<WeatherFactorsPeriod> getFactorsForNextDay(@RequestBody @Validated Flight flight,
                                                            @RequestParam("days") int amountOfDays,
-                                                           @RequestHeader("Language") String language) {
+                                                           @RequestHeader("Accept-Language") String language) {
 
         LocaleContextHolder.setLocale(Locale.forLanguageTag(language));
+
         return weatherFactorService.getFactorsInPeriods(flight, amountOfDays);
     }
 }

@@ -20,14 +20,18 @@ public class WindCalculatorImpl implements WindCalculator {
 
     @Override
     public int getCrossWind(AirportWeatherDto airportWeatherDto) {
-        return Math.abs(calculateWindSpeedByRadian(airportWeatherDto, (windSpeed, windDirection, runwayHeadingDeg) ->
-                windSpeed * sin(toRadians(runwayHeadingDeg - windDirection))));
+        WindFormula crosswindFormula = (windSpeed, windDirection, runwayHeadingDeg) ->
+                windSpeed * sin(toRadians(runwayHeadingDeg - windDirection));
+
+        return Math.abs(calculateWindSpeedByRadian(airportWeatherDto, crosswindFormula));
     }
 
     @Override
     public int getTailwind(AirportWeatherDto airportWeatherDto) {
-        return calculateWindSpeedByRadian(airportWeatherDto, (windSpeed, windDirection, runwayHeadingDeg) ->
-                windSpeed * cos(toRadians(runwayHeadingDeg - windDirection)));
+        WindFormula tailWindFormula = (windSpeed, windDirection, runwayHeadingDeg) ->
+                windSpeed * cos(toRadians(runwayHeadingDeg - windDirection));
+
+        return calculateWindSpeedByRadian(airportWeatherDto, tailWindFormula);
     }
 
     private int calculateWindSpeedByRadian(AirportWeatherDto airportWeatherDto, WindFormula windFormula) {
@@ -37,8 +41,8 @@ public class WindCalculatorImpl implements WindCalculator {
         List<Integer> crosswindSpeedByRunway = new ArrayList<>();
 
         for (RunwayDto runwayDto : airportWeatherDto.getRunwaysDTO()) {
-            int heHeadingDegResult = BigDecimal.valueOf(
-                            windFormula.formula(windSpeed, windDirection, runwayDto.getHeHeadingDegT()))
+            int heHeadingDegResult = BigDecimal
+                    .valueOf(windFormula.formula(windSpeed, windDirection, runwayDto.getHeHeadingDegT()))
                     .setScale(0, RoundingMode.UP)
                     .abs()
                     .intValue();
@@ -46,7 +50,9 @@ public class WindCalculatorImpl implements WindCalculator {
             crosswindSpeedByRunway.add(heHeadingDegResult);
         }
 
-        return crosswindSpeedByRunway.stream().max(Integer::compare)
+        return crosswindSpeedByRunway
+                .stream()
+                .max(Integer::compare)
                 .orElseThrow(WindSpeedCalculationFailedException::new);
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +65,10 @@ public class WeatherFactorCollectorImpl implements WeatherFactorCollector {
                 TAILWIND, windCalculator.getTailwind(airportWeatherDto),
                 VISIBILITY, Math.round(airportWeatherDto.getWeather().getVisibilityM()),
                 RAIN, Math.round(airportWeatherDto.getWeather().getRainMm()),
-                CLOUDBASE, runwayWeatherCalculator.calculateCloudBase(airportWeatherDto, airportWeatherDto.getElevationM()));
+                CLOUDBASE, runwayWeatherCalculator.calculateCloudBase(
+                        airportWeatherDto.getWeather().getTemperature(),
+                        airportWeatherDto.getWeather().getDewPoint(),
+                        airportWeatherDto.getElevationM()));
     }
 
     private FactorInfluence checkPhaseLimit(IlsCategory ilsCategory, FlightPhase phase, WeatherFactorName name, int value) {

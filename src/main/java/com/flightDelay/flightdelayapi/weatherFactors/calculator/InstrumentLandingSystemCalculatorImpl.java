@@ -47,13 +47,19 @@ public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingS
 
     private int getCloudBaseFt(AirportWeatherDto airportWeatherDto, int elevationFt) {
         int elevation = UnitConverter.feetToMeters(elevationFt);
-        int cloudBase = runwayWeatherCalculator.calculateCloudBase(airportWeatherDto, elevation);
+        int cloudBase = runwayWeatherCalculator.calculateCloudBase(
+                airportWeatherDto.getWeather().getTemperature(),
+                airportWeatherDto.getWeather().getDewPoint(),
+                elevation);
+
         return UnitConverter.metersToFeet(cloudBase);
     }
 
     private int getRunwayVisualRange(AirportWeatherDto airportWeatherDto) {
         int runwayVisualRange = runwayWeatherCalculator.calculateRunwayVisualRange(
-                airportWeatherDto.getWeather().getVisibilityM(), airportWeatherDto.getWeather().isDay());
+                airportWeatherDto.getWeather().getVisibilityM(),
+                airportWeatherDto.getWeather().isDay());
+
         return UnitConverter.metersToFeet(runwayVisualRange);
     }
 }

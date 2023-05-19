@@ -47,7 +47,8 @@ public class AirportWeatherCreatorImpl implements AirportWeatherCreator {
 
         List<Weather> weatherInPeriods = weatherAPIService.getWeatherPeriods(airportIdent, amountOfDays);
 
-        return weatherInPeriods.stream()
+        return weatherInPeriods
+                .stream()
                 .map(weather -> mapAirportWeatherDto(weather, airport, flight))
                 .toList();
     }
@@ -64,12 +65,13 @@ public class AirportWeatherCreatorImpl implements AirportWeatherCreator {
     }
 
     private List<RunwayDto> mapRunwaysToDto(Set<Runway> runways) {
-        List<RunwayDto> runwaysDto = runways.stream()
+        List<RunwayDto> runwaysDto = runways
+                .stream()
                 .map(runway -> modelMapper.map(runway, RunwayDto.class))
                 .toList();
 
-        runwaysDto.forEach(runwayDto ->
-                runwayDto.setAverageElevationFt((runwayDto.getHeElevationFt() + runwayDto.getLeElevationFt()) / 2));
+        runwaysDto.forEach(runwayDto -> runwayDto
+                .setAverageElevationFt((runwayDto.getHeElevationFt() + runwayDto.getLeElevationFt()) / 2));
 
         return runwaysDto;
     }

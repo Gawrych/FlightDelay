@@ -30,7 +30,7 @@ public class LandingFactorInfluenceQualifier extends FlightPhaseFactorInfluenceQ
                     landingLimitsProperties.getLowerThresholdOfCrosswindIls2And3AKt(),
                     landingLimitsProperties.getUpperThresholdOfCrosswindIls2And3AKt());
 
-            case CATEGORY_3B, CATEGORY_3C -> FactorInfluence.HIGH; // The most airports do not support ILS category greater than 3A
+            case CATEGORY_3B, CATEGORY_3C -> FactorInfluence.HIGH;
         };
     }
 }

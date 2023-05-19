@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 @EnableConfigurationProperties({LandingLimitsProperties.class, TakeoffLimitsProperties.class})
 public class FlightDelayApiApplication {
+	// TODO: Create slf4j custom log format and set target
 
 	public static void main(String[] args) {
 		SpringApplication.run(FlightDelayApiApplication.class, args);

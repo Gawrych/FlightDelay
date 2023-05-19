@@ -2,5 +2,17 @@ package com.flightDelay.flightdelayapi.statisticsFactors.enums;
 
 public enum StatisticFactorName {
 
+    PERCENTAGE_OF_DELAYS_LAST_YEAR,
 
+    PERCENTAGE_OF_DELAYS_ABOVE_15_LAST_YEAR,
+
+    PERCENTAGE_OF_DELAYS_LAST_MONTHS,
+
+    PERCENTAGE_OF_DELAYS_ABOVE_15_LAST_MONTHS,
+
+    AVERAGE_DELAY_TIME,
+
+    MOST_COMMON_CAUSE,
+
+    LAST_FEW_DELAY_EVENTS
 }

@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -30,7 +31,7 @@ public abstract class WeatherMapper {
 
     public List<Weather> mapPeriods(JsonNode rootNode, int startHour, int amountOfDays) {
         JsonNode hourNode = rootNode.path("hourly");
-        List<Weather> nextDayWeather = new ArrayList<>();
+        List<Weather> nextDayWeather = new LinkedList<>();
 
         int amountOfPeriods = (amountOfDays * 24) / amountOfHoursInOnePeriod;
         int endHour = startHour + (amountOfPeriods * amountOfHoursInOnePeriod);

@@ -9,6 +9,7 @@ import com.flightDelay.flightdelayapi.weatherFactors.exception.WeatherApiDateOut
 import com.flightDelay.flightdelayapi.weatherFactors.model.Weather;
 import com.flightDelay.flightdelayapi.weatherFactors.mapper.WeatherMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WeatherAPIServiceImpl implements WeatherAPIService {
@@ -68,7 +70,11 @@ public class WeatherAPIServiceImpl implements WeatherAPIService {
     private JsonNode getJsonNodeFromApi(String populatedUrl) {
         try {
             URL url = new URL(populatedUrl);
-            return objectMapper.readTree(url);
+            JsonNode jsonNode = objectMapper.readTree(url);
+
+            log.info("Weather data from api by url: {}", populatedUrl);
+
+            return jsonNode;
 
         } catch (IOException error) {
            throw new WeatherApiConnectionFailedException();

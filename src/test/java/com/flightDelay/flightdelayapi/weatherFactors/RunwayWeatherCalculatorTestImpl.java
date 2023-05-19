@@ -1,6 +1,5 @@
 package com.flightDelay.flightdelayapi.weatherFactors;
 
-import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.IlsCategory;
 import com.flightDelay.flightdelayapi.shared.UnitConverter;
 import com.flightDelay.flightdelayapi.weatherFactors.calculator.RunwayWeatherCalculator;
@@ -22,7 +21,7 @@ class RunwayWeatherCalculatorTestImpl implements RunwayWeatherCalculator {
     }
 
     @Override
-    public int calculateCloudBase(AirportWeatherDto airportWeatherDto, int elevationMeters) {
+    public int calculateCloudBase(float temperature, float dewPoint, int elevationMeters) {
         return UnitConverter.feetToMeters(cloudBase);
     }
 }

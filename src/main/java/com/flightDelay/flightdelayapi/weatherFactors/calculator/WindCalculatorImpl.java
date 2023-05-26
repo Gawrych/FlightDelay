@@ -1,7 +1,7 @@
 package com.flightDelay.flightdelayapi.weatherFactors.calculator;
 
+import com.flightDelay.flightdelayapi.runway.dto.RunwayWeatherDto;
 import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
-import com.flightDelay.flightdelayapi.runway.RunwayDto;
 import com.flightDelay.flightdelayapi.weatherFactors.exception.WindSpeedCalculationFailedException;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -40,9 +40,9 @@ public class WindCalculatorImpl implements WindCalculator {
 
         List<Integer> crosswindSpeedByRunway = new ArrayList<>();
 
-        for (RunwayDto runwayDto : airportWeatherDto.getRunwaysDTO()) {
+        for (RunwayWeatherDto runwayWeatherDto : airportWeatherDto.getRunwaysDTO()) {
             int heHeadingDegResult = BigDecimal
-                    .valueOf(windFormula.formula(windSpeed, windDirection, runwayDto.getHeHeadingDegT()))
+                    .valueOf(windFormula.formula(windSpeed, windDirection, runwayWeatherDto.getHeHeadingDegT()))
                     .setScale(0, RoundingMode.UP)
                     .abs()
                     .intValue();

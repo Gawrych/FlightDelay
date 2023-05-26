@@ -1,23 +1,22 @@
-package com.flightDelay.flightdelayapi.runway;
+package com.flightDelay.flightdelayapi.runway.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @RequiredArgsConstructor
-public class RunwayDto {
+public class RunwayWeatherDto {
 
     @NotNull
     private Long id;
 
     private boolean lighted;
 
-    private int leElevationFt;
-
     private int leHeadingDegT;
-
-    private int heElevationFt;
 
     private int heHeadingDegT;
 

@@ -30,15 +30,14 @@ public class AdditionalTimeFactorCollectorImpl implements AdditionalTimeFactorCo
 
     public StatisticsData getFactors(Flight flight) {
         StatisticsData statisticsData = new StatisticsData();
+        FlightPhase phase = flight.getPhase();
         String airportIdent = flight.getAirportIdent();
 
         for (AdditionalTimeFactors factorName : AdditionalTimeFactors.values()) {
             try {
                 PrecisionFactor factor = switch (factorName) {
-                    case TOP_MONTH_ARRIVAL -> getTopMonth(factorName, airportIdent, FlightPhase.ARRIVAL);
-                    case TOP_MONTH_DEPARTURE -> getTopMonth(factorName, airportIdent, FlightPhase.DEPARTURE);
-                    case AVERAGE_ARRIVAL -> getAverage(factorName, airportIdent, FlightPhase.ARRIVAL);
-                    case AVERAGE_DEPARTURE -> getAverage(factorName, airportIdent, FlightPhase.DEPARTURE);
+                    case TOP_MONTH -> getTopMonth(factorName, airportIdent, phase);
+                    case AVERAGE -> getAverage(factorName, airportIdent, phase);
                 };
 
                 statisticsData.add(factorName, factor);
@@ -46,7 +45,7 @@ public class AdditionalTimeFactorCollectorImpl implements AdditionalTimeFactorCo
             } catch (UnableToCalculateDueToLackOfDataException e) {
                 log.warn("Unable to calculate due to lack of data for airport with ident: {}", airportIdent);
 
-                statisticsData.add(factorName, getNoDataFactor(factorName));
+                statisticsData.add(factorName, getNoDataFactor(factorName, phase));
             }
         }
 
@@ -61,6 +60,7 @@ public class AdditionalTimeFactorCollectorImpl implements AdditionalTimeFactorCo
 
         return statisticFactorCreator.createTopMonth(
                 factorName,
+                phase,
                 additionalTimeFactorsCalculator.calculateTopMonth(allByAirportWithDateAfter));
     }
 
@@ -72,10 +72,11 @@ public class AdditionalTimeFactorCollectorImpl implements AdditionalTimeFactorCo
 
         return statisticFactorCreator.createAverage(
                 factorName,
+                phase,
                 additionalTimeFactorsCalculator.calculateAverageFromList(allByAirportWithDateAfter));
     }
 
-    private PrecisionFactor getNoDataFactor(StatisticFactorName factorName) {
-        return statisticFactorCreator.getNoDataFactor(factorName);
+    private PrecisionFactor getNoDataFactor(StatisticFactorName factorName, FlightPhase phase) {
+        return statisticFactorCreator.getNoDataFactor(factorName, phase);
     }
 }

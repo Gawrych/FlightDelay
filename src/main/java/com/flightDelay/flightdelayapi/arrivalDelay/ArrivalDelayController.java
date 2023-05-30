@@ -3,6 +3,7 @@ package com.flightDelay.flightdelayapi.arrivalDelay;
 import com.flightDelay.flightdelayapi.shared.dataImport.DataImportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class ArrivalDelayController {
     private String arrivalDelayConverterName;
 
     private final ArrivalDelayService arrivalDelayService;
+
 
     private final DataImportService dataImportService;
 

@@ -9,10 +9,7 @@ def departure_additional_time_completion(json_to_be_completed, stage):
     for jsonObj in json_to_be_completed:
         year = jsonObj['YEAR']
         month = jsonObj['MONTH_NUM']
-        last_day_of_month = calendar.monthrange(year, month)[1]
-
-        flight_date_in_days = (datetime.datetime(year, month, last_day_of_month) - unix_time).days
-        jsonObj['FLT_DATE'] = flight_date_in_days
+        jsonObj['FLT_DATE'] = (datetime.datetime(year, month, 1) - unix_time).total_seconds() * 1000
         jsonObj['STAGE'] = stage
 
     return json_to_be_completed
@@ -33,8 +30,8 @@ def preprocess_taxi_in_additional_time(df):
 
 
 def preprocess_taxi_out_additional_time(df):
-    cleaned_json = df.drop(columns=['APT_NAME', 'MONTH_MON', 'STATE_NAME', 'TF', 'PIVOT_LABEL', 'COMMENT']) \
-        .to_dict('records')
+    cleaned_json = df.drop(columns=['APT_NAME', 'MONTH_MON', 'STATE_NAME', 'TF', 'PIVOT_LABEL', 'COMMENT']). \
+        dropna(subset=['TOTAL_ADD_TIME_MIN']).to_dict('records')
 
     return departure_additional_time_completion(cleaned_json, 'TAXI_OUT')
 
@@ -66,6 +63,9 @@ class DepartureAdditionalTimeScript:
         json_dictionary = converter.replace_nan_to_null(json_dictionary)
 
         json_str = json.dumps(json_dictionary, indent=0)
+        file = open("/home/broslaw/Programming/testCompresion/additionalTime.json", "w")
+        file.write(json_str)
+        file.close()
         print(json_str)
 
 

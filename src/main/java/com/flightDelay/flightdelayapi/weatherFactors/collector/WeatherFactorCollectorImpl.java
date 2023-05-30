@@ -1,24 +1,22 @@
 package com.flightDelay.flightdelayapi.weatherFactors.collector;
 
-import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactor;
-import com.flightDelay.flightdelayapi.weatherFactors.creator.WeatherFactorCreator;
-import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
-import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
 import com.flightDelay.flightdelayapi.shared.enums.FactorInfluence;
-import com.flightDelay.flightdelayapi.weatherFactors.enums.WeatherFactorName;
-import com.flightDelay.flightdelayapi.weatherFactors.enums.IlsCategory;
 import com.flightDelay.flightdelayapi.weatherFactors.calculator.InstrumentLandingSystemCalculator;
 import com.flightDelay.flightdelayapi.weatherFactors.calculator.RunwayWeatherCalculator;
 import com.flightDelay.flightdelayapi.weatherFactors.calculator.WindCalculator;
+import com.flightDelay.flightdelayapi.weatherFactors.creator.WeatherFactorCreator;
+import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
+import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
+import com.flightDelay.flightdelayapi.weatherFactors.enums.IlsCategory;
+import com.flightDelay.flightdelayapi.weatherFactors.enums.WeatherFactorName;
+import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactor;
 import com.flightDelay.flightdelayapi.weatherFactors.qualifier.FlightPhaseFactorInfluenceQualifier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +41,7 @@ public class WeatherFactorCollectorImpl implements WeatherFactorCollector {
 
     private final WindCalculator windCalculator;
 
+    @Override
     public List<WeatherFactor> getWeatherFactors(AirportWeatherDto airportWeatherDto) {
         IlsCategory ilsCategory = instrumentLandingSystemCalculator.getMinRequiredCategory(airportWeatherDto);
 

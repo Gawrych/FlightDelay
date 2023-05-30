@@ -1,9 +1,8 @@
 package com.flightDelay.flightdelayapi.weatherFactors.mapper;
 
+import com.flightDelay.flightdelayapi.runway.dto.RunwayWeatherDto;
 import com.flightDelay.flightdelayapi.shared.Flight;
-import com.flightDelay.flightdelayapi.shared.PrecisionTimeFlight;
 import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
-import com.flightDelay.flightdelayapi.runway.RunwayDto;
 import com.flightDelay.flightdelayapi.weatherFactors.model.Weather;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -21,5 +20,5 @@ public interface AirportWeatherMapper {
             @Mapping(source = "flight.phase", target = "phase"),
             @Mapping(source = "runwaysDto", target = "runwaysDTO")
     })
-    AirportWeatherDto mapFrom(Weather weather, List<RunwayDto> runwaysDto, Flight flight, int elevationM);
+    AirportWeatherDto mapFrom(Weather weather, List<RunwayWeatherDto> runwaysDto, Flight flight, int elevationM);
 }

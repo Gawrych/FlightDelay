@@ -5,6 +5,7 @@ import com.flightDelay.flightdelayapi.shared.exception.importData.JsonFileDataCo
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -35,14 +36,14 @@ public class DataImportServiceImpl implements DataImportService {
             Process process = processBuilder.start();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String newDataInJson = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+            String resultFromConverter = reader.lines().collect(Collectors.joining(System.lineSeparator()));
 
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                throw new JsonFileDataConverterUnexpectedExitCodeException(scriptName, exitCode);
+                throw new JsonFileDataConverterUnexpectedExitCodeException(scriptName, exitCode, resultFromConverter);
             }
 
-            return service.updateFromJson(newDataInJson);
+            return service.updateFromJson(resultFromConverter);
 
         } catch (IOException | InterruptedException e) {
             throw new JsonFileDataConverterFailed(scriptName);

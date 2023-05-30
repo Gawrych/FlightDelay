@@ -7,8 +7,14 @@ import com.flightDelay.flightdelayapi.shared.mapper.EntityMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -23,6 +29,16 @@ public class PreDepartureDelayServiceImpl implements PreDepartureDelayService {
     private final EntityMapper entityMapper;
 
     private final ObjectMapper objectMapper;
+
+    @Value("${statistics.amountOfMonthsToCollectData}")
+    private int amountOfMonthsToCollectData;
+
+
+    @Override
+    public List<PreDepartureDelay> findAllLatestByAirport(String airportIdent) {
+        LocalDate startDate = LocalDate.now().minusMonths(amountOfMonthsToCollectData);
+        return preDepartureDelayRepository.findAllByAirportWithDateAfter(airportIdent, startDate);
+    }
 
     @Override
     @Transactional
@@ -39,7 +55,7 @@ public class PreDepartureDelayServiceImpl implements PreDepartureDelayService {
         String preDepartureDelayId = preDepartureDelay.generateId();
 
         if (!airportService.existsByAirportIdent(airportIdent)) {
-            log.warn("New PreDepartureDelay with id: {} have airport ident not matching to any airport in the database: {}",
+            log.warn("New PreDepartureDelay with id: {} has airport ident not matching to any airport in the database: {}",
                     preDepartureDelayId,
                     airportIdent);
 

@@ -1,14 +1,14 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.controller;
 
 import com.flightDelay.flightdelayapi.shared.Flight;
-import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactor;
+import com.flightDelay.flightdelayapi.statisticsFactors.model.StatisticsData;
+import com.flightDelay.flightdelayapi.statisticsFactors.service.StatisticFactorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,13 +18,18 @@ import java.util.Locale;
 @RequestMapping("/api/v1/statistics")
 public class StatisticFactorController {
 
-    @PostMapping("/airport")
-    public List<WeatherFactor> getFactors(@RequestBody @Validated Flight flight,
-                                          @RequestHeader("Accept-Language") String language) {
+    public final StatisticFactorService statisticFactorService;
+
+    @PostMapping("/phase")
+    public List<StatisticsData> getFactors(@RequestBody @Validated Flight flight,
+                                           @RequestHeader(
+                                                 value = "Accept-Language",
+                                                 defaultValue = "en-US") String language) {
 
         LocaleContextHolder.setLocale(Locale.forLanguageTag(language));
-        log.info("Language has been set to {}", Locale.forLanguageTag(language).getDisplayName());
+        log.debug("Result language has been set to {}", Locale.forLanguageTag(language).getDisplayName());
 
-        return new ArrayList<>();
+
+        return statisticFactorService.getFactorsByPhase(flight);
     }
 }

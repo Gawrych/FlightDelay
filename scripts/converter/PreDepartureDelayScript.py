@@ -3,7 +3,7 @@ from ExcelToJsonConverter import ExcelToJsonConverter
 
 
 def preprocess_predeparture_delay(df):
-    return df.dropna(subset=['DLY_ATC_PRE_2']).to_dict('records')
+    return df[df['FLT_DEP_1'] != 0].dropna(subset=['DLY_ATC_PRE_2']).to_dict('records')
 
 
 class PreDepartureDelayScript:
@@ -17,6 +17,9 @@ class PreDepartureDelayScript:
         json_dictionary = converter.replace_nan_to_null(json_dictionary)
 
         json_str = json.dumps(json_dictionary, indent=0)
+        file = open("/home/broslaw/Programming/testCompresion/preDeparture.json", "w")
+        file.write(json_str)
+        file.close()
         print(json_str)
 
 

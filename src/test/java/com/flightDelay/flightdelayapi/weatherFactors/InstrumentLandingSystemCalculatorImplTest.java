@@ -1,18 +1,18 @@
 package com.flightDelay.flightdelayapi.weatherFactors;
 
-import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
-import com.flightDelay.flightdelayapi.runway.RunwayDto;
-import com.flightDelay.flightdelayapi.weatherFactors.enums.IlsCategory;
+import com.flightDelay.flightdelayapi.runway.dto.RunwayWeatherDto;
 import com.flightDelay.flightdelayapi.weatherFactors.calculator.InstrumentLandingSystemCalculatorImpl;
+import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
+import com.flightDelay.flightdelayapi.weatherFactors.enums.IlsCategory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -24,12 +24,12 @@ class InstrumentLandingSystemCalculatorImplTest {
 
     @BeforeEach
     void setUp() {
-        RunwayDto runwayDto = new RunwayDto();
-        runwayDto.setId(1L);
+        RunwayWeatherDto runwayWeatherDto = new RunwayWeatherDto();
+        runwayWeatherDto.setId(1L);
 
         weatherCalculatorTest = new RunwayWeatherCalculatorTestImpl();
         airportWeatherDto = new AirportWeatherDto();
-        airportWeatherDto.setRunwaysDTO(List.of(runwayDto));
+        airportWeatherDto.setRunwaysDTO(List.of(runwayWeatherDto));
     }
 
     @Test

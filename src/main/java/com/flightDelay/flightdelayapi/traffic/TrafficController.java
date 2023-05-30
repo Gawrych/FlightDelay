@@ -1,11 +1,14 @@
 package com.flightDelay.flightdelayapi.traffic;
 
-import com.flightDelay.flightdelayapi.shared.dataImport.DataImportServiceImpl;
+import com.flightDelay.flightdelayapi.shared.dataImport.DataImportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -19,7 +22,8 @@ public class TrafficController {
 
     private final TrafficServiceImpl trafficService;
 
-    private final DataImportServiceImpl dataImportService;
+
+    private final DataImportService dataImportService;
 
     @PutMapping("/file")
     public ResponseEntity<List<?>> updateFromFile() {

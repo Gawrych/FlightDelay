@@ -1,6 +1,6 @@
 package com.flightDelay.flightdelayapi.weatherFactors.calculator;
+import com.flightDelay.flightdelayapi.runway.dto.RunwayWeatherDto;
 import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
-import com.flightDelay.flightdelayapi.runway.RunwayDto;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.IlsCategory;
 import com.flightDelay.flightdelayapi.shared.UnitConverter;
 import com.flightDelay.flightdelayapi.weatherFactors.exception.InstrumentLandingSystemCalculationFailedException;
@@ -22,7 +22,7 @@ public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingS
 
         List<IlsCategory> ilsCategoriesBasedOnRunway = new ArrayList<>();
 
-        for (RunwayDto runway : airportWeatherDto.getRunwaysDTO()) {
+        for (RunwayWeatherDto runway : airportWeatherDto.getRunwaysDTO()) {
             int cloudBaseFt = getCloudBaseFt(airportWeatherDto, runway.getAverageElevationFt());
 
             Optional<IlsCategory> category = Arrays.stream(IlsCategory.class.getEnumConstants())

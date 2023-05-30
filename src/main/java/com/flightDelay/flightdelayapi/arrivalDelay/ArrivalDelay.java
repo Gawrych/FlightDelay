@@ -9,6 +9,10 @@ import com.flightDelay.flightdelayapi.airport.AirportServiceImpl;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 @Entity
 @Getter
 @Setter
@@ -30,9 +34,9 @@ public class ArrivalDelay {
     @Column(nullable = false)
     private Integer month;
 
+    @Column(columnDefinition = "DATE")
     @JsonProperty("FLT_DATE")
-    @Column(nullable = false)
-    private Long flightDate;
+    private LocalDate flightDate;
 
     @JsonProperty("APT_ICAO")
     @Column(nullable = false)
@@ -99,8 +103,9 @@ public class ArrivalDelay {
     private Integer numberOfDelayedArrivalsAbove15Minutes;
 
     @JsonProperty("FLT_DATE")
-    public void setFlightDate(long flightDate) {
-        this.flightDate = java.time.Duration.ofMillis(flightDate).toDays();
+    public void setFlightDate(long flightDateMillis) {
+        Instant instant = Instant.ofEpochMilli(flightDateMillis);
+        this.flightDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     @PrePersist

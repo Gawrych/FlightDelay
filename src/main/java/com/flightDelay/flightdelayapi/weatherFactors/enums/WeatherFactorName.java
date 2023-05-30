@@ -1,5 +1,10 @@
 package com.flightDelay.flightdelayapi.weatherFactors.enums;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum WeatherFactorName {
 
     CROSSWIND("kt"),
@@ -13,12 +18,4 @@ public enum WeatherFactorName {
     RAIN("mm");
 
     private final String unit;
-
-    WeatherFactorName(String unit) {
-        this.unit = unit;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
 }

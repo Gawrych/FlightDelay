@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.util.LinkedList;
 import java.util.List;
 
+@Mapper(componentModel = "spring")
 public abstract class WeatherMapperImpl implements WeatherMapper {
 
     @Value("${weather.periods.amountOfHoursInOnePeriod}")

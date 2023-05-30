@@ -1,5 +1,10 @@
 package com.flightDelay.flightdelayapi.weatherFactors.enums;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum IlsCategory {
 
     NONPRECISION(0, 2400, 300),
@@ -19,22 +24,4 @@ public enum IlsCategory {
     private final int runwayVisualRangeThresholdFt;
 
     private final int cloudBaseThresholdFt;
-
-    IlsCategory(int value, int lowerRunwayVisualRangeThresholdFt, int lowerCloudBaseThresholdFt) {
-        this.value = value;
-        this.runwayVisualRangeThresholdFt = lowerRunwayVisualRangeThresholdFt;
-        this.cloudBaseThresholdFt = lowerCloudBaseThresholdFt;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public int getRunwayVisualRangeThresholdFt() {
-        return runwayVisualRangeThresholdFt;
-    }
-
-    public int getCloudBaseThresholdFt() {
-        return cloudBaseThresholdFt;
-    }
 }

@@ -1,12 +1,16 @@
-package com.flightDelay.flightdelayapi.departureAdditionalTime;
+package com.flightDelay.flightdelayapi.additionalTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.flightDelay.flightdelayapi.airport.Airport;
-import com.flightDelay.flightdelayapi.airport.AirportService;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Entity
 @Getter
@@ -15,8 +19,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DepartureAdditionalTime {
+public class AdditionalTime {
+
     @Id
+    @NotNull
     @Column(unique = true, nullable = false)
     private String generatedId;
 
@@ -28,9 +34,9 @@ public class DepartureAdditionalTime {
     @JsonProperty("MONTH_NUM")
     private Integer monthNum;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "DATE")
     @JsonProperty("FLT_DATE")
-    private Long flightDate;
+    private LocalDate flightDate;
 
     @Column(nullable = false)
     @JsonProperty("STAGE")
@@ -41,19 +47,25 @@ public class DepartureAdditionalTime {
     private String airportCode;
 
     @JsonProperty("TOTAL_REF_NB_FL")
-    private Integer totalDepartureFlight;
+    private Integer totalFlight;
 
     @JsonProperty("TOTAL_REF_TIME_MIN")
-    private Double totalReferenceTimeMin;
+    private Integer totalReferenceTimeInMinutes;
 
     @JsonProperty("TOTAL_ADD_TIME_MIN")
-    private Double totalAdditionalTimeMin;
+    private Integer totalAdditionalTimeInMinutes;
 
     @ToString.Exclude
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "airportIdent")
     private Airport airport;
+
+    @JsonProperty("FLT_DATE")
+    public void setFlightDate(long flightDateMillis) {
+        Instant instant = Instant.ofEpochMilli(flightDateMillis);
+        this.flightDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+    }
 
     @PrePersist
     public void autoGenerateId() {

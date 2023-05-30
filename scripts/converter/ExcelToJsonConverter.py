@@ -31,7 +31,7 @@ class ExcelToJsonConverter:
 
             return df
         except FileNotFoundError:
-            print('No such file or directory: "' + file_name + '.xlsx"')
+            print('No such file or directory: "' + self.folder_path + file_name + '.xlsx"')
             exit(1)
 
     def calculate_dates(self):
@@ -45,7 +45,7 @@ class ExcelToJsonConverter:
                 self.months.append(date.month)
 
     def __init__(self):
-        self.folder_path = 'src/main/resources/data/'
+        self.folder_path = '/home/broslaw/Programming/flight-delay-api/src/main/resources/data/'
         self.amountOfMonthsToCollectDataFrom = 12
         self.today = datetime.date.today()
         self.years = []

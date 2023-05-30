@@ -39,7 +39,7 @@ public class ArrivalDelayServiceImpl implements ArrivalDelayService {
         String arrivalDelayId = arrivalDelay.generateId();
 
         if (!airportService.existsByAirportIdent(airportIdent)) {
-            log.warn("New ArrivalDelay with id: {} have airport ident not matching to any airport in the database: {}",
+            log.warn("New ArrivalDelay with id: {} has airport ident not matching to any airport in the database: {}",
                     arrivalDelayId,
                     airportIdent);
 

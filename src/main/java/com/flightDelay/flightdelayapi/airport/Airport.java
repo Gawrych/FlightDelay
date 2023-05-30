@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.flightDelay.flightdelayapi.arrivalDelay.ArrivalDelay;
-import com.flightDelay.flightdelayapi.departureAdditionalTime.DepartureAdditionalTime;
+import com.flightDelay.flightdelayapi.additionalTime.AdditionalTime;
 import com.flightDelay.flightdelayapi.preDepartureDelay.PreDepartureDelay;
 import com.flightDelay.flightdelayapi.region.Region;
 import com.flightDelay.flightdelayapi.runway.Runway;
@@ -89,5 +89,5 @@ public class Airport {
     @ToString.Exclude
     @JsonManagedReference
     @OneToMany(mappedBy="airport")
-    private List<DepartureAdditionalTime> departureAdditionalTimes;
+    private List<AdditionalTime> additionalTimes;
 }

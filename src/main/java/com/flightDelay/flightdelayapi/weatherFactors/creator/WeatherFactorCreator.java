@@ -7,6 +7,4 @@ import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactor;
 public interface WeatherFactorCreator {
 
     WeatherFactor createFactor(WeatherFactorName weatherFactorName, int value, FactorInfluence influence);
-
-    String getMessage(WeatherFactorName weatherFactorName);
 }

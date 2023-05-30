@@ -1,6 +1,6 @@
 package com.flightDelay.flightdelayapi.weatherFactors.dto;
 
-import com.flightDelay.flightdelayapi.runway.RunwayDto;
+import com.flightDelay.flightdelayapi.runway.dto.RunwayWeatherDto;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
 import com.flightDelay.flightdelayapi.weatherFactors.model.Weather;
 import lombok.*;
@@ -22,5 +22,5 @@ public class AirportWeatherDto {
 
     private FlightPhase phase;
 
-    private List<RunwayDto> runwaysDTO;
+    private List<RunwayWeatherDto> runwaysDTO;
 }

@@ -36,10 +36,10 @@ public class TrafficServiceImpl implements TrafficService {
     @Override
     public boolean save(Traffic traffic) {
         String airportIdent = traffic.getAirportCode();
-        String trafficId = traffic.getGeneratedId();
+        String trafficId = traffic.generateId();
 
         if (!airportService.existsByAirportIdent(airportIdent)) {
-            log.warn("New Traffic with id: {} have airport ident not matching to any airport in the database: {}",
+            log.warn("New Traffic with id: {} has airport ident not matching to any airport in the database: {}",
                     trafficId,
                     airportIdent);
 

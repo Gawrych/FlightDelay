@@ -2,6 +2,7 @@ package com.flightDelay.flightdelayapi.weatherFactors.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.flightDelay.flightdelayapi.shared.enums.FactorInfluence;
+import com.flightDelay.flightdelayapi.weatherFactors.enums.WeatherFactorName;
 import lombok.*;
 
 @Getter
@@ -10,6 +11,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WeatherFactor {
+
+    @JsonProperty("id")
+    private WeatherFactorName id;
 
     @JsonProperty("title")
     private String title;

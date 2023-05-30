@@ -24,10 +24,12 @@ public class WeatherFactorController {
 
     @PostMapping("/hour")
     public List<WeatherFactor> getFactorsToSpecifyTime(@RequestBody @Validated PrecisionTimeFlight precisionTimeFlight,
-                                                       @RequestHeader("Accept-Language") String language) {
+                                                       @RequestHeader(
+                                                               value = "Accept-Language",
+                                                               defaultValue = "en-US") String language) {
 
         LocaleContextHolder.setLocale(Locale.forLanguageTag(language));
-        log.info("Language has been set to {}", Locale.forLanguageTag(language).getDisplayName());
+        log.debug("Result language has been set to {}", Locale.forLanguageTag(language).getDisplayName());
 
         return weatherFactorService.getFactorsByHour(precisionTimeFlight);
     }
@@ -35,10 +37,12 @@ public class WeatherFactorController {
     @PostMapping("/periods")
     public List<WeatherFactorsPeriod> getFactorsForNextDay(@RequestBody @Validated Flight flight,
                                                            @RequestParam("days") int amountOfDays,
-                                                           @RequestHeader("Accept-Language") String language) {
+                                                           @RequestHeader(
+                                                                   value = "Accept-Language",
+                                                                   defaultValue = "en-US") String language) {
 
         LocaleContextHolder.setLocale(Locale.forLanguageTag(language));
-        log.info("Language has been set to {}", Locale.forLanguageTag(language).getDisplayName());
+        log.debug("Result language has been set to {}", Locale.forLanguageTag(language).getDisplayName());
 
         return weatherFactorService.getFactorsInPeriods(flight, amountOfDays);
     }

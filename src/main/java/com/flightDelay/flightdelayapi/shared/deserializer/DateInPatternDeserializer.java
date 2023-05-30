@@ -13,14 +13,14 @@ import java.time.format.DateTimeParseException;
 
 public class DateInPatternDeserializer extends JsonDeserializer<LocalDateTime> {
 
-    @Value("${date.defaultPattern}")
-    private String datePattern;
+    @Value("${date.defaultDateWithTimePattern}")
+    private String defaultDateWithTimePattern;
 
     @Override
     public LocalDateTime deserialize(JsonParser jsonParser,
                                      DeserializationContext deserializationContext) throws IOException {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(datePattern);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(defaultDateWithTimePattern);
 
         String dateInJson = jsonParser.getValueAsString();
 
@@ -28,7 +28,7 @@ public class DateInPatternDeserializer extends JsonDeserializer<LocalDateTime> {
             return LocalDateTime.parse(dateInJson, formatter);
 
         } catch (DateTimeParseException e) {
-            throw new InvalidDatePatternException(datePattern.replace("'", "").toUpperCase());
+            throw new InvalidDatePatternException(defaultDateWithTimePattern.replace("'", "").toUpperCase());
         }
     }
 }

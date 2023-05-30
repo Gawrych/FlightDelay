@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.flightDelay.flightdelayapi.shared.exception.importData.ProcessingJsonDataFailedException;
 import org.mapstruct.Mapper;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Mapper(componentModel = "spring")
 public abstract class EntityMapper {

@@ -8,13 +8,16 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class RunwayWeatherDto {
 
     @NotNull
     private Long id;
 
     private boolean lighted;
+
+//    private int leElevationFt;
+//
+//    private int heElevationFt;
 
     private int leHeadingDegT;
 

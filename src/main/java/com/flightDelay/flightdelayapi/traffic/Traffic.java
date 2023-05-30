@@ -7,6 +7,10 @@ import com.flightDelay.flightdelayapi.airport.Airport;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 @Entity
 @Getter
 @Setter
@@ -31,9 +35,9 @@ public class Traffic {
     @JsonProperty("MONTH_NUM")
     @Column(nullable = false)
     private Integer monthNum;
+    @Column(columnDefinition = "DATE")
     @JsonProperty("FLT_DATE")
-    @Column(nullable = false)
-    private Long flightDate;
+    private LocalDate flightDate;
 
     @JsonProperty("FLT_DEP_1")
     private Integer flightDepartures;
@@ -54,8 +58,9 @@ public class Traffic {
     private Integer flightTotalInstrumentFlightRules;
 
     @JsonProperty("FLT_DATE")
-    public void setFlightDate(long flightDate) {
-        this.flightDate = java.time.Duration.ofMillis(flightDate).toDays();
+    public void setFlightDate(long flightDateMillis) {
+        Instant instant = Instant.ofEpochMilli(flightDateMillis);
+        this.flightDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     @PrePersist

@@ -17,6 +17,7 @@ public class WeatherFactorCreatorImpl implements WeatherFactorCreator {
     @Override
     public WeatherFactor createFactor(WeatherFactorName weatherFactorName, int value, FactorInfluence influence) {
         return WeatherFactor.builder()
+                .id(weatherFactorName)
                 .title(getMessage(weatherFactorName))
                 .unit(weatherFactorName.getUnit())
                 .influenceOnDelay(influence)
@@ -24,8 +25,7 @@ public class WeatherFactorCreatorImpl implements WeatherFactorCreator {
                 .build();
     }
 
-    @Override
-    public String getMessage(WeatherFactorName weatherFactorName) {
+    private String getMessage(WeatherFactorName weatherFactorName) {
         return messageSource.getMessage(weatherFactorName.name(), null, LocaleContextHolder.getLocale());
     }
 }

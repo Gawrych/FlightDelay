@@ -10,6 +10,8 @@ public class TopMonthValueHolder {
 
     private String monthName;
 
+    private int monthNum;
+
     private double value;
 }
 

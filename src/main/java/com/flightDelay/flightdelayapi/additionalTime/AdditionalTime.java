@@ -34,6 +34,7 @@ public class AdditionalTime {
     @JsonProperty("MONTH_NUM")
     private Integer monthNum;
 
+    // TODO: Change flightDate to date everywhere
     @Column(columnDefinition = "DATE")
     @JsonProperty("FLT_DATE")
     private LocalDate flightDate;

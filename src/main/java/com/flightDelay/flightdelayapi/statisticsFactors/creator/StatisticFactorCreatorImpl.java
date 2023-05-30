@@ -43,6 +43,7 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
                 .unit(factorName.getUnit())
                 .value(setPrecision(value.getValue()))
                 .monthName(value.getMonthName())
+                .monthNum(value.getMonthNum())
                 .status(FactorStatus.COMPLETE)
                 .build();
     }

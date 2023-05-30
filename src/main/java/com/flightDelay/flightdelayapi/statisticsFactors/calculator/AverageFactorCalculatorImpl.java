@@ -15,15 +15,20 @@ public class AverageFactorCalculatorImpl implements AverageFactorCalculator {
             throw new UnableToCalculateDueToLackOfDataException();
         }
 
-        double numeratorSum = numerator.stream().mapToInt(Integer::intValue).sum();
-        double denominatorSum = denominator.stream().mapToInt(Integer::intValue).sum();
+        double numeratorSum = numerator.stream()
+                .mapToDouble(Integer::doubleValue)
+                .sum();
+
+        double denominatorSum = denominator.stream()
+                .mapToDouble(Integer::doubleValue)
+                .sum();
 
         return calculateAverage(numeratorSum, denominatorSum);
     }
 
     public double calculateAverage(double numerator, double denominator) {
         return Double.isNaN(numerator / denominator)
-                ? -1
+                ? 0
                 : (numerator / denominator);
     }
 }

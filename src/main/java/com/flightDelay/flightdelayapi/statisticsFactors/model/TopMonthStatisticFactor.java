@@ -15,8 +15,11 @@ import lombok.experimental.SuperBuilder;
 public class TopMonthStatisticFactor extends StatisticFactor {
 
     @JsonProperty("value")
-    private Double value;
+    private double value;
+
+    @JsonProperty("month_num")
+    private int monthNum;
 
     @JsonProperty("month_name")
-    public String monthName;
+    private String monthName;
 }

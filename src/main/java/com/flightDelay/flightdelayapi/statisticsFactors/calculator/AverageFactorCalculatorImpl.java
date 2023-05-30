@@ -11,9 +11,8 @@ import java.util.List;
 public class AverageFactorCalculatorImpl implements AverageFactorCalculator {
 
     public double calculateAverage(List<Integer> numerator, List<Integer> denominator) {
-        if (numerator.isEmpty() || denominator.isEmpty()) {
-            throw new UnableToCalculateDueToLackOfDataException();
-        }
+        if (numerator.isEmpty() || denominator.isEmpty()) throw new UnableToCalculateDueToLackOfDataException();
+
 
         double numeratorSum = numerator.stream()
                 .mapToDouble(Integer::doubleValue)

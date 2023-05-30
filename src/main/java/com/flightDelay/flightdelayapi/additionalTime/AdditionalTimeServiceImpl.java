@@ -3,6 +3,7 @@ package com.flightDelay.flightdelayapi.additionalTime;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
+import com.flightDelay.flightdelayapi.shared.exception.resource.AdditionalTimeDataNotFoundException;
 import com.flightDelay.flightdelayapi.shared.mapper.EntityMapper;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
 import jakarta.transaction.Transactional;
@@ -34,10 +35,14 @@ public class AdditionalTimeServiceImpl implements AdditionalTimeService {
     public List<AdditionalTime> findAllLatestAdditionalTimeByAirport(String airportIdent, FlightPhase phase) {
         LocalDate startDate = LocalDate.now().minusMonths(amountOfMonthsToCollectData);
 
-        return switch (phase) {
+        List<AdditionalTime> additionalTimes = switch (phase) {
             case ARRIVAL -> additionalTimeRepository.findAllArrivalByAirportWithDateAfter(airportIdent, startDate);
             case DEPARTURE -> additionalTimeRepository.findAllDepartureByAirportWithDateAfter(airportIdent, startDate);
         };
+
+        if (additionalTimes.isEmpty()) throw new AdditionalTimeDataNotFoundException();
+
+        return additionalTimes;
     }
 
     @Override

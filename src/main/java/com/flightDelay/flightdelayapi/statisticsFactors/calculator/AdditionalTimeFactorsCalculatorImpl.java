@@ -29,10 +29,6 @@ public class AdditionalTimeFactorsCalculatorImpl implements AdditionalTimeFactor
 
     @Override
     public TopMonthValueHolder calculateTopMonth(List<AdditionalTime> allByAirportWithDateAfter) {
-        if (allByAirportWithDateAfter.isEmpty()) {
-            throw new UnableToCalculateDueToLackOfDataException();
-        }
-
         Map<LocalDate, AdditionalTimeDto> summedValues = sumValuesUnderTheSameDate(allByAirportWithDateAfter);
 
         AdditionalTimeDto topMonth = findTopMonth(summedValues);
@@ -50,10 +46,6 @@ public class AdditionalTimeFactorsCalculatorImpl implements AdditionalTimeFactor
 
     @Override
     public double calculateAverageFromList(List<AdditionalTime> allByAirportWithDateAfter) {
-        if (allByAirportWithDateAfter.isEmpty()) {
-            throw new UnableToCalculateDueToLackOfDataException();
-        }
-
         List<Integer> numerator = allByAirportWithDateAfter.stream()
                 .map(AdditionalTime::getTotalAdditionalTimeInMinutes)
                 .toList();
@@ -66,10 +58,6 @@ public class AdditionalTimeFactorsCalculatorImpl implements AdditionalTimeFactor
     }
 
     private AdditionalTimeDto findTopMonth(Map<LocalDate, AdditionalTimeDto> summedVariables) {
-        if (summedVariables.isEmpty()) {
-            throw new UnableToCalculateDueToLackOfDataException();
-        }
-
         return summedVariables.values()
                 .stream()
                 .max(Comparator.comparing(

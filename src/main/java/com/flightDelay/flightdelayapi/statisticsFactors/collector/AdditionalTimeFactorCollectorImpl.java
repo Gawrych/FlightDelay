@@ -3,6 +3,7 @@ package com.flightDelay.flightdelayapi.statisticsFactors.collector;
 import com.flightDelay.flightdelayapi.additionalTime.AdditionalTime;
 import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeService;
 import com.flightDelay.flightdelayapi.shared.Flight;
+import com.flightDelay.flightdelayapi.shared.exception.resource.ResourceNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.calculator.AdditionalTimeFactorsCalculator;
 import com.flightDelay.flightdelayapi.statisticsFactors.creator.StatisticFactorCreator;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.AdditionalTimeFactors;
@@ -35,45 +36,43 @@ public class AdditionalTimeFactorCollectorImpl implements AdditionalTimeFactorCo
 
         for (AdditionalTimeFactors factorName : AdditionalTimeFactors.values()) {
             try {
-                PrecisionFactor factor = switch (factorName) {
-                    case TOP_MONTH -> getTopMonth(factorName, airportIdent, phase);
-                    case AVERAGE -> getAverage(factorName, airportIdent, phase);
-                };
-
+                PrecisionFactor factor = calculateFactor(factorName, airportIdent, phase);
                 statisticsData.add(factorName, factor);
 
-            } catch (UnableToCalculateDueToLackOfDataException e) {
-                log.warn("Unable to calculate due to lack of data for airport with ident: {}", airportIdent);
+            } catch (UnableToCalculateDueToLackOfDataException | ResourceNotFoundException e) {
+                log.warn("Unable to calculate {} due to lack of data for airport with ident: {}",
+                        factorName,
+                        airportIdent);
 
-                statisticsData.add(factorName, getNoDataFactor(factorName, phase));
+                PrecisionFactor factor = getNoDataFactor(factorName, phase);
+                statisticsData.add(factorName, factor);
             }
         }
 
         return statisticsData;
     }
 
-    private PrecisionFactor getTopMonth(StatisticFactorName factorName, String airportIdent, FlightPhase phase) {
-        List<AdditionalTime> allByAirportWithDateAfter = additionalTimeService
+    private PrecisionFactor calculateFactor(AdditionalTimeFactors factorName, String airportIdent, FlightPhase phase)
+            throws UnableToCalculateDueToLackOfDataException, ResourceNotFoundException {
+
+        List<AdditionalTime> additionalTimes = additionalTimeService
                 .findAllLatestAdditionalTimeByAirport(airportIdent, phase);
 
-        log.debug("{} additional time records have been found in database", allByAirportWithDateAfter.size());
+        log.info("{} additional time records have been found in the database for factor: {}",
+                additionalTimes.size(),
+                factorName);
 
-        return statisticFactorCreator.createTopMonth(
-                factorName,
-                phase,
-                additionalTimeFactorsCalculator.calculateTopMonth(allByAirportWithDateAfter));
-    }
+        return switch (factorName) {
+            case TOP_MONTH -> statisticFactorCreator.createTopMonth(
+                    factorName,
+                    phase,
+                    additionalTimeFactorsCalculator.calculateTopMonth(additionalTimes));
 
-    private PrecisionFactor getAverage(StatisticFactorName factorName, String airportIdent, FlightPhase phase) {
-        List<AdditionalTime> allByAirportWithDateAfter = additionalTimeService
-                .findAllLatestAdditionalTimeByAirport(airportIdent, phase);
-
-        log.debug("{} additional time records have been found in database", allByAirportWithDateAfter.size());
-
-        return statisticFactorCreator.createAverage(
-                factorName,
-                phase,
-                additionalTimeFactorsCalculator.calculateAverageFromList(allByAirportWithDateAfter));
+            case AVERAGE -> statisticFactorCreator.createAverage(
+                    factorName,
+                    phase,
+                    additionalTimeFactorsCalculator.calculateAverageFromList(additionalTimes));
+        };
     }
 
     private PrecisionFactor getNoDataFactor(StatisticFactorName factorName, FlightPhase phase) {

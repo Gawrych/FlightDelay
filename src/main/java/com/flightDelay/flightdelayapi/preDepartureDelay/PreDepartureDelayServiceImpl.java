@@ -3,18 +3,15 @@ package com.flightDelay.flightdelayapi.preDepartureDelay;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
+import com.flightDelay.flightdelayapi.shared.exception.resource.PreDepartureDelayDataNotFoundException;
 import com.flightDelay.flightdelayapi.shared.mapper.EntityMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -23,6 +20,8 @@ import java.util.List;
 public class PreDepartureDelayServiceImpl implements PreDepartureDelayService {
 
     private final PreDepartureDelayRepository preDepartureDelayRepository;
+
+    private final PreDepartureDelayDtoMapper mapper;
 
     private final AirportService airportService;
 
@@ -33,11 +32,16 @@ public class PreDepartureDelayServiceImpl implements PreDepartureDelayService {
     @Value("${statistics.amountOfMonthsToCollectData}")
     private int amountOfMonthsToCollectData;
 
-
     @Override
-    public List<PreDepartureDelay> findAllLatestByAirport(String airportIdent) {
+    public List<PreDepartureDelayDto> findAllLatestByAirport(String airportIdent) {
         LocalDate startDate = LocalDate.now().minusMonths(amountOfMonthsToCollectData);
-        return preDepartureDelayRepository.findAllByAirportWithDateAfter(airportIdent, startDate);
+
+        List<PreDepartureDelay> preDepartureDelays = preDepartureDelayRepository
+                .findAllByAirportWithDateAfter(airportIdent, startDate);
+
+        if (preDepartureDelays.isEmpty()) throw new PreDepartureDelayDataNotFoundException();
+
+        return mapper.mapFromList(preDepartureDelays);
     }
 
     @Override

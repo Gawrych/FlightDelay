@@ -1,3 +1,8 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.model;
 
-public interface PrecisionFactor {}
+import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
+
+public interface PrecisionFactor {
+
+    EntityStatisticFactor getId();
+}

@@ -20,7 +20,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdditionalTimeServiceImpl implements AdditionalTimeService {
 
+    @Value("${statistics.amountOfMonthsToCollectData}")
+    private int amountOfMonthsToCollectData;
+
     private final AdditionalTimeRepository additionalTimeRepository;
+
+    private final AdditionalTimeDtoMapper mapper;
 
     private final AirportService airportService;
 
@@ -28,11 +33,8 @@ public class AdditionalTimeServiceImpl implements AdditionalTimeService {
 
     private final ObjectMapper objectMapper;
 
-    @Value("${statistics.amountOfMonthsToCollectData}")
-    private int amountOfMonthsToCollectData;
-
     @Override
-    public List<AdditionalTime> findAllLatestAdditionalTimeByAirport(String airportIdent, FlightPhase phase) {
+    public List<AdditionalTimeDto> findAllLatestByAirport(String airportIdent, FlightPhase phase) {
         LocalDate startDate = LocalDate.now().minusMonths(amountOfMonthsToCollectData);
 
         List<AdditionalTime> additionalTimes = switch (phase) {
@@ -42,7 +44,7 @@ public class AdditionalTimeServiceImpl implements AdditionalTimeService {
 
         if (additionalTimes.isEmpty()) throw new AdditionalTimeDataNotFoundException();
 
-        return additionalTimes;
+        return mapper.mapFromList(additionalTimes);
     }
 
     @Override

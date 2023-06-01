@@ -10,16 +10,16 @@ import java.util.List;
 @Component
 public class AverageFactorCalculatorImpl implements AverageFactorCalculator {
 
-    public double calculateAverage(List<Integer> numerator, List<Integer> denominator) {
+    public double calculateAverage(List<Double> numerator, List<Double> denominator) {
         if (numerator.isEmpty() || denominator.isEmpty()) throw new UnableToCalculateDueToLackOfDataException();
 
 
         double numeratorSum = numerator.stream()
-                .mapToDouble(Integer::doubleValue)
+                .mapToDouble(Double::doubleValue)
                 .sum();
 
         double denominatorSum = denominator.stream()
-                .mapToDouble(Integer::doubleValue)
+                .mapToDouble(Double::doubleValue)
                 .sum();
 
         return calculateAverage(numeratorSum, denominatorSum);

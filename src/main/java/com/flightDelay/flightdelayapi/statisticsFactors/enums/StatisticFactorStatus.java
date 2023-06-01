@@ -1,6 +1,6 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.enums;
 
-public enum FactorStatus {
+public enum StatisticFactorStatus {
 
     NO_DATA,
 

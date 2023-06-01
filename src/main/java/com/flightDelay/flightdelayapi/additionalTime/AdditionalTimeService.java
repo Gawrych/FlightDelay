@@ -11,5 +11,5 @@ public interface AdditionalTimeService extends UpdateFromJson {
 
     AdditionalTime setAirportBidirectionalRelationshipByCode(String airportCode, AdditionalTime additionalTime);
 
-    List<AdditionalTime> findAllLatestAdditionalTimeByAirport(String airportIdent, FlightPhase phase);
+    List<AdditionalTimeDto> findAllLatestByAirport(String airportIdent, FlightPhase phase);
 }

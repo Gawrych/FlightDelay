@@ -1,8 +1,8 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.enums;
 
-public interface StatisticFactorName {
+public enum ArrivalDelayFactor {
 
-//    PERCENTAGE_OF_DELAYS_LAST_YEAR("%", ),
+    //    PERCENTAGE_OF_DELAYS_LAST_YEAR("%", ),
 //
 //    PERCENTAGE_OF_DELAYS_ABOVE_15_LAST_YEAR("%"),
 //
@@ -16,11 +16,4 @@ public interface StatisticFactorName {
 //
 //    LAST_FEW_DELAY_EVENTS("text");
 
-    String getUnit();
-
-    StatisticFactorType getType();
-
-    String name();
-
-    String getDelayPhase();
 }

@@ -1,13 +1,13 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 
-import com.flightDelay.flightdelayapi.additionalTime.AdditionalTime;
-import com.flightDelay.flightdelayapi.statisticsFactors.model.TopMonthValueHolder;
+import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeDto;
+import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 
 import java.util.List;
 
 public interface AdditionalTimeFactorsCalculator {
 
-    double calculateAverageFromList(List<AdditionalTime> allByAirportWithDateAfter);
+    double calculateAverageFromList(List<AdditionalTimeDto> allByAirportWithDateAfter);
 
-    TopMonthValueHolder calculateTopMonth(List<AdditionalTime> allByAirportWithDateAfter);
+    ValueWithDateHolder calculateTopDelayMonth(List<AdditionalTimeDto> allByAirportWithDateAfter);
 }

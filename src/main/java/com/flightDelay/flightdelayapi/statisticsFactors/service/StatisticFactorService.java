@@ -1,11 +1,11 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.service;
 
 import com.flightDelay.flightdelayapi.shared.Flight;
-import com.flightDelay.flightdelayapi.statisticsFactors.model.StatisticsData;
+import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
 
-import java.util.List;
+import java.util.Map;
 
 public interface StatisticFactorService {
 
-    List<StatisticsData> getFactorsByPhase(Flight flight);
+    Map<String, PrecisionFactor> getFactorsByPhase(Flight flight);
 }

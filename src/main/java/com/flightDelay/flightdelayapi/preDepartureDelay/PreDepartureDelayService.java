@@ -8,7 +8,7 @@ public interface PreDepartureDelayService extends UpdateFromJson {
 
     boolean save(PreDepartureDelay preDepartureDelay);
 
-    List<PreDepartureDelay> findAllLatestByAirport(String airportIdent);
+    List<PreDepartureDelayDto> findAllLatestByAirport(String airportIdent);
 
     PreDepartureDelay setAirportBidirectionalRelationshipByCode(String airportCode, PreDepartureDelay preDepartureDelay);
 }

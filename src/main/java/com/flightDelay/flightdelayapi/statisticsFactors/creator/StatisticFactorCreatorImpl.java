@@ -1,7 +1,8 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.creator;
 
-import com.flightDelay.flightdelayapi.statisticsFactors.enums.FactorStatus;
-import com.flightDelay.flightdelayapi.statisticsFactors.enums.StatisticFactorName;
+import com.flightDelay.flightdelayapi.statisticsFactors.enums.StatisticFactorStatus;
+import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
+import com.flightDelay.flightdelayapi.statisticsFactors.enums.StatisticFactorType;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.*;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
 import lombok.RequiredArgsConstructor;
@@ -11,50 +12,68 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
+
 @Component
 @RequiredArgsConstructor
 public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
 
-    private final ResourceBundleMessageSource messageSource;
+    @Value("${date.defaultDatePattern}")
+    private String defaultDatePattern;
+
+    @Value("${date.dateWithoutDayPattern}")
+    private String dateWithoutDayPattern;
 
     @Value("${statistics.precisionInResponse}")
     private int precision;
 
+    private final ResourceBundleMessageSource messageSource;
+
     @Override
-    public PrecisionFactor createAverage(StatisticFactorName factorName,
-                                        FlightPhase phase,
-                                        double value) {
+    public PrecisionFactor createAverage(EntityStatisticFactor factorName,
+                                         double value) {
         return AverageStatisticFactor.builder()
                 .id(factorName)
-                .name(getMessage(factorName, phase))
+                .name(getMessage(factorName, factorName.getPhase()))
                 .unit(factorName.getUnit())
                 .value(setPrecision(value))
-                .status(FactorStatus.COMPLETE)
+                .phase(factorName.getPhase())
+                .factorType(factorName.getType())
+                .status(StatisticFactorStatus.COMPLETE)
                 .build();
     }
 
     @Override
-    public PrecisionFactor createTopMonth(StatisticFactorName factorName,
-                                          FlightPhase phase,
-                                          TopMonthValueHolder value) {
-        return TopMonthStatisticFactor.builder()
+    public PrecisionFactor createTopValue(EntityStatisticFactor factorName,
+                                          ValueWithDateHolder value) {
+
+         String datePattern = factorName.getType() == StatisticFactorType.TOP_VALUE_WITH_PRECISION_DATE
+                ? defaultDatePattern
+                : dateWithoutDayPattern;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(datePattern);
+
+        return TopValueStatisticFactor.builder()
                 .id(factorName)
-                .name(getMessage(factorName, phase))
+                .name(getMessage(factorName, factorName.getPhase()))
                 .unit(factorName.getUnit())
                 .value(setPrecision(value.getValue()))
-                .monthName(value.getMonthName())
-                .monthNum(value.getMonthNum())
-                .status(FactorStatus.COMPLETE)
+                .date(value.getDate().format(formatter))
+                .phase(factorName.getPhase())
+                .factorType(factorName.getType())
+                .status(StatisticFactorStatus.COMPLETE)
                 .build();
     }
 
     @Override
-    public PrecisionFactor getNoDataFactor(StatisticFactorName factorName, FlightPhase phase) {
-        return StatisticFactor.builder()
+    public PrecisionFactor getNoDataFactor(EntityStatisticFactor factorName) {
+        return com.flightDelay.flightdelayapi.statisticsFactors.model.StatisticFactor.builder()
                 .id(factorName)
-                .name(getMessage(factorName, phase))
+                .name(getMessage(factorName, factorName.getPhase()))
                 .unit(factorName.getUnit())
-                .status(FactorStatus.NO_DATA)
+                .phase(factorName.getPhase())
+                .factorType(factorName.getType())
+                .status(StatisticFactorStatus.NO_DATA)
                 .build();
     }
 
@@ -62,15 +81,12 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
         return Precision.round(value, precision);
     }
 
-    private String getMessage(StatisticFactorName factorName, FlightPhase phase) {
-        String flightPhase = messageSource.getMessage(
-                phase.name(),
-                null,
-                LocaleContextHolder.getLocale());
+    private String getMessage(EntityStatisticFactor factorName, FlightPhase phase) {
+
 
         return messageSource.getMessage(
-                factorName.name() + "_" + factorName.getDelayPhase(),
-                new Object[]{flightPhase},
+                factorName.name(),
+                null,
                 LocaleContextHolder.getLocale());
     }
 }

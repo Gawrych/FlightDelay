@@ -1,4 +1,4 @@
-package com.flightDelay.flightdelayapi.additionalTime;
+package com.flightDelay.flightdelayapi.preDepartureDelay;
 
 import com.flightDelay.flightdelayapi.shared.DelayEntityDto;
 import lombok.*;
@@ -11,11 +11,11 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdditionalTimeDto implements DelayEntityDto {
+public class PreDepartureDelayDto implements DelayEntityDto {
 
     private LocalDate date;
 
-    private double totalFlight;
+    private double numberOfDepartures;
 
-    private double totalAdditionalTimeInMinutes;
+    private double delayInMinutes;
 }

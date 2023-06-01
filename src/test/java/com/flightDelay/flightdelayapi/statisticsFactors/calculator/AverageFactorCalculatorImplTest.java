@@ -5,11 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.util.Assert;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -20,8 +19,8 @@ class AverageFactorCalculatorImplTest {
 
     @Test
     void calculateAverage() {
-        List<Integer> numerator = List.of(1, 2, 3); // 6
-        List<Integer> denominator = List.of(1, 2); // 3
+        List<Double> numerator = List.of(1.0, 2.0, 3.0); // 6
+        List<Double> denominator = List.of(1.0, 2.0); // 3
         double average = averageFactorCalculator.calculateAverage(numerator, denominator);
         assertEquals(2.0, average);
     }

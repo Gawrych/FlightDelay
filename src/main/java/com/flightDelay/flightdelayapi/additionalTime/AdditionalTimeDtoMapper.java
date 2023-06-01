@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AdditionalTimeDtoMapper {
@@ -22,4 +23,6 @@ public interface AdditionalTimeDtoMapper {
             @Mapping(source = "totalAdditionalTimeInMinutes", target = "totalAdditionalTimeInMinutes"),
     })
     AdditionalTimeDto mapFrom(LocalDate date, double totalFlight, double totalAdditionalTimeInMinutes);
+
+    List<AdditionalTimeDto> mapFromList(List<AdditionalTime> additionalTimes);
 }

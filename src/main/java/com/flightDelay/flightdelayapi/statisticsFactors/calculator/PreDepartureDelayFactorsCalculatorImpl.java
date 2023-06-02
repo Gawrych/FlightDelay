@@ -1,7 +1,8 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 
 import com.flightDelay.flightdelayapi.preDepartureDelay.PreDepartureDelayDto;
-import com.flightDelay.flightdelayapi.preDepartureDelay.PreDepartureDelayDtoMapper;
+import com.flightDelay.flightdelayapi.statisticsFactors.instruction.FactorAverageInstruction;
+import com.flightDelay.flightdelayapi.statisticsFactors.instruction.RemappingInstruction;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,9 @@ public class PreDepartureDelayFactorsCalculatorImpl implements PreDepartureDelay
 
     private final TopValueFactorCalculator<PreDepartureDelayDto> topValueFactorCalculator;
 
-    private final PreDepartureDelayDtoMapper mapper;
+    private final FactorAverageInstruction<PreDepartureDelayDto> averageInstruction;
+
+    private final RemappingInstruction<PreDepartureDelayDto> remappingInstruction;
 
     @Override
     public double calculateAverageDelayTime(List<PreDepartureDelayDto> preDepartureDelayDtos) {
@@ -36,40 +39,23 @@ public class PreDepartureDelayFactorsCalculatorImpl implements PreDepartureDelay
 
     @Override
     public ValueWithDateHolder calculateTopDayDelay(List<PreDepartureDelayDto> preDepartureDelayDtos) {
-        FactorAverageCalculatorInstruction<PreDepartureDelayDto> averageInstruction = getAverageInstruction();
-
-        PreDepartureDelayDto topDelay = topValueFactorCalculator.findTopValue(preDepartureDelayDtos, averageInstruction);
+        PreDepartureDelayDto topDelay = topValueFactorCalculator.findTopValue(
+                preDepartureDelayDtos,
+                averageInstruction);
 
         return topValueFactorCalculator.createValueHolder(topDelay, averageInstruction);
     }
 
     @Override
     public ValueWithDateHolder calculateTopMonthDelay(List<PreDepartureDelayDto> preDepartureDelayDtos) {
-        FactorAverageCalculatorInstruction<PreDepartureDelayDto> averageInstruction = getAverageInstruction();
-
         Map<Integer, PreDepartureDelayDto> summedValues = topValueFactorCalculator.sumValuesInTheSameMonth(
                 preDepartureDelayDtos,
-                getRemappingInstruction());
+                remappingInstruction);
 
         PreDepartureDelayDto topMonth = topValueFactorCalculator.findTopValue(
                 summedValues.values(),
                 averageInstruction);
 
         return topValueFactorCalculator.createValueHolder(topMonth, averageInstruction);
-    }
-
-    private FactorAverageCalculatorInstruction<PreDepartureDelayDto> getAverageInstruction() {
-        return dto -> averageFactorCalculator.calculateAverage(
-                dto.getDelayInMinutes(),
-                dto.getNumberOfDepartures());
-    }
-
-    private RemappingInstruction<PreDepartureDelayDto> getRemappingInstruction() {
-        return (oldRecord, newRecord) -> {
-            double mergedDepartures = oldRecord.getNumberOfDepartures() + newRecord.getNumberOfDepartures();
-            double mergedDelayTime = oldRecord.getDelayInMinutes() + newRecord.getDelayInMinutes();
-
-            return mapper.mapFrom(newRecord.getDate(), mergedDepartures, mergedDelayTime);
-        };
     }
 }

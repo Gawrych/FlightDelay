@@ -1,4 +1,4 @@
-package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
+package com.flightDelay.flightdelayapi.statisticsFactors.instruction;
 
 import com.flightDelay.flightdelayapi.shared.DelayEntityDto;
 

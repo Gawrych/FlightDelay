@@ -24,8 +24,8 @@ public class StatisticFactor implements PrecisionFactor {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("unit")
-    private String unit;
+    @JsonProperty("unit_symbol")
+    private String unitSymbol;
 
     @JsonProperty("flight_phase")
     private FlightPhase phase;

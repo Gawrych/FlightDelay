@@ -19,7 +19,8 @@ public class WeatherFactorCreatorImpl implements WeatherFactorCreator {
         return WeatherFactor.builder()
                 .id(weatherFactorName)
                 .title(getMessage(weatherFactorName))
-                .unit(weatherFactorName.getUnit())
+                .unitName(weatherFactorName.getUnit().name().toLowerCase())
+                .unitSymbol(weatherFactorName.getUnit().getSymbol())
                 .influenceOnDelay(influence)
                 .value(value)
                 .build();

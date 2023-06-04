@@ -7,4 +7,8 @@ public enum StatisticFactorType {
     TOP_VALUE_WITH_PRECISION_DATE,
 
     AVERAGE,
+
+    PERCENTAGE_VALUE,
+
+    VALUE_WITH_TEXT,
 }

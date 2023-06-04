@@ -3,12 +3,15 @@ package com.flightDelay.flightdelayapi.arrivalDelay;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
+import com.flightDelay.flightdelayapi.shared.exception.resource.ArrivalDelayDataNotFoundException;
 import com.flightDelay.flightdelayapi.shared.mapper.EntityMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -16,13 +19,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArrivalDelayServiceImpl implements ArrivalDelayService {
 
+    @Value("${statistics.amountOfMonthsToCollectData}")
+    private int amountOfMonthsToCollectData;
+
     private final ArrivalDelayRepository arrivalDelayRepository;
 
     private final AirportService airportService;
 
+    private final ArrivalDelayDtoMapper mapper;
+
     private final EntityMapper entityMapper;
 
     private final ObjectMapper objectMapper;
+
+    public List<ArrivalDelayDto> findAllLatestByAirport(String airportIdent) {
+        LocalDate startDate = LocalDate.now().minusMonths(amountOfMonthsToCollectData);
+
+        List<ArrivalDelay> arrivalDelays = arrivalDelayRepository
+                .findAllByAirportWithDateAfter(airportIdent, startDate);
+
+        if (arrivalDelays.isEmpty()) throw new ArrivalDelayDataNotFoundException();
+
+        return mapper.mapFromList(arrivalDelays);
+    }
 
     @Override
     @Transactional

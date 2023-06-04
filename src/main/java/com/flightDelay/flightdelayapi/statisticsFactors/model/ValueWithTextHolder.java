@@ -4,15 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.time.LocalDate;
-
 @Getter
 @ToString
 @AllArgsConstructor
-public class ValueWithDateHolder {
+public class ValueWithTextHolder {
 
-    private LocalDate date;
+    private String text;
 
     private double value;
 }
-

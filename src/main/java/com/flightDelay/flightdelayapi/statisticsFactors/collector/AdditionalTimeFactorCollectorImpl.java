@@ -28,8 +28,8 @@ public class AdditionalTimeFactorCollectorImpl extends StatisticFactorCollector 
     private final AdditionalTimeService additionalTimeService;
 
     @Override
-    public List<PrecisionFactor> getFactors(Flight flight) {
-        return super.getFactors(flight, AdditionalTimeFactor.values());
+    public List<PrecisionFactor> collect(Flight flight) {
+        return super.collectFactors(flight, AdditionalTimeFactor.values());
     }
 
     @Override
@@ -39,15 +39,16 @@ public class AdditionalTimeFactorCollectorImpl extends StatisticFactorCollector 
         List<AdditionalTimeDto> additionalTimes = additionalTimeService
                 .findAllLatestByAirport(airportIdent, factorName.getPhase());
 
-        log.info("{} additional time records have been found in the database",
-                additionalTimes.size());
+        log.info("{} additional time records have been found in the database for airport: {}",
+                additionalTimes.size(),
+                airportIdent);
 
         return switch (factorName.getType()) {
-            case TOP_VALUE_WITH_DATE -> statisticFactorCreator.createTopValue(
+            case TOP_VALUE_WITH_DATE -> statisticFactorCreator.createValueWithDate(
                     factorName,
                     additionalTimeFactorsCalculator.calculateTopDelayMonth(additionalTimes));
 
-            case AVERAGE -> statisticFactorCreator.createAverage(
+            case AVERAGE -> statisticFactorCreator.createSimpleValue(
                     factorName,
                     additionalTimeFactorsCalculator.calculateAverageFromList(additionalTimes));
 
@@ -57,6 +58,6 @@ public class AdditionalTimeFactorCollectorImpl extends StatisticFactorCollector 
 
     @Override
     protected PrecisionFactor getNoDataFactor(EntityStatisticFactor factorName) {
-        return statisticFactorCreator.getNoDataFactor(factorName);
+        return statisticFactorCreator.createNoDataFactor(factorName);
     }
 }

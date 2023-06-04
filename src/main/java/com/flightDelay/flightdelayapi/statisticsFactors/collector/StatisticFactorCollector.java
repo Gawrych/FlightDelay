@@ -1,7 +1,7 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.collector;
 
 import com.flightDelay.flightdelayapi.shared.Flight;
-import com.flightDelay.flightdelayapi.shared.exception.resource.PreDepartureDelayDataNotFoundException;
+import com.flightDelay.flightdelayapi.shared.exception.resource.ResourceNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
 import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToLackOfDataException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 public abstract class StatisticFactorCollector {
 
-    public List<PrecisionFactor> getFactors(Flight flight, EntityStatisticFactor[] entityFactor) {
+    public List<PrecisionFactor> collectFactors(Flight flight, EntityStatisticFactor[] entityFactor) {
         List<PrecisionFactor> factors = new ArrayList<>();
         String airportIdent = flight.getAirportIdent();
 
@@ -22,7 +22,7 @@ public abstract class StatisticFactorCollector {
                 PrecisionFactor arrivalFactor = calculateFactor(factorName, airportIdent);
                 factors.add(arrivalFactor);
 
-            } catch (UnableToCalculateDueToLackOfDataException | PreDepartureDelayDataNotFoundException e) {
+            } catch (UnableToCalculateDueToLackOfDataException | ResourceNotFoundException e) {
                 log.warn("Unable to calculate {} due to lack of data for airport with ident: {}",
                         factorName,
                         airportIdent);

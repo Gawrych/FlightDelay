@@ -1,10 +1,9 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.creator;
 
-import com.flightDelay.flightdelayapi.statisticsFactors.enums.StatisticFactorStatus;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
+import com.flightDelay.flightdelayapi.statisticsFactors.enums.StatisticFactorStatus;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.StatisticFactorType;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.*;
-import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,12 +29,12 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
     private final ResourceBundleMessageSource messageSource;
 
     @Override
-    public PrecisionFactor createAverage(EntityStatisticFactor factorName,
-                                         double value) {
-        return AverageStatisticFactor.builder()
+    public PrecisionFactor createSimpleValue(EntityStatisticFactor factorName,
+                                             double value) {
+        return SimpleValueStatisticFactor.builder()
                 .id(factorName)
-                .name(getMessage(factorName, factorName.getPhase()))
-                .unit(factorName.getUnit())
+                .name(getMessage(factorName))
+                .unitSymbol(factorName.getUnit().getSymbol())
                 .value(setPrecision(value))
                 .phase(factorName.getPhase())
                 .factorType(factorName.getType())
@@ -44,8 +43,8 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
     }
 
     @Override
-    public PrecisionFactor createTopValue(EntityStatisticFactor factorName,
-                                          ValueWithDateHolder value) {
+    public PrecisionFactor createValueWithDate(EntityStatisticFactor factorName,
+                                               ValueWithDateHolder value) {
 
          String datePattern = factorName.getType() == StatisticFactorType.TOP_VALUE_WITH_PRECISION_DATE
                 ? defaultDatePattern
@@ -53,10 +52,10 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(datePattern);
 
-        return TopValueStatisticFactor.builder()
+        return ValueWithTextStatisticFactor.builder()
                 .id(factorName)
-                .name(getMessage(factorName, factorName.getPhase()))
-                .unit(factorName.getUnit())
+                .name(getMessage(factorName))
+                .unitSymbol(factorName.getUnit().getSymbol())
                 .value(setPrecision(value.getValue()))
                 .date(value.getDate().format(formatter))
                 .phase(factorName.getPhase())
@@ -66,11 +65,27 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
     }
 
     @Override
-    public PrecisionFactor getNoDataFactor(EntityStatisticFactor factorName) {
-        return com.flightDelay.flightdelayapi.statisticsFactors.model.StatisticFactor.builder()
+    public PrecisionFactor createValueWithText(EntityStatisticFactor factorName,
+                                               ValueWithTextHolder value) {
+
+        return ValueWithTextStatisticFactor.builder()
                 .id(factorName)
-                .name(getMessage(factorName, factorName.getPhase()))
-                .unit(factorName.getUnit())
+                .name(getMessage(factorName))
+                .unitSymbol(factorName.getUnit().getSymbol())
+                .value(setPrecision(value.getValue()))
+                .date(value.getText())
+                .phase(factorName.getPhase())
+                .factorType(factorName.getType())
+                .status(StatisticFactorStatus.COMPLETE)
+                .build();
+    }
+
+    @Override
+    public PrecisionFactor createNoDataFactor(EntityStatisticFactor factorName) {
+        return StatisticFactor.builder()
+                .id(factorName)
+                .name(getMessage(factorName))
+                .unitSymbol(factorName.getUnit().getSymbol())
                 .phase(factorName.getPhase())
                 .factorType(factorName.getType())
                 .status(StatisticFactorStatus.NO_DATA)
@@ -81,9 +96,7 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
         return Precision.round(value, precision);
     }
 
-    private String getMessage(EntityStatisticFactor factorName, FlightPhase phase) {
-
-
+    private String getMessage(EntityStatisticFactor factorName) {
         return messageSource.getMessage(
                 factorName.name(),
                 null,

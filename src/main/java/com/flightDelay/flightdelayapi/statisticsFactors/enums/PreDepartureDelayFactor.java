@@ -1,5 +1,6 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.enums;
 
+import com.flightDelay.flightdelayapi.shared.enums.FactorUnit;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,13 +9,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PreDepartureDelayFactor implements EntityStatisticFactor {
 
-    TOP_MONTH_OF_PRE_DEPARTURE_DELAY("min", StatisticFactorType.TOP_VALUE_WITH_DATE, FlightPhase.DEPARTURE),
+    TOP_MONTH_OF_PRE_DEPARTURE_DELAY(FactorUnit.MINUTES, StatisticFactorType.TOP_VALUE_WITH_DATE, FlightPhase.DEPARTURE),
 
-    TOP_DAY_OF_PRE_DEPARTURE_DELAY("min", StatisticFactorType.TOP_VALUE_WITH_PRECISION_DATE, FlightPhase.DEPARTURE),
+    TOP_DAY_OF_PRE_DEPARTURE_DELAY(FactorUnit.MINUTES, StatisticFactorType.TOP_VALUE_WITH_PRECISION_DATE, FlightPhase.DEPARTURE),
 
-    AVERAGE_PRE_DEPARTURE_DELAY("min", StatisticFactorType.AVERAGE, FlightPhase.DEPARTURE);
+    AVERAGE_PRE_DEPARTURE_DELAY(FactorUnit.MINUTES, StatisticFactorType.AVERAGE, FlightPhase.DEPARTURE);
 
-    private final String unit;
+    private final FactorUnit unit;
 
     private final StatisticFactorType type;
 

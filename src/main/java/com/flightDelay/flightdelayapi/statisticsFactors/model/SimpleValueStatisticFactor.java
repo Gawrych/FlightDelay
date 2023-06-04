@@ -12,11 +12,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TopValueStatisticFactor extends StatisticFactor {
+public class SimpleValueStatisticFactor extends StatisticFactor {
 
     @JsonProperty("value")
     private double value;
-
-    @JsonProperty("date")
-    private String date;
 }

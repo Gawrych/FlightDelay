@@ -19,6 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PreDepartureDelayServiceImpl implements PreDepartureDelayService {
 
+    @Value("${statistics.amountOfMonthsToCollectData}")
+    private int amountOfMonthsToCollectData;
+
     private final PreDepartureDelayRepository preDepartureDelayRepository;
 
     private final PreDepartureDelayDtoMapper mapper;
@@ -28,9 +31,6 @@ public class PreDepartureDelayServiceImpl implements PreDepartureDelayService {
     private final EntityMapper entityMapper;
 
     private final ObjectMapper objectMapper;
-
-    @Value("${statistics.amountOfMonthsToCollectData}")
-    private int amountOfMonthsToCollectData;
 
     @Override
     public List<PreDepartureDelayDto> findAllLatestByAirport(String airportIdent) {

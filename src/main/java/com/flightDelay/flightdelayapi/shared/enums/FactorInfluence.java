@@ -1,5 +1,10 @@
 package com.flightDelay.flightdelayapi.shared.enums;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum FactorInfluence {
 
     LOW(0),
@@ -7,12 +12,4 @@ public enum FactorInfluence {
     HIGH(2);
 
     private final int value;
-
-    FactorInfluence(int value) {
-        this.value = value;
-    }
-
-    public int getValue() {
-        return value;
-    }
 }

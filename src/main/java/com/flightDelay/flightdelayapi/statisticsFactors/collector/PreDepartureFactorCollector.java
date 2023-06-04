@@ -6,5 +6,5 @@ import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
 import java.util.List;
 
 public interface PreDepartureFactorCollector {
-    List<PrecisionFactor> getFactors(Flight flight);
+    List<PrecisionFactor> collect(Flight flight);
 }

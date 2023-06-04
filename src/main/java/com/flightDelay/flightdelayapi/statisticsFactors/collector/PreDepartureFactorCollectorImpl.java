@@ -10,6 +10,7 @@ import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFac
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.PreDepartureDelayFactor;
 import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToLackOfDataException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
+import jakarta.persistence.EnumType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -28,8 +29,8 @@ public class PreDepartureFactorCollectorImpl extends StatisticFactorCollector im
     private final StatisticFactorCreator statisticFactorCreator;
 
     @Override
-    public List<PrecisionFactor> getFactors(Flight flight) {
-        return super.getFactors(flight, PreDepartureDelayFactor.values());
+    public List<PrecisionFactor> collect(Flight flight) {
+        return super.collectFactors(flight, PreDepartureDelayFactor.values());
     }
 
     @Override
@@ -38,28 +39,28 @@ public class PreDepartureFactorCollectorImpl extends StatisticFactorCollector im
 
         List<PreDepartureDelayDto> additionalTimes = preDepartureDelayService.findAllLatestByAirport(airportIdent);
 
-        log.info("{} pre departure delay records have been found in the database",
-                additionalTimes.size());
+        log.info("{} pre departure delay records have been found in the database for airport: {}",
+                additionalTimes.size(),
+                airportIdent);
 
-        return switch (factorName.getType()) {
-            case TOP_VALUE_WITH_DATE -> statisticFactorCreator.createTopValue(
+
+        return switch (EnumType.valueOf(PreDepartureDelayFactor.class, factorName.name())) {
+            case TOP_MONTH_OF_PRE_DEPARTURE_DELAY -> statisticFactorCreator.createValueWithDate(
                     factorName,
                     preDepartureDelayFactorsCalculator.calculateTopMonthDelay(additionalTimes));
 
-            case TOP_VALUE_WITH_PRECISION_DATE -> statisticFactorCreator.createTopValue(
+            case TOP_DAY_OF_PRE_DEPARTURE_DELAY -> statisticFactorCreator.createValueWithDate(
                     factorName,
                     preDepartureDelayFactorsCalculator.calculateTopDayDelay(additionalTimes));
 
-            case AVERAGE -> statisticFactorCreator.createAverage(
+            case AVERAGE_PRE_DEPARTURE_DELAY -> statisticFactorCreator.createSimpleValue(
                     factorName,
                     preDepartureDelayFactorsCalculator.calculateAverageDelayTime(additionalTimes));
-
-            default -> getNoDataFactor(factorName);
         };
     }
 
     @Override
     protected PrecisionFactor getNoDataFactor(EntityStatisticFactor factorName) {
-        return statisticFactorCreator.getNoDataFactor(factorName);
+        return statisticFactorCreator.createNoDataFactor(factorName);
     }
 }

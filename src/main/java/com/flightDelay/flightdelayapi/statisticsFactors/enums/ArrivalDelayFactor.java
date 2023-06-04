@@ -1,9 +1,14 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.enums;
 
-public enum ArrivalDelayFactor {
+import com.flightDelay.flightdelayapi.shared.enums.FactorUnit;
+import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-    //    PERCENTAGE_OF_DELAYS_LAST_YEAR("%", ),
-//
+@Getter
+@RequiredArgsConstructor
+public enum ArrivalDelayFactor implements EntityStatisticFactor {
+
 //    PERCENTAGE_OF_DELAYS_ABOVE_15_LAST_YEAR("%"),
 //
 //    PERCENTAGE_OF_DELAYS_LAST_MONTHS("%"),
@@ -16,4 +21,12 @@ public enum ArrivalDelayFactor {
 //
 //    LAST_FEW_DELAY_EVENTS("text");
 
+
+    MOST_COMMON_DELAY_CAUSE(FactorUnit.TEXT, StatisticFactorType.VALUE_WITH_TEXT, FlightPhase.ARRIVAL);
+
+    private final FactorUnit unit;
+
+    private final StatisticFactorType type;
+
+    private final FlightPhase phase;
 }

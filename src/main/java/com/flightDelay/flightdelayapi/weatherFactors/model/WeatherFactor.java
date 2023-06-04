@@ -21,8 +21,11 @@ public class WeatherFactor {
     @JsonProperty("value")
     private int value;
 
-    @JsonProperty("unit")
-    private String unit;
+    @JsonProperty("unit_name")
+    private String unitName;
+
+    @JsonProperty("unit_symbol")
+    private String unitSymbol;
 
     @JsonProperty("influence_on_delay")
     private FactorInfluence influenceOnDelay;

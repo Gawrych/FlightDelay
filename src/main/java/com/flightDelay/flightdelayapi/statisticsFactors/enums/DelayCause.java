@@ -4,6 +4,8 @@ import com.flightDelay.flightdelayapi.arrivalDelay.ArrivalDelay;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.function.Function;
+
 @Getter
 @RequiredArgsConstructor
 public enum DelayCause {
@@ -40,5 +42,5 @@ public enum DelayCause {
 
     NOT_SPECIFIED(ArrivalDelay::getDelayInMinutesCausedByNotSpecified);
 
-    private final ArrivalDelayCauseReference causeReference;
+    private final Function<ArrivalDelay, Integer> causeReference;
 }

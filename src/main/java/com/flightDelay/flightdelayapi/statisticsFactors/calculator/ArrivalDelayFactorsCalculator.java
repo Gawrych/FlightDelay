@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface ArrivalDelayFactorsCalculator {
 
-    ValueWithTextHolder calculateMostCommonDelayCause(List<ArrivalDelayDto> additionalTimes);
+    List<ValueWithTextHolder> calculateMostCommonDelayCause(List<ArrivalDelayDto> additionalTimes);
+
+    List<ValueWithTextHolder> calculateAverageTimeToParticularDelayCause(List<ArrivalDelayDto> additionalTimes);
 }

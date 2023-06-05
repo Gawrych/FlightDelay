@@ -32,7 +32,7 @@ public class ArrivalDelayDtoMapperImpl implements ArrivalDelayDtoMapper {
         Map<DelayCause, Integer> delayCauses = Arrays.stream(DelayCause.values())
                 .collect(Collectors.toMap(
                         Function.identity(),
-                        cause -> cause.getCauseReference().getCause(arrivalDelay)
+                        cause -> cause.getCauseReference().apply(arrivalDelay)
                 ));
 
         return filterNonZeroValues(delayCauses);

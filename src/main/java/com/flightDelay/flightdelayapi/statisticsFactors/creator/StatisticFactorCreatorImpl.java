@@ -12,6 +12,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -43,6 +44,21 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
     }
 
     @Override
+    public PrecisionFactor createListValuesWithText(EntityStatisticFactor factorName,
+                                                      List<ValueWithTextHolder> values) {
+        return TopValueWithTextStatisticFactor.builder()
+                .id(factorName)
+                .name(getMessage(factorName))
+                .unitSymbol(factorName.getUnit().getSymbol())
+                .values(values)
+                .phase(factorName.getPhase())
+                .factorType(factorName.getType())
+                .status(StatisticFactorStatus.COMPLETE)
+                .build();
+
+    }
+
+    @Override
     public PrecisionFactor createValueWithDate(EntityStatisticFactor factorName,
                                                ValueWithDateHolder value) {
 
@@ -58,22 +74,6 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
                 .unitSymbol(factorName.getUnit().getSymbol())
                 .value(setPrecision(value.getValue()))
                 .date(value.getDate().format(formatter))
-                .phase(factorName.getPhase())
-                .factorType(factorName.getType())
-                .status(StatisticFactorStatus.COMPLETE)
-                .build();
-    }
-
-    @Override
-    public PrecisionFactor createValueWithText(EntityStatisticFactor factorName,
-                                               ValueWithTextHolder value) {
-
-        return ValueWithTextStatisticFactor.builder()
-                .id(factorName)
-                .name(getMessage(factorName))
-                .unitSymbol(factorName.getUnit().getSymbol())
-                .value(setPrecision(value.getValue()))
-                .date(value.getText())
                 .phase(factorName.getPhase())
                 .factorType(factorName.getType())
                 .status(StatisticFactorStatus.COMPLETE)

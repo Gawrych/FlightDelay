@@ -39,13 +39,20 @@ public class RunwayServiceImpl implements RunwayService {
         return entityMapper
                 .jsonArrayToList(newDataInJson, Runway.class, objectMapper)
                 .stream()
-                .filter(this::save).toList();
+                .filter(this::save)
+                .toList();
     }
 
     @Override
     public boolean save(Runway runway) {
         String airportIdent = runway.getAirportCode();
         Long runwayId = runway.getId();
+
+        if (runwayId == null) {
+            log.warn("New Runway has no id");
+
+            return false;
+        }
 
         if (!airportService.existsByAirportIdent(airportIdent)) {
             log.warn("New Runway with id: {} have airport ident not matching to any airport in the database: {}",

@@ -11,4 +11,6 @@ public enum StatisticFactorType {
     PERCENTAGE_VALUE,
 
     VALUE_WITH_TEXT,
+
+    LIST_OF_VALUES_WITH_TEXT,
 }

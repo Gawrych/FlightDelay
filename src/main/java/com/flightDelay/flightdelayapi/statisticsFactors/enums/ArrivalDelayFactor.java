@@ -9,20 +9,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ArrivalDelayFactor implements EntityStatisticFactor {
 
-//    PERCENTAGE_OF_DELAYS_ABOVE_15_LAST_YEAR("%"),
-//
-//    PERCENTAGE_OF_DELAYS_LAST_MONTHS("%"),
-//
-//    PERCENTAGE_OF_DELAYS_ABOVE_15_LAST_MONTHS("%"),
-//
-//    AVERAGE_DELAY_TIME("min"),
-//
-//    MOST_COMMON_CAUSE("text"),
-//
-//    LAST_FEW_DELAY_EVENTS("text");
+    MOST_COMMON_DELAY_CAUSES(FactorUnit.TEXT_WITH_NUMBER, StatisticFactorType.LIST_OF_VALUES_WITH_TEXT, FlightPhase.ARRIVAL),
 
-
-    MOST_COMMON_DELAY_CAUSE(FactorUnit.TEXT, StatisticFactorType.VALUE_WITH_TEXT, FlightPhase.ARRIVAL);
+    AVERAGE_TIME_TO_PARTICULAR_DELAY_CAUSE(FactorUnit.TEXT_WITH_NUMBER, StatisticFactorType.LIST_OF_VALUES_WITH_TEXT, FlightPhase.ARRIVAL);
 
     private final FactorUnit unit;
 

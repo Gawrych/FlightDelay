@@ -17,7 +17,9 @@ public enum FactorUnit {
 
     PERCENTAGE("%"),
 
-    TEXT("txt");
+    TEXT("txt"),
+
+    TEXT_WITH_NUMBER("txt/min");
 
     private final String symbol;
 }

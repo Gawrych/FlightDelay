@@ -5,16 +5,15 @@ import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithTextHolder;
 
+import java.util.List;
+
 public interface StatisticFactorCreator {
 
-    PrecisionFactor createSimpleValue(EntityStatisticFactor factorName,
-                                      double value);
+    PrecisionFactor createSimpleValue(EntityStatisticFactor factorName, double value);
 
-    PrecisionFactor createValueWithDate(EntityStatisticFactor factorName,
-                                        ValueWithDateHolder value);
+    PrecisionFactor createValueWithDate(EntityStatisticFactor factorName, ValueWithDateHolder value);
 
-    PrecisionFactor createValueWithText(EntityStatisticFactor factorName,
-                                        ValueWithTextHolder value);
+    PrecisionFactor createListValuesWithText(EntityStatisticFactor factorName, List<ValueWithTextHolder> values);
 
     PrecisionFactor createNoDataFactor(EntityStatisticFactor factorName);
 }

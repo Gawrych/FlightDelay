@@ -44,9 +44,13 @@ public class ArrivalDelayFactorCollectorImpl extends StatisticFactorCollector im
                 airportIdent);
 
         return switch (EnumType.valueOf(ArrivalDelayFactor.class, factorName.name())) {
-            case MOST_COMMON_DELAY_CAUSE -> statisticFactorCreator.createValueWithText(
+            case MOST_COMMON_DELAY_CAUSES -> statisticFactorCreator.createListValuesWithText(
                     factorName,
                     arrivalDelayFactorsCalculator.calculateMostCommonDelayCause(additionalTimes));
+
+            case AVERAGE_TIME_TO_PARTICULAR_DELAY_CAUSE -> statisticFactorCreator.createListValuesWithText(
+                    factorName,
+                    arrivalDelayFactorsCalculator.calculateAverageTimeToParticularDelayCause(additionalTimes));
         };
     }
 

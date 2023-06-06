@@ -20,7 +20,7 @@ public class WeatherFactorCreatorImpl implements WeatherFactorCreator {
                 .id(weatherFactorName)
                 .title(getMessage(weatherFactorName))
                 .unitName(weatherFactorName.getUnit().name().toLowerCase())
-                .unitSymbol(weatherFactorName.getUnit().getSymbol())
+                .unitSymbol(weatherFactorName.getUnit().getUnit())
                 .influenceOnDelay(influence)
                 .value(value)
                 .build();

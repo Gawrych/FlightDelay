@@ -19,7 +19,9 @@ public enum FactorUnit {
 
     TEXT("txt"),
 
-    TEXT_WITH_NUMBER("txt/min");
+    TEXT_WITH_NUMBER("txt/min"),
 
-    private final String symbol;
+    NUMBER("num");
+
+    private final String unit;
 }

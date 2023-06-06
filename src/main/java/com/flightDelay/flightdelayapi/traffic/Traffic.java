@@ -35,6 +35,8 @@ public class Traffic {
     @JsonProperty("MONTH_NUM")
     @Column(nullable = false)
     private Integer monthNum;
+
+    // TODO: Change to date instead of flightDate
     @Column(columnDefinition = "DATE")
     @JsonProperty("FLT_DATE")
     private LocalDate flightDate;
@@ -42,6 +44,7 @@ public class Traffic {
     @JsonProperty("FLT_DEP_1")
     private Integer flightDepartures;
 
+//    TODO: Change flightArrival to flightArrivals maybe only arrivals
     @JsonProperty("FLT_ARR_1")
     private Integer flightArrival;
 

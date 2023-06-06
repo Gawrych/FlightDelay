@@ -4,6 +4,7 @@ import com.flightDelay.flightdelayapi.shared.Flight;
 import com.flightDelay.flightdelayapi.statisticsFactors.collector.AdditionalTimeFactorCollector;
 import com.flightDelay.flightdelayapi.statisticsFactors.collector.ArrivalDelayFactorCollector;
 import com.flightDelay.flightdelayapi.statisticsFactors.collector.PreDepartureFactorCollector;
+import com.flightDelay.flightdelayapi.statisticsFactors.collector.TrafficFactorCollector;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +27,14 @@ public class StatisticFactorServiceImpl implements StatisticFactorService {
 
     private final ArrivalDelayFactorCollector arrivalDelayFactorCollector;
 
+    private final TrafficFactorCollector trafficFactorCollector;
+
     public Map<String, PrecisionFactor> getFactorsByPhase(Flight flight) {
         List<PrecisionFactor> factors = new ArrayList<>();
         factors.addAll(additionalTimeFactorCollector.collect(flight));
         factors.addAll(preDepartureFactorCollector.collect(flight));
         factors.addAll(arrivalDelayFactorCollector.collect(flight));
+        factors.addAll(trafficFactorCollector.collect(flight));
 
         return factors.stream().collect(Collectors.toMap(key -> key.getId().name(), Function.identity()));
     }

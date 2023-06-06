@@ -46,7 +46,7 @@ class ExcelToJsonConverter:
 
     def __init__(self):
         self.folder_path = '/home/broslaw/Programming/flight-delay-api/src/main/resources/data/'
-        self.amountOfMonthsToCollectDataFrom = 12
+        self.amountOfMonthsToCollectDataFrom = 4
         self.today = datetime.date.today()
         self.years = []
         self.months = []

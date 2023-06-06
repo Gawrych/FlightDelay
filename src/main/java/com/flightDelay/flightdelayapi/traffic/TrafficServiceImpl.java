@@ -3,12 +3,15 @@ package com.flightDelay.flightdelayapi.traffic;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
+import com.flightDelay.flightdelayapi.shared.exception.resource.TrafficDataNotFoundException;
 import com.flightDelay.flightdelayapi.shared.mapper.EntityMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -16,13 +19,30 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TrafficServiceImpl implements TrafficService {
 
+    @Value("${statistics.amountOfMonthsToCollectData}")
+    private int amountOfMonthsToCollectData;
+
     private final TrafficRepository trafficRepository;
 
     private final AirportService airportService;
 
+    private final TrafficDtoMapper mapper;
+
     private final EntityMapper entityMapper;
 
     private final ObjectMapper objectMapper;
+
+    @Override
+    public List<TrafficDto> findAllLatestByAirport(String airportIdent) {
+        LocalDate startDate = LocalDate.now().minusMonths(amountOfMonthsToCollectData);
+
+        List<Traffic> traffic = trafficRepository
+                .findAllByAirportWithDateAfter(airportIdent, startDate);
+
+        if (traffic.isEmpty()) throw new TrafficDataNotFoundException();
+
+        return mapper.mapFromList(traffic);
+    }
 
     @Override
     @Transactional

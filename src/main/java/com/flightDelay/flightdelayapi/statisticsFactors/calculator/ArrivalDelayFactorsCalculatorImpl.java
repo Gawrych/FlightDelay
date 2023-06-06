@@ -19,6 +19,8 @@ public class ArrivalDelayFactorsCalculatorImpl implements ArrivalDelayFactorsCal
     @Value("${statistics.itemsLimitOnListsFactors}")
     private int listLimit;
 
+    // TODO: Check possibility of use TopValueFactorCalculator methods
+
     @Override
     public List<ValueWithTextHolder> calculateMostCommonDelayCause(List<ArrivalDelayDto> additionalTimes) {
         Map<DelayCause, Integer> delayCause = calculateFrequencyOfEachDelayCause(additionalTimes);

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 
 @Slf4j
 @Component
@@ -18,8 +18,6 @@ public class ArrivalDelayFactorsCalculatorImpl implements ArrivalDelayFactorsCal
 
     @Value("${statistics.itemsLimitOnListsFactors}")
     private int listLimit;
-
-    // TODO: Check possibility of use TopValueFactorCalculator methods
 
     @Override
     public List<ValueWithTextHolder> calculateMostCommonDelayCause(List<ArrivalDelayDto> additionalTimes) {
@@ -95,7 +93,7 @@ public class ArrivalDelayFactorsCalculatorImpl implements ArrivalDelayFactorsCal
         return delayCause;
     }
 
-    private BiFunction<Integer, Integer, Integer> sum(ArrivalDelayDto dto) {
+    private BinaryOperator<Integer> sum(ArrivalDelayDto dto) {
         return (oldValue, newValue) -> oldValue + dto.getNumberOfDelayedArrivals();
     }
 

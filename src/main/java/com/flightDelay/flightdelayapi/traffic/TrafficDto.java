@@ -1,5 +1,6 @@
 package com.flightDelay.flightdelayapi.traffic;
 
+import com.flightDelay.flightdelayapi.shared.DelayEntityDto;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrafficDto {
+public class TrafficDto implements DelayEntityDto {
 
     private LocalDate date;
 

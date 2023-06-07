@@ -40,6 +40,7 @@ public class AdditionalTimeServiceImpl implements AdditionalTimeService {
         List<AdditionalTime> additionalTimes = switch (phase) {
             case ARRIVAL -> additionalTimeRepository.findAllArrivalByAirportWithDateAfter(airportIdent, startDate);
             case DEPARTURE -> additionalTimeRepository.findAllDepartureByAirportWithDateAfter(airportIdent, startDate);
+            case DEPARTURE_AND_ARRIVAL -> additionalTimeRepository.findAllByAirportWithDateAfter(airportIdent, startDate);
         };
 
         if (additionalTimes.isEmpty()) throw new AdditionalTimeDataNotFoundException();

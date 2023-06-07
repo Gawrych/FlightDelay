@@ -1,20 +1,22 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.instruction;
 
-import com.flightDelay.flightdelayapi.preDepartureDelay.PreDepartureDelayDto;
+import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeDto;
 import com.flightDelay.flightdelayapi.statisticsFactors.calculator.AverageFactorCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.function.Function;
+
 @Component
 @RequiredArgsConstructor
-public class PreDepartureAverageInstructionImpl implements FactorAverageInstruction<PreDepartureDelayDto> {
+public class AdditionalTimeAveragingImpl implements Function<AdditionalTimeDto, Double> {
 
     private final AverageFactorCalculator averageFactorCalculator;
 
     @Override
-    public Double getInstruction(PreDepartureDelayDto dto) {
+    public Double apply(AdditionalTimeDto additionalTimeDto) {
         return averageFactorCalculator.calculateAverage(
-                dto.getDelayInMinutes(),
-                dto.getNumberOfDepartures());
+                additionalTimeDto.getTotalAdditionalTimeInMinutes(),
+                additionalTimeDto.getTotalFlight());
     }
 }

@@ -40,6 +40,10 @@ public class ArrivalDelayServiceImpl implements ArrivalDelayService {
 
         if (arrivalDelays.isEmpty()) throw new ArrivalDelayDataNotFoundException();
 
+        log.info("{} arrival delay records have been found in the database for airport: {}",
+                arrivalDelays.size(),
+                airportIdent);
+
         return mapper.mapFromList(arrivalDelays);
     }
 

@@ -1,5 +1,6 @@
 package com.flightDelay.flightdelayapi.arrivalDelay;
 
+import com.flightDelay.flightdelayapi.shared.DelayEntityDto;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.DelayCause;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArrivalDelayDto {
+public class ArrivalDelayDto implements DelayEntityDto {
 
     private LocalDate date;
 

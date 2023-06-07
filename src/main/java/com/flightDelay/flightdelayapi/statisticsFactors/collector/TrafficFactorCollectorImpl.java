@@ -33,7 +33,7 @@ public class TrafficFactorCollectorImpl extends StatisticFactorCollector impleme
         return super.collectFactors(flight, TrafficFactor.values());
     }
 
-    // TODO: Try change this class to more generic
+    // TODO: Try to change this class to more generic
     @Override
     protected PrecisionFactor calculateFactor(EntityStatisticFactor factorName, String airportIdent)
             throws UnableToCalculateDueToLackOfDataException, PreDepartureDelayDataNotFoundException {
@@ -46,13 +46,13 @@ public class TrafficFactorCollectorImpl extends StatisticFactorCollector impleme
 
 
         return switch (EnumType.valueOf(TrafficFactor.class, factorName.name())) {
-            case AVERAGE_MONTHLY_DEPARTURES_TRAFFIC -> statisticFactorCreator.createSimpleValue(
+            case TOP_MONTH_OF_TRAFFIC -> statisticFactorCreator.createValueWithDate(
                     factorName,
-                    trafficFactorsCalculator.calculateAverageMonthlyAmountOfDepartures(additionalTimes));
+                    trafficFactorsCalculator.calculateTopMonthTraffic(additionalTimes));
 
-            case AVERAGE_MONTHLY_ARRIVAL_TRAFFIC -> statisticFactorCreator.createSimpleValue(
+            case AVERAGE_MONTHLY_TRAFFIC -> statisticFactorCreator.createSimpleValue(
                     factorName,
-                    trafficFactorsCalculator.calculateAverageMonthlyAmountOfArrival(additionalTimes));
+                    trafficFactorsCalculator.calculateAverageMonthlyTraffic(additionalTimes));
         };
     }
 

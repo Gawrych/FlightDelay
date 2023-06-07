@@ -37,20 +37,16 @@ public class ArrivalDelayFactorCollectorImpl extends StatisticFactorCollector im
     protected PrecisionFactor calculateFactor(EntityStatisticFactor factorName, String airportIdent)
             throws UnableToCalculateDueToLackOfDataException, PreDepartureDelayDataNotFoundException {
 
-        List<ArrivalDelayDto> additionalTimes = arrivalDelayService.findAllLatestByAirport(airportIdent);
-
-        log.info("{} arrival delay records have been found in the database for airport: {}",
-                additionalTimes.size(),
-                airportIdent);
+        List<ArrivalDelayDto> arrivalDelayDtos = arrivalDelayService.findAllLatestByAirport(airportIdent);
 
         return switch (EnumType.valueOf(ArrivalDelayFactor.class, factorName.name())) {
-            case MOST_COMMON_DELAY_CAUSES -> statisticFactorCreator.createListValuesWithText(
+            case MOST_COMMON_DELAY_CAUSE -> statisticFactorCreator.createListValuesWithText(
                     factorName,
-                    arrivalDelayFactorsCalculator.calculateMostCommonDelayCause(additionalTimes));
+                    arrivalDelayFactorsCalculator.calculateMostCommonDelayCause(arrivalDelayDtos));
 
             case AVERAGE_TIME_TO_PARTICULAR_DELAY_CAUSE -> statisticFactorCreator.createListValuesWithText(
                     factorName,
-                    arrivalDelayFactorsCalculator.calculateAverageTimeToParticularDelayCause(additionalTimes));
+                    arrivalDelayFactorsCalculator.calculateAverageTimeToParticularDelayCause(arrivalDelayDtos));
         };
     }
 

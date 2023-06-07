@@ -16,7 +16,7 @@ public enum AdditionalTimeFactor implements EntityStatisticFactor {
 
     AVERAGE_DELAY_IN_TAXI_IN_AND_ASMA(FactorUnit.MINUTES, StatisticFactorType.AVERAGE, FlightPhase.ARRIVAL),
 
-    AVERAGE_TOP_MONTH_DELAY_IN_TAXI_OUT(FactorUnit.MINUTES, StatisticFactorType.AVERAGE, FlightPhase.DEPARTURE);
+    AVERAGE_DELAY_IN_TAXI_OUT(FactorUnit.MINUTES, StatisticFactorType.AVERAGE, FlightPhase.DEPARTURE);
 
     private final FactorUnit unit;
 

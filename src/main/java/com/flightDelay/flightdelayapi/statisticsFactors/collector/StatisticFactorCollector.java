@@ -1,9 +1,9 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.collector;
 
 import com.flightDelay.flightdelayapi.shared.Flight;
+import com.flightDelay.flightdelayapi.shared.exception.LackOfCrucialDataException;
 import com.flightDelay.flightdelayapi.shared.exception.resource.ResourceNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
-import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToLackOfDataException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,8 +22,8 @@ public abstract class StatisticFactorCollector {
                 PrecisionFactor arrivalFactor = calculateFactor(factorName, airportIdent);
                 factors.add(arrivalFactor);
 
-            } catch (UnableToCalculateDueToLackOfDataException | ResourceNotFoundException e) {
-                log.warn("Unable to calculate {} due to lack of data for airport with ident: {}",
+            } catch (LackOfCrucialDataException | ResourceNotFoundException e) {
+                log.warn("Unable to calculate {} due to lack of data or incorrect data for airport with ident: {}",
                         factorName,
                         airportIdent);
 

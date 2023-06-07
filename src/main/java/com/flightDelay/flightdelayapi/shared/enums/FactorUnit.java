@@ -19,9 +19,11 @@ public enum FactorUnit {
 
     TEXT("txt"),
 
-    TEXT_WITH_NUMBER("txt/min"),
+    NUMBER("num"),
 
-    NUMBER("num");
+    TEXT_WITH_MINUTES("txt/min"),
+
+    TEXT_WITH_NUMBER("txt/num");
 
     private final String unit;
 }

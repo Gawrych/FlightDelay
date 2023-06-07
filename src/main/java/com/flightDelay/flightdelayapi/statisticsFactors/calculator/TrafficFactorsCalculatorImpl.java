@@ -1,38 +1,47 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 
+import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import com.flightDelay.flightdelayapi.traffic.TrafficDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class TrafficFactorsCalculatorImpl implements TrafficFactorsCalculator {
 
+    private final AverageFactorCalculator averageFactorCalculator;
+
+    private final TopDtoFactorCalculator<TrafficDto> topDtoFactorCalculator;
+
+    private final Function<TrafficDto, Double> trafficAveraging;
+
+    private final BinaryOperator<TrafficDto> trafficRemapping;
+
     @Override
-    public double calculateAverageMonthlyAmountOfDepartures(List<TrafficDto> trafficDtos) {
-//        Map<Integer, Integer> departuresTraffic = trafficDtos.stream()
-//                .collect(Collectors.toMap(
-//                        dto -> dto.getDate().getMonthValue(),
-//                        TrafficDto::getDepartures));
-//
-//        int sumOfAllDepartures = departuresTraffic.values().stream().mapToInt(Integer::intValue).sum();
-//        double amountOfMonths = departuresTraffic.keySet().size();
-
-        int sumOfAllDepartures = trafficDtos.stream().mapToInt(TrafficDto::getDepartures).sum();
-        double amountOfMonths = trafficDtos.size();
-
-        return sumOfAllDepartures / amountOfMonths;
+    public ValueWithDateHolder calculateTopMonthTraffic(List<TrafficDto> trafficDtos) {
+        return topDtoFactorCalculator.getTopMonthDto(trafficDtos, trafficRemapping, trafficAveraging);
     }
 
     @Override
-    public double calculateAverageMonthlyAmountOfArrival(List<TrafficDto> trafficDtos) {
-        int sumOfAllArrivals = trafficDtos.stream().mapToInt(TrafficDto::getArrivals).sum();
-        double amountOfMonths = trafficDtos.size();
+    public double calculateAverageMonthlyTraffic(List<TrafficDto> trafficDtos) {
+        Map<Integer, TrafficDto> mergedValues = topDtoFactorCalculator.sumDtosInTheSameMonths(
+                trafficDtos,
+                trafficRemapping);
 
-        return sumOfAllArrivals / amountOfMonths;
+        int sumOfAllTraffic = mergedValues.values()
+                .stream()
+                .mapToInt(TrafficDto::getTotal)
+                .sum();
+
+        double amountOfMonths = mergedValues.keySet().size();
+
+        return averageFactorCalculator.calculateAverage(sumOfAllTraffic, amountOfMonths);
     }
 }

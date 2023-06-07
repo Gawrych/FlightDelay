@@ -5,14 +5,16 @@ import com.flightDelay.flightdelayapi.preDepartureDelay.PreDepartureDelayDtoMapp
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.function.BinaryOperator;
+
 @Component
 @RequiredArgsConstructor
-public class PreDepartureRemappingInstructionImpl implements RemappingInstruction<PreDepartureDelayDto> {
+public class PreDepartureDelayRemappingImpl implements BinaryOperator<PreDepartureDelayDto> {
 
     private final PreDepartureDelayDtoMapper mapper;
 
     @Override
-    public PreDepartureDelayDto getInstruction(PreDepartureDelayDto oldRecord, PreDepartureDelayDto newRecord) {
+    public PreDepartureDelayDto apply(PreDepartureDelayDto oldRecord, PreDepartureDelayDto newRecord) {
         double mergedDepartures = oldRecord.getNumberOfDepartures() + newRecord.getNumberOfDepartures();
         double mergedDelayTime = oldRecord.getDelayInMinutes() + newRecord.getDelayInMinutes();
 

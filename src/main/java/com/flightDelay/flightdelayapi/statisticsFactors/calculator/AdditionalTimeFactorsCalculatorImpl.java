@@ -1,15 +1,14 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 
 import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeDto;
-import com.flightDelay.flightdelayapi.statisticsFactors.instruction.FactorAverageInstruction;
-import com.flightDelay.flightdelayapi.statisticsFactors.instruction.RemappingInstruction;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 @Slf4j
 @Component
@@ -18,35 +17,25 @@ public class AdditionalTimeFactorsCalculatorImpl implements AdditionalTimeFactor
 
     private final AverageFactorCalculator averageFactorCalculator;
 
-    private final TopValueFactorCalculator<AdditionalTimeDto> topValueFactorCalculator;
+    private final TopDtoFactorCalculator<AdditionalTimeDto> topDtoFactorCalculator;
 
-    private final FactorAverageInstruction<AdditionalTimeDto> averageInstruction;
+    private final Function<AdditionalTimeDto, Double> additionalTimeAveraging;
 
-    private final RemappingInstruction<AdditionalTimeDto> remappingInstruction;
+    private final BinaryOperator<AdditionalTimeDto> additionalTimeRemapping;
 
     @Override
     public double calculateAverageFromList(List<AdditionalTimeDto> additionalTimeDtos) {
-        List<Double> numerator = additionalTimeDtos.stream()
-                .map(AdditionalTimeDto::getTotalAdditionalTimeInMinutes)
-                .toList();
-
-        List<Double> denominator = additionalTimeDtos.stream()
-                .map(AdditionalTimeDto::getTotalFlight)
-                .toList();
-
-        return averageFactorCalculator.calculateAverage(numerator, denominator);
+        return averageFactorCalculator.calculateAverageByDtoList(
+                additionalTimeDtos,
+                AdditionalTimeDto::getTotalAdditionalTimeInMinutes,
+                AdditionalTimeDto::getTotalFlight);
     }
 
     @Override
     public ValueWithDateHolder calculateTopDelayMonth(List<AdditionalTimeDto> additionalTimeDtos) {
-        Map<Integer, AdditionalTimeDto> summedValues = topValueFactorCalculator.sumValuesInTheSameMonth(
+        return topDtoFactorCalculator.getTopMonthDto(
                 additionalTimeDtos,
-                remappingInstruction);
-
-        AdditionalTimeDto topMonth = topValueFactorCalculator.findTopValue(
-                summedValues.values(),
-                averageInstruction);
-
-       return topValueFactorCalculator.createValueHolder(topMonth, averageInstruction);
+                additionalTimeRemapping,
+                additionalTimeAveraging);
     }
 }

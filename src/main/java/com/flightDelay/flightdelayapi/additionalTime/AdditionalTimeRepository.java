@@ -17,4 +17,7 @@ public interface AdditionalTimeRepository extends ListCrudRepository<AdditionalT
 
     @Query("SELECT u FROM AdditionalTime u WHERE u.airportCode = :airportIdent AND u.flightDate > :startDate AND u.stage = 'TAXI_OUT'")
     List<AdditionalTime> findAllDepartureByAirportWithDateAfter(String airportIdent, LocalDate startDate);
+
+    @Query("SELECT u FROM AdditionalTime u WHERE u.airportCode = :airportIdent AND u.flightDate > :startDate")
+    List<AdditionalTime> findAllByAirportWithDateAfter(String airportIdent, LocalDate startDate);
 }

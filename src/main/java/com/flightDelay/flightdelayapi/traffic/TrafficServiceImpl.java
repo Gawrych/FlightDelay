@@ -3,7 +3,6 @@ package com.flightDelay.flightdelayapi.traffic;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
-import com.flightDelay.flightdelayapi.shared.exception.resource.TrafficDataNotFoundException;
 import com.flightDelay.flightdelayapi.shared.mapper.EntityMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +38,9 @@ public class TrafficServiceImpl implements TrafficService {
         List<Traffic> traffic = trafficRepository
                 .findAllByAirportWithDateAfter(airportIdent, startDate);
 
-        if (traffic.isEmpty()) throw new TrafficDataNotFoundException();
+        log.info("{} traffic records have been found in the database for airport: {}",
+                traffic.size(),
+                airportIdent);
 
         return mapper.mapFromList(traffic);
     }

@@ -3,10 +3,7 @@ package com.flightDelay.flightdelayapi.additionalTime;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
-import com.flightDelay.flightdelayapi.shared.exception.resource.AdditionalTimeDataNotFoundException;
 import com.flightDelay.flightdelayapi.shared.mapper.EntityMapper;
-import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,22 +31,21 @@ public class AdditionalTimeServiceImpl implements AdditionalTimeService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public List<AdditionalTimeDto> findAllLatestByAirport(String airportIdent, FlightPhase phase) {
+    public List<AdditionalTimeDto> findAllLatestByAirport(String airportIdent) {
         LocalDate startDate = LocalDate.now().minusMonths(amountOfMonthsToCollectData);
 
-        List<AdditionalTime> additionalTimes = switch (phase) {
-            case ARRIVAL -> additionalTimeRepository.findAllArrivalByAirportWithDateAfter(airportIdent, startDate);
-            case DEPARTURE -> additionalTimeRepository.findAllDepartureByAirportWithDateAfter(airportIdent, startDate);
-            case DEPARTURE_AND_ARRIVAL -> additionalTimeRepository.findAllByAirportWithDateAfter(airportIdent, startDate);
-        };
+        List<AdditionalTime> additionalTimes = additionalTimeRepository
+                .findAllByAirportWithDateAfter(airportIdent, startDate);
 
-        if (additionalTimes.isEmpty()) throw new AdditionalTimeDataNotFoundException();
+        log.info("{} additional time records have been found in the database for airport: {}",
+                additionalTimes.size(),
+                airportIdent);
 
         return mapper.mapFromList(additionalTimes);
     }
 
     @Override
-    @Transactional
+    // TODO: Add transactional
     public List<AdditionalTime> updateFromJson(String newDataInJson) {
         return entityMapper
                 .jsonArrayToList(newDataInJson, AdditionalTime.class, objectMapper)

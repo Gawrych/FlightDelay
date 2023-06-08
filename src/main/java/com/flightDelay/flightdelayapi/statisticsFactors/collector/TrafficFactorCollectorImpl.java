@@ -1,12 +1,9 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.collector;
 
-import com.flightDelay.flightdelayapi.shared.Flight;
-import com.flightDelay.flightdelayapi.shared.exception.resource.PreDepartureDelayDataNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.calculator.TrafficFactorsCalculator;
 import com.flightDelay.flightdelayapi.statisticsFactors.creator.StatisticFactorCreator;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.TrafficFactor;
-import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToLackOfDataException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
 import com.flightDelay.flightdelayapi.traffic.TrafficDto;
 import com.flightDelay.flightdelayapi.traffic.TrafficService;
@@ -20,7 +17,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TrafficFactorCollectorImpl extends StatisticFactorCollector implements TrafficFactorCollector {
+public class TrafficFactorCollectorImpl extends StatisticFactorCollector<TrafficDto> implements TrafficFactorCollector {
 
     private final TrafficService trafficService;
 
@@ -29,30 +26,22 @@ public class TrafficFactorCollectorImpl extends StatisticFactorCollector impleme
     private final StatisticFactorCreator statisticFactorCreator;
 
     @Override
-    public List<PrecisionFactor> collect(Flight flight) {
-        return super.collectFactors(flight, TrafficFactor.values());
+    public List<PrecisionFactor> collect(String airportIdent) {
+        List<TrafficDto> trafficDtos = trafficService.findAllLatestByAirport(airportIdent);
+
+        return super.collectFactors(airportIdent, trafficDtos, TrafficFactor.values());
     }
 
-    // TODO: Try to change this class to more generic
     @Override
-    protected PrecisionFactor calculateFactor(EntityStatisticFactor factorName, String airportIdent)
-            throws UnableToCalculateDueToLackOfDataException, PreDepartureDelayDataNotFoundException {
-
-        List<TrafficDto> additionalTimes = trafficService.findAllLatestByAirport(airportIdent);
-
-        log.info("{} traffic records have been found in the database for airport: {}",
-                additionalTimes.size(),
-                airportIdent);
-
-
+    protected PrecisionFactor calculateFactor(EntityStatisticFactor factorName, List<TrafficDto> trafficDtos) {
         return switch (EnumType.valueOf(TrafficFactor.class, factorName.name())) {
             case TOP_MONTH_OF_TRAFFIC -> statisticFactorCreator.createValueWithDate(
                     factorName,
-                    trafficFactorsCalculator.calculateTopMonthTraffic(additionalTimes));
+                    trafficFactorsCalculator.calculateTopMonthTraffic(trafficDtos));
 
             case AVERAGE_MONTHLY_TRAFFIC -> statisticFactorCreator.createSimpleValue(
                     factorName,
-                    trafficFactorsCalculator.calculateAverageMonthlyTraffic(additionalTimes));
+                    trafficFactorsCalculator.calculateAverageMonthlyTraffic(trafficDtos));
         };
     }
 

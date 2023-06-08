@@ -1,6 +1,8 @@
 package com.flightDelay.flightdelayapi.additionalTime;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.flightDelay.flightdelayapi.shared.DelayEntityDto;
+import com.flightDelay.flightdelayapi.shared.validator.EnumValidator;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -18,4 +20,8 @@ public class AdditionalTimeDto implements DelayEntityDto {
     private double totalFlight;
 
     private double totalAdditionalTimeInMinutes;
+
+    @JsonDeserialize(using = AdditionalTimeStageEnumDeserializer.class) // TODO: Change message
+    @EnumValidator(enumClass = AdditionalTimeStage.class, message = "{error.message.incorrectPhase}")
+    private AdditionalTimeStage stage;
 }

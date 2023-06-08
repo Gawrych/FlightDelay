@@ -1,6 +1,5 @@
 package com.flightDelay.flightdelayapi.weatherFactors.calculator;
 
-import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 

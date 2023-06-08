@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.flightDelay.flightdelayapi.shared.deserializer.FlightPhaseEnumDeserializer;
 import com.flightDelay.flightdelayapi.shared.validator.AirportIcaoCodeValidator;
 import com.flightDelay.flightdelayapi.shared.validator.EnumValidator;
-import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
+import com.flightDelay.flightdelayapi.shared.enums.FlightPhase;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

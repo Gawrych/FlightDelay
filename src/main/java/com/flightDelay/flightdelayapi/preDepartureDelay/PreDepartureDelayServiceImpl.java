@@ -3,7 +3,6 @@ package com.flightDelay.flightdelayapi.preDepartureDelay;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
-import com.flightDelay.flightdelayapi.shared.exception.resource.PreDepartureDelayDataNotFoundException;
 import com.flightDelay.flightdelayapi.shared.mapper.EntityMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +38,9 @@ public class PreDepartureDelayServiceImpl implements PreDepartureDelayService {
         List<PreDepartureDelay> preDepartureDelays = preDepartureDelayRepository
                 .findAllByAirportWithDateAfter(airportIdent, startDate);
 
-        if (preDepartureDelays.isEmpty()) throw new PreDepartureDelayDataNotFoundException();
+        log.info("{} pre departure delay records have been found in the database for airport: {}",
+                preDepartureDelays.size(),
+                airportIdent);
 
         return mapper.mapFromList(preDepartureDelays);
     }

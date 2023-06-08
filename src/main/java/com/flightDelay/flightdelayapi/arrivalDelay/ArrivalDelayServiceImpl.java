@@ -3,7 +3,6 @@ package com.flightDelay.flightdelayapi.arrivalDelay;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
-import com.flightDelay.flightdelayapi.shared.exception.resource.ArrivalDelayDataNotFoundException;
 import com.flightDelay.flightdelayapi.shared.mapper.EntityMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +36,6 @@ public class ArrivalDelayServiceImpl implements ArrivalDelayService {
 
         List<ArrivalDelay> arrivalDelays = arrivalDelayRepository
                 .findAllByAirportWithDateAfter(airportIdent, startDate);
-
-        if (arrivalDelays.isEmpty()) throw new ArrivalDelayDataNotFoundException();
 
         log.info("{} arrival delay records have been found in the database for airport: {}",
                 arrivalDelays.size(),

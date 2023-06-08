@@ -2,13 +2,10 @@ package com.flightDelay.flightdelayapi.statisticsFactors.collector;
 
 import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeDto;
 import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeService;
-import com.flightDelay.flightdelayapi.shared.Flight;
-import com.flightDelay.flightdelayapi.shared.exception.resource.ResourceNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.calculator.AdditionalTimeFactorsCalculator;
 import com.flightDelay.flightdelayapi.statisticsFactors.creator.StatisticFactorCreator;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.AdditionalTimeFactor;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
-import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToLackOfDataException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +16,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AdditionalTimeFactorCollectorImpl extends StatisticFactorCollector implements AdditionalTimeFactorCollector {
+public class AdditionalTimeFactorCollectorImpl extends StatisticFactorCollector<AdditionalTimeDto> implements AdditionalTimeFactorCollector {
 
     private final AdditionalTimeFactorsCalculator additionalTimeFactorsCalculator;
 
@@ -28,29 +25,28 @@ public class AdditionalTimeFactorCollectorImpl extends StatisticFactorCollector 
     private final AdditionalTimeService additionalTimeService;
 
     @Override
-    public List<PrecisionFactor> collect(Flight flight) {
-        return super.collectFactors(flight, AdditionalTimeFactor.values());
+    public List<PrecisionFactor> collect(String airportIdent) {
+        List<AdditionalTimeDto> additionalTimeDtos = additionalTimeService.findAllLatestByAirport(airportIdent);
+
+        return super.collectFactors(airportIdent, additionalTimeDtos, AdditionalTimeFactor.values());
     }
 
     @Override
-    protected PrecisionFactor calculateFactor(EntityStatisticFactor factorName, String airportIdent)
-            throws UnableToCalculateDueToLackOfDataException, ResourceNotFoundException {
+    protected PrecisionFactor calculateFactor(EntityStatisticFactor factorName,
+                                              List<AdditionalTimeDto> additionalTimeDtos) {
 
-        List<AdditionalTimeDto> additionalTimes = additionalTimeService
-                .findAllLatestByAirport(airportIdent, factorName.getPhase());
-
-        log.info("{} additional time records have been found in the database for airport: {}",
-                additionalTimes.size(),
-                airportIdent);
+        List<AdditionalTimeDto> additionalTimeDtosInPhase = additionalTimeDtos.stream()
+                .filter(item -> factorName.getPhase().getStage().contains(item.getStage()))
+                .toList();
 
         return switch (factorName.getType()) {
             case TOP_VALUE_WITH_DATE -> statisticFactorCreator.createValueWithDate(
                     factorName,
-                    additionalTimeFactorsCalculator.calculateTopDelayMonth(additionalTimes));
+                    additionalTimeFactorsCalculator.calculateTopDelayMonth(additionalTimeDtosInPhase));
 
             case AVERAGE -> statisticFactorCreator.createSimpleValue(
                     factorName,
-                    additionalTimeFactorsCalculator.calculateAverageFromList(additionalTimes));
+                    additionalTimeFactorsCalculator.calculateAverageFromList(additionalTimeDtosInPhase));
 
             default -> getNoDataFactor(factorName);
         };

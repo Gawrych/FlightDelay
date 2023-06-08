@@ -30,11 +30,13 @@ public class StatisticFactorServiceImpl implements StatisticFactorService {
     private final TrafficFactorCollector trafficFactorCollector;
 
     public Map<String, PrecisionFactor> getFactorsByPhase(Flight flight) {
+        String airportIdent = flight.getAirportIdent();
         List<PrecisionFactor> factors = new ArrayList<>();
-        factors.addAll(additionalTimeFactorCollector.collect(flight));
-        factors.addAll(preDepartureFactorCollector.collect(flight));
-        factors.addAll(arrivalDelayFactorCollector.collect(flight));
-        factors.addAll(trafficFactorCollector.collect(flight));
+
+        factors.addAll(preDepartureFactorCollector.collect(airportIdent));
+        factors.addAll(additionalTimeFactorCollector.collect(airportIdent));
+        factors.addAll(arrivalDelayFactorCollector.collect(airportIdent));
+        factors.addAll(trafficFactorCollector.collect(airportIdent));
 
         return factors.stream().collect(Collectors.toMap(key -> key.getId().name(), Function.identity()));
     }

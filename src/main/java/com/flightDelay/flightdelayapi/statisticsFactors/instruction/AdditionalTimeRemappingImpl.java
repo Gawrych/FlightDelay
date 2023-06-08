@@ -2,6 +2,7 @@ package com.flightDelay.flightdelayapi.statisticsFactors.instruction;
 
 import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeDto;
 import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeDtoMapper;
+import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeStage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,6 @@ public class AdditionalTimeRemappingImpl implements BinaryOperator<AdditionalTim
         double mergedAdditionalTime =
                 oldRecord.getTotalAdditionalTimeInMinutes() + newRecord.getTotalAdditionalTimeInMinutes();
 
-        return mapper.mapFrom(newRecord.getDate(), mergedFlights, mergedAdditionalTime);
+        return mapper.mapFrom(newRecord.getDate(), AdditionalTimeStage.ASMA, mergedFlights, mergedAdditionalTime);
     }
 }

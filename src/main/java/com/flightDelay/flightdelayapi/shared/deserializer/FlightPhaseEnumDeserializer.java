@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.flightDelay.flightdelayapi.shared.exception.request.InvalidFlightPhaseEnumException;
-import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
+import com.flightDelay.flightdelayapi.shared.enums.FlightPhase;
 
 import java.io.IOException;
 

@@ -2,9 +2,11 @@ package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 
 import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeDto;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.function.BinaryOperator;
@@ -12,6 +14,7 @@ import java.util.function.Function;
 
 @Slf4j
 @Component
+@Validated
 @RequiredArgsConstructor
 public class AdditionalTimeFactorsCalculatorImpl implements AdditionalTimeFactorsCalculator {
 
@@ -24,7 +27,7 @@ public class AdditionalTimeFactorsCalculatorImpl implements AdditionalTimeFactor
     private final BinaryOperator<AdditionalTimeDto> additionalTimeRemapping;
 
     @Override
-    public double calculateAverageFromList(List<AdditionalTimeDto> additionalTimeDtos) {
+    public double calculateAverageFromList(@NotEmpty List<AdditionalTimeDto> additionalTimeDtos) {
         return averageFactorCalculator.calculateAverageByDtoList(
                 additionalTimeDtos,
                 AdditionalTimeDto::getTotalAdditionalTimeInMinutes,
@@ -32,7 +35,7 @@ public class AdditionalTimeFactorsCalculatorImpl implements AdditionalTimeFactor
     }
 
     @Override
-    public ValueWithDateHolder calculateTopDelayMonth(List<AdditionalTimeDto> additionalTimeDtos) {
+    public ValueWithDateHolder calculateTopDelayMonth(@NotEmpty List<AdditionalTimeDto> additionalTimeDtos) {
         return topDtoFactorCalculator.getTopMonthDto(
                 additionalTimeDtos,
                 additionalTimeRemapping,

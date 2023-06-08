@@ -6,12 +6,14 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
 @Slf4j
+@Validated
 @Component
 @RequiredArgsConstructor
 public class PreDepartureDelayFactorsCalculatorImpl implements PreDepartureDelayFactorsCalculator {

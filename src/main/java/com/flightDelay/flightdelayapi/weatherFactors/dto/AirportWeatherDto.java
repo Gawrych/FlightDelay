@@ -1,7 +1,7 @@
 package com.flightDelay.flightdelayapi.weatherFactors.dto;
 
 import com.flightDelay.flightdelayapi.runway.dto.RunwayWeatherDto;
-import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
+import com.flightDelay.flightdelayapi.shared.enums.FlightPhase;
 import com.flightDelay.flightdelayapi.weatherFactors.model.Weather;
 import lombok.*;
 

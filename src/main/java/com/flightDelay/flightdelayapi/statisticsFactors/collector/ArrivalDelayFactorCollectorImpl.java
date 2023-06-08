@@ -2,13 +2,10 @@ package com.flightDelay.flightdelayapi.statisticsFactors.collector;
 
 import com.flightDelay.flightdelayapi.arrivalDelay.ArrivalDelayDto;
 import com.flightDelay.flightdelayapi.arrivalDelay.ArrivalDelayService;
-import com.flightDelay.flightdelayapi.shared.Flight;
-import com.flightDelay.flightdelayapi.shared.exception.resource.PreDepartureDelayDataNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.calculator.ArrivalDelayFactorsCalculator;
 import com.flightDelay.flightdelayapi.statisticsFactors.creator.StatisticFactorCreator;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.ArrivalDelayFactor;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
-import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToLackOfDataException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
 import jakarta.persistence.EnumType;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +17,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ArrivalDelayFactorCollectorImpl extends StatisticFactorCollector implements ArrivalDelayFactorCollector {
+public class ArrivalDelayFactorCollectorImpl extends StatisticFactorCollector<ArrivalDelayDto> implements ArrivalDelayFactorCollector {
 
     private final ArrivalDelayService arrivalDelayService;
 
@@ -29,15 +26,15 @@ public class ArrivalDelayFactorCollectorImpl extends StatisticFactorCollector im
     private final StatisticFactorCreator statisticFactorCreator;
 
     @Override
-    public List<PrecisionFactor> collect(Flight flight) {
-        return super.collectFactors(flight, ArrivalDelayFactor.values());
+    public List<PrecisionFactor> collect(String airportIdent) {
+        List<ArrivalDelayDto> arrivalDelayDtos = arrivalDelayService.findAllLatestByAirport(airportIdent);
+
+        return super.collectFactors(airportIdent, arrivalDelayDtos, ArrivalDelayFactor.values());
     }
 
     @Override
-    protected PrecisionFactor calculateFactor(EntityStatisticFactor factorName, String airportIdent)
-            throws UnableToCalculateDueToLackOfDataException, PreDepartureDelayDataNotFoundException {
-
-        List<ArrivalDelayDto> arrivalDelayDtos = arrivalDelayService.findAllLatestByAirport(airportIdent);
+    protected PrecisionFactor calculateFactor(EntityStatisticFactor factorName,
+                                              List<ArrivalDelayDto> arrivalDelayDtos) {
 
         return switch (EnumType.valueOf(ArrivalDelayFactor.class, factorName.name())) {
             case MOST_COMMON_DELAY_CAUSE -> statisticFactorCreator.createListValuesWithText(

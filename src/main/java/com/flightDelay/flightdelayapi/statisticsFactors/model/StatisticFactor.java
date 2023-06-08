@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.StatisticFactorStatus;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.StatisticFactorType;
-import com.flightDelay.flightdelayapi.weatherFactors.enums.FlightPhase;
+import com.flightDelay.flightdelayapi.shared.enums.FlightPhase;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

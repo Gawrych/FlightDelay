@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import com.flightDelay.flightdelayapi.airport.AirportService;
 import com.flightDelay.flightdelayapi.shared.mapper.EntityMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +46,7 @@ public class AdditionalTimeServiceImpl implements AdditionalTimeService {
     }
 
     @Override
-    // TODO: Add transactional
+    @Transactional
     public List<AdditionalTime> updateFromJson(String newDataInJson) {
         return entityMapper
                 .jsonArrayToList(newDataInJson, AdditionalTime.class, objectMapper)

@@ -1,5 +1,5 @@
 import json
-from ExcelToJsonConverter import ExcelToJsonConverter
+from CsvToJsonConverter import CsvToJsonConverter
 
 
 def preprocess_airport_traffic(df):
@@ -12,12 +12,13 @@ class TrafficScript:
         self.file_name = 'Airport_Traffic'
 
     def convert_file(self):
-        converter = ExcelToJsonConverter()
+        converter = CsvToJsonConverter()
         df = converter.convert(self.file_name)
         json_dictionary = preprocess_airport_traffic(df)
         json_dictionary = converter.replace_nan_to_null(json_dictionary)
 
         json_str = json.dumps(json_dictionary, indent=0)
+
         print(json_str)
 
 

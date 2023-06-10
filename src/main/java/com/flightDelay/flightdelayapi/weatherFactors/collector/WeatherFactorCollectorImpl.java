@@ -51,8 +51,21 @@ public class WeatherFactorCollectorImpl implements WeatherFactorCollector {
             WeatherFactorName weatherFactorName = condition.getKey();
             int value = condition.getValue();
 
-            FactorInfluence factorInfluence = checkPhaseLimit(ilsCategory, airportWeatherDto.getPhase(), weatherFactorName, value);
-            weatherFactors.add(weatherFactorCreator.createFactor(weatherFactorName, value, factorInfluence));
+            FactorInfluence factorInfluence = checkPhaseLimit(
+                    ilsCategory,
+                    airportWeatherDto.getPhase(),
+                    weatherFactorName,
+                    value);
+
+            WeatherFactor factor = weatherFactorCreator.createFactor(weatherFactorName, value, factorInfluence);
+
+            log.info("For {} factor with value {} {} has been set delay influence on {}",
+                    factor.getTitle(),
+                    factor.getValue(),
+                    factor.getUnitSymbol(),
+                    factor.getInfluenceOnDelay());
+
+            weatherFactors.add(factor);
         }
 
         return weatherFactors;

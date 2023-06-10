@@ -1,5 +1,5 @@
 import json
-from ExcelToJsonConverter import ExcelToJsonConverter
+from CsvToJsonConverter import CsvToJsonConverter
 
 
 def preprocess_predeparture_delay(df):
@@ -11,15 +11,13 @@ class PreDepartureDelayScript:
         self.file_name = 'ATC_Pre-Departure_Delay'
 
     def convert_file(self):
-        converter = ExcelToJsonConverter()
+        converter = CsvToJsonConverter()
         df = converter.convert(self.file_name)
         json_dictionary = preprocess_predeparture_delay(df)
         json_dictionary = converter.replace_nan_to_null(json_dictionary)
 
         json_str = json.dumps(json_dictionary, indent=0)
-        file = open("/home/broslaw/Programming/testCompresion/preDeparture.json", "w")
-        file.write(json_str)
-        file.close()
+
         print(json_str)
 
 

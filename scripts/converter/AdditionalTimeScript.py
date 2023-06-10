@@ -1,7 +1,6 @@
-import calendar
 import datetime
 import json
-from ExcelToJsonConverter import ExcelToJsonConverter
+from CsvToJsonConverter import CsvToJsonConverter
 
 
 def departure_additional_time_completion(json_to_be_completed, stage):
@@ -44,7 +43,7 @@ class DepartureAdditionalTimeScript:
         self.taxi_out_file_name = 'Taxi-Out_Additional_Time'
 
     def convert_file(self):
-        converter = ExcelToJsonConverter()
+        converter = CsvToJsonConverter()
         asma_df = converter.convert(self.asma_file_name)
         taxi_in_df = converter.convert(self.taxi_in_file_name)
         taxi_out_df = converter.convert(self.taxi_out_file_name)
@@ -63,9 +62,7 @@ class DepartureAdditionalTimeScript:
         json_dictionary = converter.replace_nan_to_null(json_dictionary)
 
         json_str = json.dumps(json_dictionary, indent=0)
-        file = open("/home/broslaw/Programming/testCompresion/additionalTime.json", "w")
-        file.write(json_str)
-        file.close()
+
         print(json_str)
 
 

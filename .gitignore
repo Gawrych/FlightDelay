@@ -37,3 +37,4 @@ src/main/java/com/flightDelay/flightdelayapi/converter/.idea
 scripts/converter/.idea
 src/main/resources/data
 src/main/resources/application.properties
+src/main/resources/properties/databaseConnect.properties

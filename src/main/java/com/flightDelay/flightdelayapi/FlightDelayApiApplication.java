@@ -9,8 +9,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 @EnableConfigurationProperties({LandingLimitsProperties.class, TakeoffLimitsProperties.class})
 public class FlightDelayApiApplication {
-	// TODO: Create slf4j custom log format and set target
 	// TODO: Think about multi threading
+	// TODO: Create tests
+	// TODO: Add api security
 
 	public static void main(String[] args) {
 		SpringApplication.run(FlightDelayApiApplication.class, args);

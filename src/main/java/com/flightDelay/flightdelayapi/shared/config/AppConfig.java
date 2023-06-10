@@ -8,11 +8,13 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 @Configuration
-@PropertySource("classpath:api/weatherApi.properties")
-@PropertySource("classpath:flightPhasesLimits.properties")
-@PropertySource("classpath:weatherSettings.properties")
-@PropertySource("classpath:dateAndTimePatterns.properties")
-@PropertySource("classpath:importDataFromFile.properties")
+@PropertySource("classpath:properties/databaseConnect.properties")
+@PropertySource("classpath:properties/weatherOpenMeteoApi.properties")
+@PropertySource("classpath:properties/flightPhasesLimits.properties")
+@PropertySource("classpath:properties/statisticsFactors.properties")
+@PropertySource("classpath:properties/weatherFactors.properties")
+@PropertySource("classpath:properties/dateAndTimePatterns.properties")
+@PropertySource("classpath:properties/importDataFromFile.properties")
 public class AppConfig {
 
     @Bean

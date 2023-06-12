@@ -1,8 +1,8 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 
+import com.flightDelay.flightdelayapi.shared.exception.resource.TrafficDataNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import com.flightDelay.flightdelayapi.traffic.TrafficDto;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -30,12 +30,16 @@ public class TrafficFactorsCalculatorImpl implements TrafficFactorsCalculator {
     private final BinaryOperator<TrafficDto> trafficRemapping;
 
     @Override
-    public ValueWithDateHolder calculateTopMonthTraffic(@NotEmpty List<TrafficDto> trafficDtos) {
+    public ValueWithDateHolder calculateTopMonthTraffic(List<TrafficDto> trafficDtos) {
+        if (trafficDtos == null || trafficDtos.isEmpty()) throw new TrafficDataNotFoundException();
+
         return topDtoFactorCalculator.getTopMonthDto(trafficDtos, trafficRemapping, trafficAveraging);
     }
 
     @Override
-    public double calculateAverageMonthlyTraffic(@NotEmpty List<TrafficDto> trafficDtos) {
+    public double calculateAverageMonthlyTraffic(List<TrafficDto> trafficDtos) {
+        if (trafficDtos == null ||trafficDtos.isEmpty()) throw new TrafficDataNotFoundException();
+
         Map<Integer, TrafficDto> mergedValues = topDtoFactorCalculator.sumDtosInTheSameMonths(
                 trafficDtos,
                 trafficRemapping);

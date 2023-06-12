@@ -1,7 +1,7 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 
 import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToIncorrectDataException;
-import jakarta.validation.constraints.NotEmpty;
+import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToLackOfDataException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -14,9 +14,12 @@ import java.util.function.Function;
 @Component
 public class AverageFactorCalculatorImpl implements AverageFactorCalculator {
 
-    public <T> double  calculateAverageByDtoList(@NotEmpty List<T> dtos,
+    public <T> double  calculateAverageByDtoList(List<T> dtos,
                                                  Function<T, Double> numeratorImpl,
                                                  Function<T, Double> denominatorImpl) {
+
+        if (dtos.isEmpty() || numeratorImpl == null || denominatorImpl == null)
+            throw new UnableToCalculateDueToLackOfDataException();
 
         List<Double> numerator = dtos.stream()
                 .map(numeratorImpl)
@@ -29,7 +32,9 @@ public class AverageFactorCalculatorImpl implements AverageFactorCalculator {
         return calculateAverage(numerator, denominator);
     }
 
-    public double calculateAverage(@NotEmpty List<Double> numerator, @NotEmpty List<Double> denominator) {
+    public double calculateAverage(List<Double> numerator, List<Double> denominator) {
+        if (numerator.isEmpty() || denominator.isEmpty()) throw new UnableToCalculateDueToLackOfDataException();
+
         double numeratorSum = numerator.stream()
                 .mapToDouble(Double::doubleValue)
                 .sum();

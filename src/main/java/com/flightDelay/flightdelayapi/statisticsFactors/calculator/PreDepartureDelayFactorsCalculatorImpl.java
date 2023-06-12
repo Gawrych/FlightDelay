@@ -1,8 +1,8 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 
 import com.flightDelay.flightdelayapi.preDepartureDelay.PreDepartureDelayDto;
+import com.flightDelay.flightdelayapi.shared.exception.resource.PreDepartureDelayDataNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -27,26 +27,32 @@ public class PreDepartureDelayFactorsCalculatorImpl implements PreDepartureDelay
     private final BinaryOperator<PreDepartureDelayDto> preDepartureDelayRemapping;
 
     @Override
-    public double calculateAverageDelayTime(@NotEmpty List<PreDepartureDelayDto> preDepartureDelayDtos) {
+    public double calculateAverageDelayTime(List<PreDepartureDelayDto> preDepartureDtos) {
+        if (preDepartureDtos == null || preDepartureDtos.isEmpty()) throw new PreDepartureDelayDataNotFoundException();
+
         return averageFactorCalculator.calculateAverageByDtoList(
-                preDepartureDelayDtos,
+                preDepartureDtos,
                 PreDepartureDelayDto::getDelayInMinutes,
                 PreDepartureDelayDto::getNumberOfDepartures);
     }
 
     @Override
-    public ValueWithDateHolder calculateTopDayDelay(@NotEmpty List<PreDepartureDelayDto> preDepartureDelayDtos) {
+    public ValueWithDateHolder calculateTopDayDelay(List<PreDepartureDelayDto> preDepartureDtos) {
+        if (preDepartureDtos == null || preDepartureDtos.isEmpty()) throw new PreDepartureDelayDataNotFoundException();
+
         PreDepartureDelayDto topDelay = topDtoFactorCalculator.findTopDto(
-                preDepartureDelayDtos,
+                preDepartureDtos,
                 preDepartureDelayAveraging);
 
         return topDtoFactorCalculator.createValueHolder(topDelay, preDepartureDelayAveraging);
     }
 
     @Override
-    public ValueWithDateHolder calculateTopMonthDelay(@NotEmpty List<PreDepartureDelayDto> preDepartureDelayDtos) {
+    public ValueWithDateHolder calculateTopMonthDelay(List<PreDepartureDelayDto> preDepartureDtos) {
+        if (preDepartureDtos == null || preDepartureDtos.isEmpty()) throw new PreDepartureDelayDataNotFoundException();
+
         return topDtoFactorCalculator.getTopMonthDto(
-                preDepartureDelayDtos,
+                preDepartureDtos,
                 preDepartureDelayRemapping,
                 preDepartureDelayAveraging);
     }

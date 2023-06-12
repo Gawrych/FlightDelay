@@ -24,36 +24,39 @@ public class AdditionalTime {
 
     @Id
     @NotNull
-    @Column(unique = true, nullable = false)
+    @Column(name = "`generatedId`", unique = true, nullable = false)
     private String generatedId;
 
-    @Column(nullable = false)
+    @Column(name = "`year`", nullable = false)
     @JsonProperty("YEAR")
     private Integer year;
 
-    @Column(nullable = false)
+    @Column(name = "`monthNum`", nullable = false)
     @JsonProperty("MONTH_NUM")
     private Integer monthNum;
 
     // TODO: Change flightDate to date everywhere
-    @Column(columnDefinition = "DATE")
+    @Column(name = "`flightDate`", columnDefinition = "DATE")
     @JsonProperty("FLT_DATE")
     private LocalDate flightDate;
 
-    @Column(nullable = false)
+    @Column(name = "`stage`", nullable = false)
     @JsonProperty("STAGE")
     private String stage;
 
-    @Column(nullable = false)
+    @Column(name = "`airportCode`", nullable = false)
     @JsonProperty("APT_ICAO")
     private String airportCode;
 
+    @Column(name = "`totalFlight`")
     @JsonProperty("TOTAL_REF_NB_FL")
     private Integer totalFlight;
 
+    @Column(name = "`totalReferenceTimeInMinutes`")
     @JsonProperty("TOTAL_REF_TIME_MIN")
     private Integer totalReferenceTimeInMinutes;
 
+    @Column(name = "`totalAdditionalTimeInMinutes`")
     @JsonProperty("TOTAL_ADD_TIME_MIN")
     private Integer totalAdditionalTimeInMinutes;
 

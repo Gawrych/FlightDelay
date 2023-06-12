@@ -1,9 +1,9 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 
 import com.flightDelay.flightdelayapi.arrivalDelay.ArrivalDelayDto;
+import com.flightDelay.flightdelayapi.shared.exception.resource.ArrivalDelayDataNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.DelayCause;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithTextHolder;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +23,9 @@ public class ArrivalDelayFactorsCalculatorImpl implements ArrivalDelayFactorsCal
     private int listLimit;
 
     @Override
-    public List<ValueWithTextHolder> calculateMostCommonDelayCause(@NotEmpty List<ArrivalDelayDto> additionalTimes) {
+    public List<ValueWithTextHolder> calculateMostCommonDelayCause(List<ArrivalDelayDto> additionalTimes) {
+        if (additionalTimes == null || additionalTimes.isEmpty()) throw new ArrivalDelayDataNotFoundException();
+
         Map<DelayCause, Integer> delayCause = calculateFrequencyOfEachDelayCause(additionalTimes);
         List<ValueWithTextHolder> result = createSortedValueWithTextHolderList(delayCause);
 
@@ -31,7 +33,9 @@ public class ArrivalDelayFactorsCalculatorImpl implements ArrivalDelayFactorsCal
     }
 
     @Override
-    public List<ValueWithTextHolder> calculateAverageTimeToParticularDelayCause(@NotEmpty List<ArrivalDelayDto> additionalTimes) {
+    public List<ValueWithTextHolder> calculateAverageTimeToParticularDelayCause(List<ArrivalDelayDto> additionalTimes) {
+        if (additionalTimes == null || additionalTimes.isEmpty()) throw new ArrivalDelayDataNotFoundException();
+
         Map<DelayCause, Integer> delayCauseWithDelayTimeInMinutes = calculateDelayTimeInMinutes(additionalTimes);
         Map<DelayCause, Integer> delayCause = calculateTotalNumberOfDelayedArrivals(additionalTimes);
 

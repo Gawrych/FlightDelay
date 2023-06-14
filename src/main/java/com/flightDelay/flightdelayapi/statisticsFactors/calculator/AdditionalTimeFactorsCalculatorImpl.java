@@ -4,17 +4,13 @@ import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeDto;
 import com.flightDelay.flightdelayapi.shared.exception.resource.AdditionalTimeDataNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
-@Slf4j
 @Component
-@Validated
 @RequiredArgsConstructor
 public class AdditionalTimeFactorsCalculatorImpl implements AdditionalTimeFactorsCalculator {
 

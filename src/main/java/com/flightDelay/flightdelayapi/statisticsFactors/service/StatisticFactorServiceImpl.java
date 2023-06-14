@@ -1,6 +1,5 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.service;
 
-import com.flightDelay.flightdelayapi.shared.Flight;
 import com.flightDelay.flightdelayapi.statisticsFactors.collector.AdditionalTimeFactorCollector;
 import com.flightDelay.flightdelayapi.statisticsFactors.collector.ArrivalDelayFactorCollector;
 import com.flightDelay.flightdelayapi.statisticsFactors.collector.PreDepartureFactorCollector;
@@ -29,8 +28,7 @@ public class StatisticFactorServiceImpl implements StatisticFactorService {
 
     private final TrafficFactorCollector trafficFactorCollector;
 
-    public Map<String, PrecisionFactor> getFactorsByPhase(Flight flight) {
-        String airportIdent = flight.getAirportIdent();
+    public Map<String, PrecisionFactor> getFactorsByPhase(String airportIdent) {
         List<PrecisionFactor> factors = new ArrayList<>();
 
         factors.addAll(preDepartureFactorCollector.collect(airportIdent));

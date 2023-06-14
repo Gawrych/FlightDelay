@@ -5,18 +5,14 @@ import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalcul
 import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToLackOfDataException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
-@Slf4j
 @Component
-@Validated
 @RequiredArgsConstructor
 public class TopDtoFactorCalculatorImpl<T extends DelayEntityDto> implements TopDtoFactorCalculator<T> {
 

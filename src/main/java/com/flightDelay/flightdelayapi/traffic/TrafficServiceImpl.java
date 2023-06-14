@@ -55,6 +55,14 @@ public class TrafficServiceImpl implements TrafficService {
     }
 
     @Override
+    @Transactional
+    public List<Traffic> updateFromJson(List<Traffic> trafficRecords) {
+        return trafficRecords
+                .stream()
+                .filter(this::save).toList();
+    }
+
+    @Override
     public boolean save(Traffic traffic) {
         String airportIdent = traffic.getAirportCode();
         String trafficId = traffic.generateId();

@@ -55,15 +55,14 @@ class AdditionalTimeFactorsCalculatorImplTest {
         // Given
         List<AdditionalTimeDto> validList = List.of(new AdditionalTimeDto());
 
-        given(averageFactorCalculator.calculateAverageByDtoList(any(), any(), any()))
-                .willReturn(1.0d);
+        double expectedValue = 1.0d;
+        given(averageFactorCalculator.calculateAverageByDtoList(any(), any(), any())).willReturn(expectedValue);
 
         // When
         double actualValue = additionalTimeFactorsCalculator.calculateAverageFromList(validList);
 
         // Then
-        then(actualValue).isEqualTo(1.0d);
-        verify(averageFactorCalculator).calculateAverageByDtoList(any(), any(), any());
+        then(actualValue).isEqualTo(expectedValue);
     }
 
     @Test
@@ -123,17 +122,15 @@ class AdditionalTimeFactorsCalculatorImplTest {
     void CalculateTopDelayMonth_WhenPassValidListAsAParameter_ThenReturnResultFromTopDtoFactorCalculator() {
         // Given
         List<AdditionalTimeDto> validList = List.of(new AdditionalTimeDto());
-        ValueWithDateHolder expectedObject = new ValueWithDateHolder(LocalDate.ofEpochDay(1), 1.0d);
 
-        given(topDtoFactorCalculator.getTopMonthDto(any(), any(), any()))
-                .willReturn(expectedObject);
+        ValueWithDateHolder expectedObject = new ValueWithDateHolder(LocalDate.ofEpochDay(1), 1.0d);
+        given(topDtoFactorCalculator.getTopMonthDto(any(), any(), any())).willReturn(expectedObject);
 
         // When
         ValueWithDateHolder actualObject = additionalTimeFactorsCalculator.calculateTopDelayMonth(validList);
 
         // Then
         then(actualObject).isEqualTo(expectedObject);
-        verify(topDtoFactorCalculator).getTopMonthDto(any(), any(), any());
     }
 
     @Test

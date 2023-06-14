@@ -53,6 +53,15 @@ public class ArrivalDelayServiceImpl implements ArrivalDelayService {
                 .filter(this::save).toList();
     }
 
+
+    @Override
+    @Transactional
+    public List<ArrivalDelay> updateFromJson(List<ArrivalDelay> arrivalDelays) {
+        return arrivalDelays
+                .stream()
+                .filter(this::save)
+                .toList();
+    }
     @Override
     public boolean save(ArrivalDelay arrivalDelay) {
         String airportIdent = arrivalDelay.getAirportCode();

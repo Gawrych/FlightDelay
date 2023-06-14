@@ -28,7 +28,7 @@ public class DateInPatternDeserializer extends JsonDeserializer<LocalDateTime> {
             return LocalDateTime.parse(dateInJson, formatter);
 
         } catch (DateTimeParseException e) {
-            throw new InvalidDatePatternException(defaultDateWithTimePattern.replace("'", "").toUpperCase());
+            throw new InvalidDatePatternException(defaultDateWithTimePattern.replace("'", "").toUpperCase(), dateInJson);
         }
     }
 }

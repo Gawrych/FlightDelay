@@ -9,4 +9,6 @@ public interface ArrivalDelayService extends UpdateFromJson {
     boolean save(ArrivalDelay arrivalDelay);
 
     List<ArrivalDelayDto> findAllLatestByAirport(String airportIdent);
+
+    List<ArrivalDelay> updateFromJson(List<ArrivalDelay> arrivalDelays);
 }

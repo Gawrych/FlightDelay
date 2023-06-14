@@ -30,7 +30,6 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
 
     private final WeatherAPIService weatherAPIService;
 
-
     @Override
     public List<WeatherFactor> getFactorsByHour(PrecisionTimeFlight precisionTimeFlight) {
         Weather weather = weatherAPIService.getWeather(

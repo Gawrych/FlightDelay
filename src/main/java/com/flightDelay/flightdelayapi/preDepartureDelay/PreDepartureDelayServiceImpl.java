@@ -51,7 +51,17 @@ public class PreDepartureDelayServiceImpl implements PreDepartureDelayService {
         return entityMapper
                 .jsonArrayToList(newDataInJson, PreDepartureDelay.class, objectMapper)
                 .stream()
-                .filter(this::save).toList();
+                .filter(this::save)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public List<PreDepartureDelay> updateFromJson(List<PreDepartureDelay> newDataInJson) {
+        return newDataInJson
+                .stream()
+                .filter(this::save)
+                .toList();
     }
 
     @Override

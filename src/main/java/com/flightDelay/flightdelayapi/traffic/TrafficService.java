@@ -11,4 +11,6 @@ public interface TrafficService extends UpdateFromJson {
     Traffic setAirportBidirectionalRelationshipByCode(String airportCode, Traffic traffic);
 
     List<TrafficDto> findAllLatestByAirport(String airportCode);
+
+    List<Traffic> updateFromJson(List<Traffic> trafficRecords);
 }

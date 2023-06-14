@@ -5,17 +5,13 @@ import com.flightDelay.flightdelayapi.shared.exception.resource.ArrivalDelayData
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.DelayCause;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithTextHolder;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
 import java.util.function.BinaryOperator;
 
-@Slf4j
 @Component
-@Validated
 @RequiredArgsConstructor
 public class ArrivalDelayFactorsCalculatorImpl implements ArrivalDelayFactorsCalculator {
 
@@ -46,6 +42,17 @@ public class ArrivalDelayFactorsCalculatorImpl implements ArrivalDelayFactorsCal
         return limitList(result);
     }
 
+    private Map<DelayCause, Integer> calculateFrequencyOfEachDelayCause(List<ArrivalDelayDto> additionalTimes) {
+        Map<DelayCause, Integer> delayCause = new HashMap<>();
+
+        additionalTimes.forEach(
+                dto -> dto
+                        .getDelays()
+                        .forEach((key, value) -> delayCause.merge(key, 1, this::iterate)));
+
+        return delayCause;
+    }
+
     private List<ValueWithTextHolder> createSortedValueWithTextHolderList(Map<DelayCause, Integer> delayCause) {
         List<Map.Entry<DelayCause, Integer>> sortedList = new ArrayList<>(delayCause.entrySet());
 
@@ -60,22 +67,6 @@ public class ArrivalDelayFactorsCalculatorImpl implements ArrivalDelayFactorsCal
         return list.stream()
                 .limit(listLimit)
                 .toList();
-    }
-
-    private void mergeDelayCauseMaps(Map<DelayCause, Integer> delayCauseWithDelayTimeInMinutes,
-                                     Map<DelayCause, Integer> delayCause) {
-        delayCauseWithDelayTimeInMinutes.forEach((key, value) -> delayCause.merge(key, value, this::calculateAverage));
-    }
-
-    private Map<DelayCause, Integer> calculateFrequencyOfEachDelayCause(List<ArrivalDelayDto> additionalTimes) {
-        Map<DelayCause, Integer> delayCause = new HashMap<>();
-
-        additionalTimes.forEach(
-                dto -> dto
-                        .getDelays()
-                        .forEach((key, value) -> delayCause.merge(key, 1, this::iterate)));
-
-        return delayCause;
     }
 
     private Map<DelayCause, Integer> calculateDelayTimeInMinutes(List<ArrivalDelayDto> additionalTimes) {
@@ -98,6 +89,11 @@ public class ArrivalDelayFactorsCalculatorImpl implements ArrivalDelayFactorsCal
                         .forEach((key, value) -> delayCause.merge(key, dto.getNumberOfDelayedArrivals(), sum(dto))));
 
         return delayCause;
+    }
+
+    private void mergeDelayCauseMaps(Map<DelayCause, Integer> delayCauseWithDelayTimeInMinutes,
+                                     Map<DelayCause, Integer> delayCause) {
+        delayCauseWithDelayTimeInMinutes.forEach((key, value) -> delayCause.merge(key, value, this::calculateAverage));
     }
 
     private BinaryOperator<Integer> sum(ArrivalDelayDto dto) {

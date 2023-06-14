@@ -4,17 +4,13 @@ import com.flightDelay.flightdelayapi.shared.dataImport.DataImportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/traffic")
+@RequestMapping(path = "/api/v1/traffic", produces="application/json")
 public class TrafficController {
 
     @Value("${import.trafficConverterName}")
@@ -22,18 +18,17 @@ public class TrafficController {
 
     private final TrafficServiceImpl trafficService;
 
-
     private final DataImportService dataImportService;
 
     @PutMapping("/file")
-    public ResponseEntity<List<?>> updateFromFile() {
-        List<?> addedEntities = dataImportService.importFromFile(trafficService, trafficConverterName);
-        return new ResponseEntity<>(addedEntities, HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<?> updateFromFile() {
+        return dataImportService.importFromFile(trafficService, trafficConverterName);
     }
 
-    @PutMapping("/json")
-    public ResponseEntity<List<?>> update(@RequestBody String dataInJson) {
-        List<?> addedEntities = trafficService.updateFromJson(dataInJson);
-        return new ResponseEntity<>(addedEntities, HttpStatus.CREATED);
+    @PutMapping(consumes = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<?> update(@RequestBody List<Traffic> trafficRecords) {
+        return trafficService.updateFromJson(trafficRecords);
     }
 }

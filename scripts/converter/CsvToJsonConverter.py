@@ -27,6 +27,9 @@ class CsvToJsonConverter:
 
             self.calculate_dates(df)
 
+            df['FLT_DATE'] = pd.to_datetime(df['FLT_DATE'])
+            df['FLT_DATE'] = df['FLT_DATE'].apply(lambda x: int(x.timestamp()))
+
             df = df[((df['YEAR'] == self.last_year)
                      & (df['MONTH_NUM'] >= self.start_month))
                     | (df['YEAR'] > self.last_year)]

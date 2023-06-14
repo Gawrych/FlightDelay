@@ -51,8 +51,19 @@ public class AdditionalTimeServiceImpl implements AdditionalTimeService {
         return entityMapper
                 .jsonArrayToList(newDataInJson, AdditionalTime.class, objectMapper)
                 .stream()
-                .filter(this::save).toList();
+                .filter(this::save)
+                .toList();
     }
+
+    @Override
+    @Transactional
+    public List<AdditionalTime> updateFromJson(List<AdditionalTime> additionalTimes) {
+        return additionalTimes
+                .stream()
+                .filter(this::save)
+                .toList();
+    }
+
 
     @Override
     public boolean save(AdditionalTime additionalTime) {

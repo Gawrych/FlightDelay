@@ -1,16 +1,15 @@
 package com.flightDelay.flightdelayapi.weatherFactors.calculator;
+
 import com.flightDelay.flightdelayapi.runway.dto.RunwayWeatherDto;
+import com.flightDelay.flightdelayapi.shared.UnitConverter;
 import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.IlsCategory;
-import com.flightDelay.flightdelayapi.shared.UnitConverter;
 import com.flightDelay.flightdelayapi.weatherFactors.exception.InstrumentLandingSystemCalculationFailedException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class InstrumentLandingSystemCalculatorImpl implements InstrumentLandingSystemCalculator {

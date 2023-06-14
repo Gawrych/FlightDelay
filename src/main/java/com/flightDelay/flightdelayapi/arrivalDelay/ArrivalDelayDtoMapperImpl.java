@@ -28,7 +28,7 @@ public class ArrivalDelayDtoMapperImpl implements ArrivalDelayDtoMapper {
                 .build();
     }
 
-    public Map<DelayCause, Integer> getMapWithDelayCauses(ArrivalDelay arrivalDelay) {
+    private Map<DelayCause, Integer> getMapWithDelayCauses(ArrivalDelay arrivalDelay) {
         Map<DelayCause, Integer> delayCauses = Arrays.stream(DelayCause.values())
                 .collect(Collectors.toMap(
                         Function.identity(),

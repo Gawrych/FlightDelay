@@ -15,6 +15,7 @@ import java.time.ZoneId;
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -41,10 +42,10 @@ public class ArrivalDelay {
     private String airportCode;
 
     @JsonProperty("FLT_ARR_1")
-    private Integer numberOfArrivals;
+    private int numberOfArrivals;
 
     @JsonProperty("DLY_APT_ARR_1")
-    private Integer minutesOfAirportDelay;
+    private int minutesOfAirportDelay;
 
     @JsonProperty("DLY_APT_ARR_A_1")
     private int delayInMinutesCausedByAccident;
@@ -95,10 +96,10 @@ public class ArrivalDelay {
     private int delayInMinutesCausedByNotSpecified;
 
     @JsonProperty("FLT_ARR_1_DLY")
-    private Integer numberOfDelayedArrivals;
+    private int numberOfDelayedArrivals;
 
     @JsonProperty("FLT_ARR_1_DLY_15")
-    private Integer numberOfDelayedArrivalsAbove15Minutes;
+    private int numberOfDelayedArrivalsAbove15Minutes;
 
     @JsonProperty("FLT_DATE")
     public void setFlightDate(long flightDateMillis) {

@@ -4,13 +4,11 @@ import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalcul
 import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToLackOfDataException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.function.Function;
 
 @Slf4j
-@Validated
 @Component
 public class AverageFactorCalculatorImpl implements AverageFactorCalculator {
 
@@ -18,8 +16,9 @@ public class AverageFactorCalculatorImpl implements AverageFactorCalculator {
                                                  Function<T, Double> numeratorImpl,
                                                  Function<T, Double> denominatorImpl) {
 
-        if (dtos.isEmpty() || numeratorImpl == null || denominatorImpl == null)
+        if (numeratorImpl == null || denominatorImpl == null || dtos == null || dtos.isEmpty()) {
             throw new UnableToCalculateDueToLackOfDataException();
+        }
 
         List<Double> numerator = dtos.stream()
                 .map(numeratorImpl)
@@ -29,11 +28,13 @@ public class AverageFactorCalculatorImpl implements AverageFactorCalculator {
                 .map(denominatorImpl)
                 .toList();
 
-        return calculateAverage(numerator, denominator);
+        return calculateAverageFromLists(numerator, denominator);
     }
 
-    public double calculateAverage(List<Double> numerator, List<Double> denominator) {
-        if (numerator.isEmpty() || denominator.isEmpty()) throw new UnableToCalculateDueToLackOfDataException();
+    public double calculateAverageFromLists(List<Double> numerator, List<Double> denominator) {
+        if (numerator == null || denominator == null || numerator.isEmpty() || denominator.isEmpty()) {
+            throw new UnableToCalculateDueToLackOfDataException();
+        }
 
         double numeratorSum = numerator.stream()
                 .mapToDouble(Double::doubleValue)
@@ -47,7 +48,7 @@ public class AverageFactorCalculatorImpl implements AverageFactorCalculator {
     }
 
     public double calculateAverage(double numerator, double denominator) {
-        if (denominator == 0) {
+        if (denominator == 0.0d) {
             log.warn("Dividing by zero");
             throw new UnableToCalculateDueToIncorrectDataException();
         }

@@ -9,7 +9,7 @@ public interface AverageFactorCalculator {
                               Function<T, Double> numeratorImpl,
                               Function<T, Double> denominatorImpl);
 
-    double calculateAverage(List<Double> numerator, List<Double> denominator);
+    double calculateAverageFromLists(List<Double> numerator, List<Double> denominator);
 
     double calculateAverage(double numerator, double denominator);
 }

@@ -20,7 +20,7 @@ import static org.assertj.core.api.BDDAssertions.catchThrowable;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("AdditionalTimeFactorsCalculator Tests")
+@DisplayName("ArrivalDelayFactorsCalculator Tests")
 class ArrivalDelayFactorsCalculatorImplTest {
 
     private ArrivalDelayFactorsCalculatorImpl arrivalDelayFactorsCalculator;
@@ -61,7 +61,7 @@ class ArrivalDelayFactorsCalculatorImplTest {
 
             softly.assertThat(valueWithTextHolders)
                     .extracting("value")
-                    .containsSequence(2.0, 1.0);
+                    .containsSequence(2.0d, 1.0d);
         });
     }
 
@@ -98,7 +98,7 @@ class ArrivalDelayFactorsCalculatorImplTest {
 
             softly.assertThat(valueWithTextHolders)
                     .extracting("value")
-                    .containsSequence(2.0);
+                    .containsSequence(2.0d);
         });
     }
 
@@ -181,7 +181,7 @@ class ArrivalDelayFactorsCalculatorImplTest {
 
             softly.assertThat(valueWithTextHolders)
                     .extracting("value")
-                    .containsSequence(15.0, 5.0);
+                    .containsSequence(15.0d, 5.0d);
         });
     }
 
@@ -220,7 +220,7 @@ class ArrivalDelayFactorsCalculatorImplTest {
 
             softly.assertThat(valueWithTextHolders)
                     .extracting("value")
-                    .containsSequence(15.0);
+                    .containsSequence(15.0d);
         });
     }
 

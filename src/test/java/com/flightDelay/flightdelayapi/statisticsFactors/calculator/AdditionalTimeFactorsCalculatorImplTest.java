@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -19,7 +21,8 @@ import static org.assertj.core.api.BDDAssertions.catchThrowable;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -38,6 +41,9 @@ class AdditionalTimeFactorsCalculatorImplTest {
     @Mock
     private BinaryOperator<AdditionalTimeDto> additionalTimeRemapping;
 
+    @Captor
+    private ArgumentCaptor<List<AdditionalTimeDto>> captor;
+
     private AdditionalTimeFactorsCalculator additionalTimeFactorsCalculator;
 
     @BeforeEach
@@ -50,7 +56,24 @@ class AdditionalTimeFactorsCalculatorImplTest {
     }
 
     @Test
-    @DisplayName("CalculateAverageFromList - Valid List")
+    @DisplayName("CalculateAverageFromList - Correct result")
+    void CalculateAverageFromList_WhenPassValidListAsAParameter_ThenReturnCorrectResult() {
+        // Given
+        List<AdditionalTimeDto> list = List.of(new AdditionalTimeDto());
+
+        // When
+        additionalTimeFactorsCalculator.calculateAverageFromList(list);
+
+        // Then
+        verify(averageFactorCalculator).calculateAverageByDtoList(captor.capture(), any(), any());
+
+        List<AdditionalTimeDto> capturedList = captor.getValue();
+
+        then(capturedList).isEqualTo(list);
+    }
+
+    @Test
+    @DisplayName("CalculateAverageFromList - Valid list parameter")
     void CalculateAverageFromList_WhenPassValidListAsAParameter_ThenReturnResultFromAverageCalculator() {
         // Given
         List<AdditionalTimeDto> validList = List.of(new AdditionalTimeDto());
@@ -66,7 +89,7 @@ class AdditionalTimeFactorsCalculatorImplTest {
     }
 
     @Test
-    @DisplayName("CalculateAverageFromList - Valid List")
+    @DisplayName("CalculateAverageFromList - Valid list parameter")
     void CalculateAverageFromList_WhenPassValidListAsAParameter_ThenNotThrowException() {
         // Given
         List<AdditionalTimeDto> notEmptyList = List.of(new AdditionalTimeDto());
@@ -81,7 +104,7 @@ class AdditionalTimeFactorsCalculatorImplTest {
     }
 
     @Test
-    @DisplayName("CalculateAverageFromList - Empty List")
+    @DisplayName("CalculateAverageFromList - Empty list parameter")
     void CalculateAverageFromList_WhenPassEmptyListAsAParameter_ThenThrowException() {
         // Given
         List<AdditionalTimeDto> emptyList = List.of();
@@ -100,7 +123,7 @@ class AdditionalTimeFactorsCalculatorImplTest {
 
 
     @Test
-    @DisplayName("CalculateAverageFromList - Null List")
+    @DisplayName("CalculateAverageFromList - Null list parameter")
     void CalculateAverageFromList_WhenPassNullListAsAParameter_ThenThrowException() {
         // Given
         List<AdditionalTimeDto> nullList = null;
@@ -118,7 +141,24 @@ class AdditionalTimeFactorsCalculatorImplTest {
     }
 
     @Test
-    @DisplayName("CalculateTopDelayMonth - Valid List")
+    @DisplayName("CalculateTopDelayMonth - Correct result")
+    void CalculateTopDelayMonth_WhenPassValidListAsAParameter_ThenReturnCorrectResult() {
+        // Given
+        List<AdditionalTimeDto> list = List.of(new AdditionalTimeDto());
+
+        // When
+        additionalTimeFactorsCalculator.calculateTopDelayMonth(list);
+
+        // Then
+        verify(topDtoFactorCalculator).getTopMonthDto(captor.capture(), any(), any());
+
+        List<AdditionalTimeDto> capturedList = captor.getValue();
+
+        then(capturedList).isEqualTo(list);
+    }
+
+    @Test
+    @DisplayName("CalculateTopDelayMonth - Valid list parameter")
     void CalculateTopDelayMonth_WhenPassValidListAsAParameter_ThenReturnResultFromTopDtoFactorCalculator() {
         // Given
         List<AdditionalTimeDto> validList = List.of(new AdditionalTimeDto());
@@ -134,7 +174,7 @@ class AdditionalTimeFactorsCalculatorImplTest {
     }
 
     @Test
-    @DisplayName("CalculateTopDelayMonth - Valid List")
+    @DisplayName("CalculateTopDelayMonth - Valid list parameter")
     void CalculateTopDelayMonth_WhenPassValidListAsAParameter_ThenNotThrowException() {
         // Given
         List<AdditionalTimeDto> notEmptyList = List.of(new AdditionalTimeDto());
@@ -149,7 +189,7 @@ class AdditionalTimeFactorsCalculatorImplTest {
     }
 
     @Test
-    @DisplayName("CalculateTopDelayMonth - Empty List")
+    @DisplayName("CalculateTopDelayMonth - Empty list parameter")
     void CalculateTopDelayMonth_WhenPassEmptyListAsAParameter_ThenThrowException() {
         // Given
         List<AdditionalTimeDto> emptyList = List.of();
@@ -168,7 +208,7 @@ class AdditionalTimeFactorsCalculatorImplTest {
 
 
     @Test
-    @DisplayName("CalculateTopDelayMonth - Null List")
+    @DisplayName("CalculateTopDelayMonth - Null list parameter")
     void CalculateTopDelayMonth_WhenPassNullListAsAParameter_ThenThrowException() {
         // Given
         List<AdditionalTimeDto> nullList = null;

@@ -30,26 +30,30 @@ public class TrafficFactorsCalculatorImpl implements TrafficFactorsCalculator {
     private final BinaryOperator<TrafficDto> trafficRemapping;
 
     @Override
-    public ValueWithDateHolder calculateTopMonthTraffic(List<TrafficDto> trafficDtos) {
+    public ValueWithDateHolder calculateTopMonth(List<TrafficDto> trafficDtos) {
         if (trafficDtos == null || trafficDtos.isEmpty()) throw new TrafficDataNotFoundException();
 
-        return topDtoFactorCalculator.getTopMonthDto(trafficDtos, trafficRemapping, trafficAveraging);
+        TrafficDto topMonthDto = topDtoFactorCalculator.getTopMonthDto(trafficDtos, trafficRemapping, trafficAveraging);
+
+        return new ValueWithDateHolder(topMonthDto.getDate(), trafficAveraging.apply(topMonthDto));
     }
 
     @Override
-    public double calculateAverageMonthlyTraffic(List<TrafficDto> trafficDtos) {
-        if (trafficDtos == null ||trafficDtos.isEmpty()) throw new TrafficDataNotFoundException();
+    public double calculateAverageMonthly(List<TrafficDto> trafficDtos) {
+        if (trafficDtos == null || trafficDtos.isEmpty()) throw new TrafficDataNotFoundException();
 
         Map<Integer, TrafficDto> mergedValues = topDtoFactorCalculator.sumDtosInTheSameMonths(
                 trafficDtos,
                 trafficRemapping);
 
-        int sumOfAllTraffic = mergedValues.values()
+        double sumOfAllTraffic = mergedValues.values()
                 .stream()
-                .mapToInt(TrafficDto::getTotal)
+                .mapToDouble(TrafficDto::getTotal)
                 .sum();
 
         double amountOfMonths = mergedValues.keySet().size();
+
+        log.warn("To string test: {}", this);
 
         return averageFactorCalculator.calculateAverage(sumOfAllTraffic, amountOfMonths);
     }

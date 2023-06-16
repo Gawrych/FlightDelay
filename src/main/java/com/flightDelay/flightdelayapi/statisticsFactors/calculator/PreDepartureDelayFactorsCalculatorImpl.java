@@ -4,16 +4,12 @@ import com.flightDelay.flightdelayapi.preDepartureDelay.PreDepartureDelayDto;
 import com.flightDelay.flightdelayapi.shared.exception.resource.PreDepartureDelayDataNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
-@Slf4j
-@Validated
 @Component
 @RequiredArgsConstructor
 public class PreDepartureDelayFactorsCalculatorImpl implements PreDepartureDelayFactorsCalculator {
@@ -44,16 +40,18 @@ public class PreDepartureDelayFactorsCalculatorImpl implements PreDepartureDelay
                 preDepartureDtos,
                 preDepartureDelayAveraging);
 
-        return topDtoFactorCalculator.createValueHolder(topDelay, preDepartureDelayAveraging);
+        return new ValueWithDateHolder(topDelay.getDate(), preDepartureDelayAveraging.apply(topDelay));
     }
 
     @Override
     public ValueWithDateHolder calculateTopMonthDelay(List<PreDepartureDelayDto> preDepartureDtos) {
         if (preDepartureDtos == null || preDepartureDtos.isEmpty()) throw new PreDepartureDelayDataNotFoundException();
 
-        return topDtoFactorCalculator.getTopMonthDto(
+        PreDepartureDelayDto topMonthDto = topDtoFactorCalculator.getTopMonthDto(
                 preDepartureDtos,
                 preDepartureDelayRemapping,
                 preDepartureDelayAveraging);
+
+        return new ValueWithDateHolder(topMonthDto.getDate(), preDepartureDelayAveraging.apply(topMonthDto));
     }
 }

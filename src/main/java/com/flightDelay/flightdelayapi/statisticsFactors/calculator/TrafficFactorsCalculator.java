@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TrafficFactorsCalculator {
 
-    ValueWithDateHolder calculateTopMonthTraffic(List<TrafficDto> trafficDtos);
+    ValueWithDateHolder calculateTopMonth(List<TrafficDto> trafficDtos);
 
-    double calculateAverageMonthlyTraffic(List<TrafficDto> trafficDtos);
+    double calculateAverageMonthly(List<TrafficDto> trafficDtos);
 }

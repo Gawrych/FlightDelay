@@ -37,11 +37,11 @@ public class TrafficFactorCollectorImpl extends StatisticFactorCollector<Traffic
         return switch (EnumType.valueOf(TrafficFactor.class, factorName.name())) {
             case TOP_MONTH_OF_TRAFFIC -> statisticFactorCreator.createValueWithDate(
                     factorName,
-                    trafficFactorsCalculator.calculateTopMonthTraffic(trafficDtos));
+                    trafficFactorsCalculator.calculateTopMonth(trafficDtos));
 
             case AVERAGE_MONTHLY_TRAFFIC -> statisticFactorCreator.createSimpleValue(
                     factorName,
-                    trafficFactorsCalculator.calculateAverageMonthlyTraffic(trafficDtos));
+                    trafficFactorsCalculator.calculateAverageMonthly(trafficDtos));
         };
     }
 

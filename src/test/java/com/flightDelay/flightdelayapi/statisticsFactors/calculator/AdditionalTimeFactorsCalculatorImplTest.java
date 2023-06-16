@@ -20,6 +20,7 @@ import java.util.function.Function;
 import static org.assertj.core.api.BDDAssertions.catchThrowable;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -36,10 +37,10 @@ class AdditionalTimeFactorsCalculatorImplTest {
     private TopDtoFactorCalculator<AdditionalTimeDto> topDtoFactorCalculator;
 
     @Mock
-    private Function<AdditionalTimeDto, Double> additionalTimeAveraging;
+    private Function<AdditionalTimeDto, Double> functionAveraging;
 
     @Mock
-    private BinaryOperator<AdditionalTimeDto> additionalTimeRemapping;
+    private BinaryOperator<AdditionalTimeDto> binaryOperatorRemapping;
 
     @Captor
     private ArgumentCaptor<List<AdditionalTimeDto>> captor;
@@ -51,13 +52,13 @@ class AdditionalTimeFactorsCalculatorImplTest {
         additionalTimeFactorsCalculator = new AdditionalTimeFactorsCalculatorImpl(
                 averageFactorCalculator,
                 topDtoFactorCalculator,
-                additionalTimeAveraging,
-                additionalTimeRemapping);
+                functionAveraging,
+                binaryOperatorRemapping);
     }
 
     @Test
-    @DisplayName("CalculateAverageFromList - Correct result")
-    void CalculateAverageFromList_WhenPassValidListAsAParameter_ThenReturnCorrectResult() {
+    @DisplayName("CalculateAverageFromList - Pass input list to average calculator")
+    void CalculateAverageFromList_WhenPassValidList_ThenPassThisListToAverageFactorCalculator() {
         // Given
         List<AdditionalTimeDto> list = List.of(new AdditionalTimeDto());
 
@@ -79,7 +80,7 @@ class AdditionalTimeFactorsCalculatorImplTest {
         List<AdditionalTimeDto> validList = List.of(new AdditionalTimeDto());
 
         double expectedValue = 1.0d;
-        given(averageFactorCalculator.calculateAverageByDtoList(any(), any(), any())).willReturn(expectedValue);
+        given(averageFactorCalculator.calculateAverageByDtoList(anyList(), any(), any())).willReturn(expectedValue);
 
         // When
         double actualValue = additionalTimeFactorsCalculator.calculateAverageFromList(validList);
@@ -100,7 +101,7 @@ class AdditionalTimeFactorsCalculatorImplTest {
 
         // Then
         then(throwable).isNull();
-        verify(averageFactorCalculator).calculateAverageByDtoList(any(), any(), any());
+        verify(averageFactorCalculator).calculateAverageByDtoList(anyList(), any(), any());
     }
 
     @Test
@@ -141,10 +142,15 @@ class AdditionalTimeFactorsCalculatorImplTest {
     }
 
     @Test
-    @DisplayName("CalculateTopDelayMonth - Correct result")
-    void CalculateTopDelayMonth_WhenPassValidListAsAParameter_ThenReturnCorrectResult() {
+    @DisplayName("CalculateTopDelayMonth - Input list in Top Dto calculator")
+    void CalculateTopDelayMonth_WhenPassValidListAsAParameter_ThenPassThisListToTopDtoFactorCalculator() {
         // Given
         List<AdditionalTimeDto> list = List.of(new AdditionalTimeDto());
+
+        AdditionalTimeDto exampleDto = getAdditionalTimeDtoExample();
+
+        given(functionAveraging.apply(any(AdditionalTimeDto.class))).willReturn(10.0d);
+        given(topDtoFactorCalculator.getTopMonthDto(anyList(), any(), any())).willReturn(exampleDto);
 
         // When
         additionalTimeFactorsCalculator.calculateTopDelayMonth(list);
@@ -158,19 +164,23 @@ class AdditionalTimeFactorsCalculatorImplTest {
     }
 
     @Test
-    @DisplayName("CalculateTopDelayMonth - Valid list parameter")
-    void CalculateTopDelayMonth_WhenPassValidListAsAParameter_ThenReturnResultFromTopDtoFactorCalculator() {
+    @DisplayName("CalculateTopDelayMonth - Correct result")
+    void CalculateTopDelayMonth_WhenPassValidListAsAParameter_ThenReturnCorrectResult() {
         // Given
-        List<AdditionalTimeDto> validList = List.of(new AdditionalTimeDto());
+        List<AdditionalTimeDto> list = List.of(new AdditionalTimeDto());
 
-        ValueWithDateHolder expectedObject = new ValueWithDateHolder(LocalDate.ofEpochDay(1), 1.0d);
-        given(topDtoFactorCalculator.getTopMonthDto(any(), any(), any())).willReturn(expectedObject);
+        AdditionalTimeDto exampleDto = getAdditionalTimeDtoExample();
+
+        given(functionAveraging.apply(any(AdditionalTimeDto.class))).willReturn(10.0d);
+        given(topDtoFactorCalculator.getTopMonthDto(anyList(), any(), any())).willReturn(exampleDto);
+
+        ValueWithDateHolder expectedValue = new ValueWithDateHolder(LocalDate.ofEpochDay(1), 10.0d);
 
         // When
-        ValueWithDateHolder actualObject = additionalTimeFactorsCalculator.calculateTopDelayMonth(validList);
+        ValueWithDateHolder actualValue = additionalTimeFactorsCalculator.calculateTopDelayMonth(list);
 
         // Then
-        then(actualObject).isEqualTo(expectedObject);
+        then(actualValue).usingRecursiveComparison().isEqualTo(expectedValue);
     }
 
     @Test
@@ -184,8 +194,8 @@ class AdditionalTimeFactorsCalculatorImplTest {
                 additionalTimeFactorsCalculator.calculateTopDelayMonth(notEmptyList));
 
         // Then
-        then(throwable).isNull();
-        verify(topDtoFactorCalculator).getTopMonthDto(any(), any(), any());
+        then(throwable).isNotInstanceOf(AdditionalTimeDataNotFoundException.class);
+        verify(topDtoFactorCalculator).getTopMonthDto(anyList(), any(), any());
     }
 
     @Test
@@ -206,7 +216,6 @@ class AdditionalTimeFactorsCalculatorImplTest {
         verifyNoInteractions(topDtoFactorCalculator);
     }
 
-
     @Test
     @DisplayName("CalculateTopDelayMonth - Null list parameter")
     void CalculateTopDelayMonth_WhenPassNullListAsAParameter_ThenThrowException() {
@@ -223,5 +232,12 @@ class AdditionalTimeFactorsCalculatorImplTest {
                 .hasMessage("error.message.additionalTimeDataNotFound");
 
         verifyNoInteractions(topDtoFactorCalculator);
+    }
+
+    private static AdditionalTimeDto getAdditionalTimeDtoExample() {
+        return AdditionalTimeDto
+                .builder()
+                .date(LocalDate.ofEpochDay(1))
+                .build();
     }
 }

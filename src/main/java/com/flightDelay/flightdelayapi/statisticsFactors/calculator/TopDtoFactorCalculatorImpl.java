@@ -1,13 +1,10 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 
 import com.flightDelay.flightdelayapi.shared.DelayEntityDto;
-import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToIncorrectDataException;
 import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToLackOfDataException;
-import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -17,7 +14,7 @@ import java.util.function.Function;
 public class TopDtoFactorCalculatorImpl<T extends DelayEntityDto> implements TopDtoFactorCalculator<T> {
 
     @Override
-    public ValueWithDateHolder getTopMonthDto(List<T> dtos,
+    public T getTopMonthDto(List<T> dtos,
                                               BinaryOperator<T> remappingImpl,
                                               Function<T, Double> averageImpl) {
 
@@ -25,9 +22,8 @@ public class TopDtoFactorCalculatorImpl<T extends DelayEntityDto> implements Top
             throw new UnableToCalculateDueToLackOfDataException();
 
         Map<Integer, T> summedValues = sumDtosInTheSameMonths(dtos, remappingImpl);
-        T topMonth = findTopDto(summedValues.values(), averageImpl);
 
-        return createValueHolder(topMonth, averageImpl);
+        return findTopDto(summedValues.values(), averageImpl);
     }
 
     @Override
@@ -49,15 +45,5 @@ public class TopDtoFactorCalculatorImpl<T extends DelayEntityDto> implements Top
         return dtos.stream()
                 .max(Comparator.comparing(averageImpl))
                 .orElseThrow(UnableToCalculateDueToLackOfDataException::new);
-    }
-
-    @Override
-    public ValueWithDateHolder createValueHolder(T topDto, Function<T, Double> averageImpl) {
-        if (topDto == null || averageImpl == null) throw new UnableToCalculateDueToIncorrectDataException();
-
-        LocalDate date = topDto.getDate();
-        double value = averageImpl.apply(topDto);
-
-        return new ValueWithDateHolder(date, value);
     }
 }

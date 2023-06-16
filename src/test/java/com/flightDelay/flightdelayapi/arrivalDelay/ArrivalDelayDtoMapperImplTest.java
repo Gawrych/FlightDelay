@@ -28,7 +28,7 @@ class ArrivalDelayDtoMapperImplTest {
     @DisplayName("Map - Correct delays map result")
     void Map_WhenPassArrivalDelayWithDelaysCauses_ThenReturnCorrectDelaysMap() {
         // Given
-        ArrivalDelay arrivalDelay = getArrivalDelay();
+        ArrivalDelay arrivalDelay = getArrivalDelayExample();
 
         arrivalDelay.setDelayInMinutesCausedByAccident(10);
         arrivalDelay.setDelayInMinutesCausedByDeicing(5);
@@ -48,9 +48,9 @@ class ArrivalDelayDtoMapperImplTest {
     @DisplayName("Map - Correct ArrivalDelayDto result")
     void Map_WhenPassArrivalDelay_ThenReturnMappedArrivalDelayDto() {
         // Given
-        ArrivalDelay arrivalDelay = getArrivalDelay();
+        ArrivalDelay arrivalDelay = getArrivalDelayExample();
 
-        ArrivalDelayDto expectedDto = getArrivalDelayDto();
+        ArrivalDelayDto expectedDto = getArrivalDelayDtoExample();
 
         // When
         ArrivalDelayDto actualDto = arrivalDelayDtoMapper.map(arrivalDelay);
@@ -63,9 +63,9 @@ class ArrivalDelayDtoMapperImplTest {
     @DisplayName("MapFromList - Correct ArrivalDelayDto list result")
     void MapFromList_WhenPassArrivalDelaysInList_ThenReturnMappedArrivalDelayDtos() {
         // Given
-        List<ArrivalDelay> arrivalDelayList = List.of(getArrivalDelay(), getArrivalDelay());
+        List<ArrivalDelay> arrivalDelayList = List.of(getArrivalDelayExample(), getArrivalDelayExample());
 
-        List<ArrivalDelayDto> expectedArrivalDelayList = List.of(getArrivalDelayDto(), getArrivalDelayDto());
+        List<ArrivalDelayDto> expectedArrivalDelayList = List.of(getArrivalDelayDtoExample(), getArrivalDelayDtoExample());
 
         // When
         List<ArrivalDelayDto> actualArrivalDelayList = arrivalDelayDtoMapper.mapFromList(arrivalDelayList);
@@ -74,7 +74,7 @@ class ArrivalDelayDtoMapperImplTest {
         then(actualArrivalDelayList).usingRecursiveComparison().isEqualTo(expectedArrivalDelayList);
     }
 
-    private static ArrivalDelayDto getArrivalDelayDto() {
+    private static ArrivalDelayDto getArrivalDelayDtoExample() {
         return ArrivalDelayDto.builder()
                 .date(LocalDate.of(1970, 1, 1))
                 .numberOfDelayedArrivals(5)
@@ -84,7 +84,7 @@ class ArrivalDelayDtoMapperImplTest {
                 .build();
     }
 
-    private static ArrivalDelay getArrivalDelay() {
+    private static ArrivalDelay getArrivalDelayExample() {
         return ArrivalDelay.builder()
                 .generatedId("Id")
                 .year(1)

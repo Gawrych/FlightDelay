@@ -36,9 +36,11 @@ public class AdditionalTimeFactorsCalculatorImpl implements AdditionalTimeFactor
     public ValueWithDateHolder calculateTopDelayMonth(List<AdditionalTimeDto> additionalTimeDtos) {
         if (additionalTimeDtos == null || additionalTimeDtos.isEmpty()) throw new AdditionalTimeDataNotFoundException();
 
-        return topDtoFactorCalculator.getTopMonthDto(
+        AdditionalTimeDto topMonthDto = topDtoFactorCalculator.getTopMonthDto(
                 additionalTimeDtos,
                 additionalTimeRemapping,
                 additionalTimeAveraging);
+
+        return new ValueWithDateHolder(topMonthDto.getDate(), additionalTimeAveraging.apply(topMonthDto));
     }
 }

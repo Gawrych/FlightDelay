@@ -10,8 +10,11 @@ import com.flightDelay.flightdelayapi.weatherFactors.exception.InstrumentLanding
 import com.flightDelay.flightdelayapi.weatherFactors.model.Weather;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -24,13 +27,13 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("InstrumentLandingSystemCalculator Tests")
+@DisplayName("Instrument landing system calculator")
 class InstrumentLandingSystemCalculatorImplTest {
-
-    private AirportWeatherDto airportWeatherDto;
 
     @Mock
     private RunwayWeatherCalculatorImpl runwayWeatherCalculator;
+
+    private AirportWeatherDto airportWeatherDto;
 
     private InstrumentLandingSystemCalculatorImpl instrumentLandingSystemCalculatorImpl;
 
@@ -43,137 +46,53 @@ class InstrumentLandingSystemCalculatorImplTest {
         airportWeatherDto.setWeather(mock(Weather.class));
     }
 
-    @Test
-    @DisplayName("GetMinRequiredCategory - Not valid conditions")
-    void GetMinRequiredCategory_WhenConditionsAreNotValid_thenThrowException() {
-        // Given
-        int cloudBase = -1;
-        int rvr = -1;
+    @Nested
+    @DisplayName("throws an exception")
+    class ThrowsAnException {
 
-        given(runwayWeatherCalculator.calculateCloudBase(anyFloat(), anyFloat(), anyInt())).willReturn(cloudBase);
-        given(runwayWeatherCalculator.calculateRunwayVisualRange(anyFloat(), anyBoolean())).willReturn(rvr);
+        @Test
+        @DisplayName("when not valid conditions are passed to minimum required category calculator")
+        void GetMinRequiredCategory_WhenConditionsAreNotValid_thenThrowException() {
+            // Given
+            int cloudBase = -1;
+            int rvr = -1;
 
-        // When
-        Throwable throwable = catchThrowable(() ->
-                instrumentLandingSystemCalculatorImpl.getMinRequiredCategory(airportWeatherDto));
+            given(runwayWeatherCalculator.calculateCloudBase(anyFloat(), anyFloat(), anyInt())).willReturn(cloudBase);
+            given(runwayWeatherCalculator.calculateRunwayVisualRange(anyFloat(), anyBoolean())).willReturn(rvr);
 
-        // Then
-        then(throwable)
-                .isInstanceOf(InstrumentLandingSystemCalculationFailedException.class)
-                .hasMessage("error.message.failedToCalculateInstrumentLandingSystem");
+            // When
+            Throwable throwable = catchThrowable(() ->
+                    instrumentLandingSystemCalculatorImpl.getMinRequiredCategory(airportWeatherDto));
+
+            // Then
+            then(throwable)
+                    .isInstanceOf(InstrumentLandingSystemCalculationFailedException.class)
+                    .hasMessage("error.message.failedToCalculateInstrumentLandingSystem");
+        }
     }
 
-    @Test
-    @DisplayName("GetMinRequiredCategory - Nonprecision Ils")
-    void GetMinRequiredCategory_WhenConditionsAreEnoughForIlsCategory0_thenReturnIlsCategory0() {
-        // Given
-        IlsCategory expectedIlsCategory = IlsCategory.NONPRECISION;
+    @Nested
+    @DisplayName("returns correct ils category")
+    class ReturnsCorrectResult {
 
-        int cloudBase = UnitConverter.feetToMeters(expectedIlsCategory.getCloudBaseThresholdFt());
-        int rvr = UnitConverter.feetToMeters(expectedIlsCategory.getRunwayVisualRangeThresholdFt());
+        @ParameterizedTest(name = "{index} : Matching {0} limits to ils category")
+        @EnumSource(IlsCategory.class)
+        @DisplayName("when conditions match to ils category limits")
+        void GetMinRequiredCategory_WhenConditionsAreEnoughForIlsCategory_thenReturnIlsCategory(
+                IlsCategory expectedIlsCategory) {
 
-        given(runwayWeatherCalculator.calculateCloudBase(anyFloat(), anyFloat(), anyInt())).willReturn(cloudBase + 1);
-        given(runwayWeatherCalculator.calculateRunwayVisualRange(anyFloat(), anyBoolean())).willReturn(rvr + 1);
+            // Given
+            int cloudBase = UnitConverter.feetToMeters(expectedIlsCategory.getCloudBaseThresholdFt());
+            int rvr = UnitConverter.feetToMeters(expectedIlsCategory.getRunwayVisualRangeThresholdFt());
 
-        // When
-        IlsCategory ilsCategory = instrumentLandingSystemCalculatorImpl.getMinRequiredCategory(airportWeatherDto);
+            given(runwayWeatherCalculator.calculateCloudBase(anyFloat(), anyFloat(), anyInt())).willReturn(cloudBase + 1);
+            given(runwayWeatherCalculator.calculateRunwayVisualRange(anyFloat(), anyBoolean())).willReturn(rvr + 1);
 
-        // Then
-        then(ilsCategory).isEqualTo(expectedIlsCategory);
-    }
+            // When
+            IlsCategory actualIlsCategory = instrumentLandingSystemCalculatorImpl.getMinRequiredCategory(airportWeatherDto);
 
-    @Test
-    @DisplayName("GetMinRequiredCategory - Category 1 Ils")
-    void GetMinRequiredCategory_WhenConditionsAreEnoughForIlsCategory1_thenReturnIlsCategory1() {
-        // Given
-        IlsCategory expectedIlsCategory = IlsCategory.CATEGORY_1;
-
-        int cloudBase = UnitConverter.feetToMeters(expectedIlsCategory.getCloudBaseThresholdFt());
-        int rvr = UnitConverter.feetToMeters(expectedIlsCategory.getRunwayVisualRangeThresholdFt());
-
-        given(runwayWeatherCalculator.calculateCloudBase(anyFloat(), anyFloat(), anyInt())).willReturn(cloudBase + 1);
-        given(runwayWeatherCalculator.calculateRunwayVisualRange(anyFloat(), anyBoolean())).willReturn(rvr + 1);
-
-        // When
-        IlsCategory ilsCategory = instrumentLandingSystemCalculatorImpl.getMinRequiredCategory(airportWeatherDto);
-
-        // Then
-        then(ilsCategory).isEqualTo(expectedIlsCategory);
-    }
-
-    @Test
-    @DisplayName("GetMinRequiredCategory - Category 2 Ils")
-    void GetMinRequiredCategory_WhenConditionsAreEnoughForIlsCategory2_thenReturnIlsCategory2() {
-        // Given
-        IlsCategory expectedIlsCategory = IlsCategory.CATEGORY_2;
-
-        int cloudBase = UnitConverter.feetToMeters(expectedIlsCategory.getCloudBaseThresholdFt());
-        int rvr = UnitConverter.feetToMeters(expectedIlsCategory.getRunwayVisualRangeThresholdFt());
-
-        given(runwayWeatherCalculator.calculateCloudBase(anyFloat(), anyFloat(), anyInt())).willReturn(cloudBase + 1);
-        given(runwayWeatherCalculator.calculateRunwayVisualRange(anyFloat(), anyBoolean())).willReturn(rvr + 1);
-
-        // When
-        IlsCategory ilsCategory = instrumentLandingSystemCalculatorImpl.getMinRequiredCategory(airportWeatherDto);
-
-        // Then
-        then(ilsCategory).isEqualTo(expectedIlsCategory);
-    }
-
-    @Test
-    @DisplayName("GetMinRequiredCategory - Category 3A Ils")
-    void GetMinRequiredCategory_WhenConditionsAreEnoughForIlsCategory3A_thenReturnIlsCategory3A() {
-        // Given
-        IlsCategory expectedIlsCategory = IlsCategory.CATEGORY_3A;
-
-        int cloudBase = UnitConverter.feetToMeters(expectedIlsCategory.getCloudBaseThresholdFt());
-        int rvr = UnitConverter.feetToMeters(expectedIlsCategory.getRunwayVisualRangeThresholdFt());
-
-        given(runwayWeatherCalculator.calculateCloudBase(anyFloat(), anyFloat(), anyInt())).willReturn(cloudBase + 1);
-        given(runwayWeatherCalculator.calculateRunwayVisualRange(anyFloat(), anyBoolean())).willReturn(rvr + 1);
-
-        // When
-        IlsCategory ilsCategory = instrumentLandingSystemCalculatorImpl.getMinRequiredCategory(airportWeatherDto);
-
-        // Then
-        then(ilsCategory).isEqualTo(expectedIlsCategory);
-    }
-
-    @Test
-    @DisplayName("GetMinRequiredCategory - Category 3B Ils")
-    void GetMinRequiredCategory_WhenConditionsAreEnoughForIlsCategory3B_thenReturnIlsCategory3B() {
-        // Given
-        IlsCategory expectedIlsCategory = IlsCategory.CATEGORY_3B;
-
-        int cloudBase = UnitConverter.feetToMeters(expectedIlsCategory.getCloudBaseThresholdFt());
-        int rvr = UnitConverter.feetToMeters(expectedIlsCategory.getRunwayVisualRangeThresholdFt());
-
-        given(runwayWeatherCalculator.calculateCloudBase(anyFloat(), anyFloat(), anyInt())).willReturn(cloudBase + 1);
-        given(runwayWeatherCalculator.calculateRunwayVisualRange(anyFloat(), anyBoolean())).willReturn(rvr + 1);
-
-        // When
-        IlsCategory ilsCategory = instrumentLandingSystemCalculatorImpl.getMinRequiredCategory(airportWeatherDto);
-
-        // Then
-        then(ilsCategory).isEqualTo(expectedIlsCategory);
-    }
-
-    @Test
-    @DisplayName("GetMinRequiredCategory - Category 3C Ils")
-    void GetMinRequiredCategory_WhenConditionsAreEnoughForIlsCategory3C_thenReturnIlsCategory3C() {
-        // Given
-        IlsCategory expectedIlsCategory = IlsCategory.CATEGORY_3C;
-
-        int cloudBase = UnitConverter.feetToMeters(expectedIlsCategory.getCloudBaseThresholdFt());
-        int rvr = UnitConverter.feetToMeters(expectedIlsCategory.getRunwayVisualRangeThresholdFt());
-
-        given(runwayWeatherCalculator.calculateCloudBase(anyFloat(), anyFloat(), anyInt())).willReturn(cloudBase + 1);
-        given(runwayWeatherCalculator.calculateRunwayVisualRange(anyFloat(), anyBoolean())).willReturn(rvr + 1);
-
-        // When
-        IlsCategory ilsCategory = instrumentLandingSystemCalculatorImpl.getMinRequiredCategory(airportWeatherDto);
-
-        // Then
-        then(ilsCategory).isEqualTo(expectedIlsCategory);
+            // Then
+            then(actualIlsCategory).isEqualTo(expectedIlsCategory);
+        }
     }
 }

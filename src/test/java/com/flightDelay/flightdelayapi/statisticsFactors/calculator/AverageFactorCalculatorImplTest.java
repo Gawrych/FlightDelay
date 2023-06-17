@@ -4,8 +4,12 @@ import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalcul
 import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToLackOfDataException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -15,7 +19,7 @@ import static org.assertj.core.api.BDDAssertions.catchThrowable;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("AverageFactorCalculator Tests")
+@DisplayName("Average factor calculator")
 class AverageFactorCalculatorImplTest {
 
     private AverageFactorCalculatorImpl averageFactorCalculator;
@@ -25,214 +29,169 @@ class AverageFactorCalculatorImplTest {
         averageFactorCalculator = new AverageFactorCalculatorImpl();
     }
 
-    @Test
-    @DisplayName("CalculateAverage - Correct result")
-    void CalculateAverage_WhenPassValidListAsAParameter_ThenReturnCorrectResult() {
-        // Given
-        double numerator = 10;
-        double denominator = 2;
+    @Nested
+    @DisplayName("returns correct result")
+    class ReturnsCorrectResult {
 
-        // When
-        double average = averageFactorCalculator.calculateAverage(numerator, denominator);
+        @ParameterizedTest(name = "{index} : {0} divided by {1} returned {2}")
+        @CsvSource(value = {"10:2:5", "20:5:4", "30:5:6"}, delimiter = ':')
+        @DisplayName("when first number by second are correctly divided")
+        void CalculateAverage_WhenCorrectlyDividedFirstNumberBySecond_ThenReturnCorrectResult(double numerator,
+                                                                                    double denominator,
+                                                                                    double expectedValue) {
+            // When
+            double average = averageFactorCalculator.calculateAverage(numerator, denominator);
 
-        // Then
-        then(average).isEqualTo(5.0d);
+            // Then
+            then(average).isEqualTo(expectedValue);
+        }
+
+        @ParameterizedTest(name = "{index} : summed numerator numbers {0} and {1} divided by summed denominator numbers {2} and {3} equals {4}")
+        @CsvSource(value = {"10:10:2:2:5", "20:20:5:5:4"}, delimiter = ':')
+        @DisplayName("when summed numerator numbers and summed denominator numbers are correctly divided")
+        void CalculateAverageFromLists_WhenSummedCorrectlyNumeratorAndDenominator_ThenPassToCalculateAverageCorrectValues(
+                double firstNumerator,
+                double secondNumerator,
+                double firstDenominator,
+                double secondDenominator,
+                double expectedValue) {
+
+            // Given
+            List<Double> numerator = List.of(firstNumerator, secondNumerator);
+            List<Double> denominator = List.of(firstDenominator, secondDenominator);
+
+            // When
+            double actualValue = averageFactorCalculator.calculateAverageFromLists(numerator, denominator);
+
+            // Then
+            then(actualValue).isEqualTo(expectedValue);
+        }
+
+        @ParameterizedTest(name = "{index} : {0} in list return {1}")
+        @CsvSource(value = {"10:1", "20:1"}, delimiter = ':')
+        @DisplayName("when values are in list")
+        void CalculateAverageByDtoList_WhenValuesAreInList_ThenThrowException(
+                double value,
+                double expectedValue) {
+
+            // Given
+            List<Double> list = List.of(value);
+
+            // When
+            double actualValue = averageFactorCalculator.calculateAverageByDtoList(
+                    list,
+                    Double::doubleValue,
+                    Double::doubleValue);
+
+            // Then
+            then(actualValue).isEqualTo(expectedValue);
+        }
     }
 
-    @Test
-    @DisplayName("CalculateAverage - Zero as denominator")
-    void CalculateAverage_WhenPassZeroAsDenominator_ThenThrowException() {
-        // Given
-        double numerator = 10;
-        double denominator = 0;
+    @Nested
+    @DisplayName("throws an exception")
+    class ThrowsAnException {
+        @ParameterizedTest(name = "{index} : {0} divided by {1} returned exception")
+        @CsvSource(value = {"10:0", "20:0", "30:0"}, delimiter = ':')
+        @DisplayName("when denominator is zero")
+        void CalculateAverage_WhenDenominatorIsZero_ThenThrowException(double numerator, double denominator) {
+            // When
+            Throwable throwable = catchThrowable(() ->
+                    averageFactorCalculator.calculateAverage(numerator, denominator));
 
-        // When
-        Throwable throwable = catchThrowable(() ->
-                averageFactorCalculator.calculateAverage(numerator, denominator));
+            // Then
+            then(throwable)
+                    .isInstanceOf(UnableToCalculateDueToIncorrectDataException.class)
+                    .hasMessage("error.message.unableToCalculateDueToIncorrectDataException");
+        }
 
-        // Then
-        then(throwable)
-                .isInstanceOf(UnableToCalculateDueToIncorrectDataException.class)
-                .hasMessage("error.message.unableToCalculateDueToIncorrectDataException");
-    }
+        @ParameterizedTest(name = "{index} : is {0}")
+        @NullAndEmptySource
+        @DisplayName("when numerator list")
+        void CalculateAverageFromLists_WhenNumeratorIsEmptyOrNull_ThenThrowException(List<Double> numerator) {
+            // Given
+            List<Double> denominator = List.of(10.0d);
 
-    @Test
-    @DisplayName("CalculateAverageFromLists - Correct result")
-    void CalculateAverageFromLists_WhenPassValidListsAsAParameters_ThenPassToCalculateAverageCorrectValues() {
-        // Given
-        List<Double> numerator = List.of(10.0d, 10.0d);
-        List<Double> denominator = List.of(5.0d, 5.0d);
+            // When
+            Throwable throwable = catchThrowable(() ->
+                    averageFactorCalculator.calculateAverageFromLists(numerator, denominator));
 
-        double expectedValue = 2.0d;
+            // Then
+            then(throwable)
+                    .isInstanceOf(UnableToCalculateDueToLackOfDataException.class)
+                    .hasMessage("error.message.unableToCalculateDueToLackOfDataException");
+        }
 
-        // When
-        double actualValue = averageFactorCalculator.calculateAverageFromLists(numerator, denominator);
+        @ParameterizedTest(name = "{index} : is {0}")
+        @NullAndEmptySource
+        @DisplayName("when denominator list")
+        void CalculateAverageFromLists_WhenDenominatorIsEmptyOrNull_ThenThrowException(List<Double> denominator) {
+            // Given
+            List<Double> numerator = List.of(10.0d);
 
-        // Then
-        then(actualValue).isEqualTo(expectedValue);
-    }
+            // When
+            Throwable throwable = catchThrowable(() ->
+                    averageFactorCalculator.calculateAverageFromLists(numerator, denominator));
 
-    @Test
-    @DisplayName("CalculateAverageFromLists - Empty numerator list parameter")
-    void CalculateAverageFromLists_WhenPassEmptyNumeratorListAsAParameters_ThenThrowException() {
-        // Given
-        List<Double> numerator = List.of();
-        List<Double> denominator = List.of(10.0d);
+            // Then
+            then(throwable)
+                    .isInstanceOf(UnableToCalculateDueToLackOfDataException.class)
+                    .hasMessage("error.message.unableToCalculateDueToLackOfDataException");
+        }
 
-        // When
-        Throwable throwable = catchThrowable(() ->
-                averageFactorCalculator.calculateAverageFromLists(numerator, denominator));
+        @ParameterizedTest(name = "{index} : is {0}")
+        @NullAndEmptySource
+        @DisplayName("when list to averaging")
+        void CalculateAverageByDtoList_WhenNotValidListToAveraging_ThenThrowException(List<Double> notValidList) {
+            // When
+            Throwable throwable = catchThrowable(() ->
+                    averageFactorCalculator.calculateAverageByDtoList(
+                            notValidList,
+                            Double::doubleValue,
+                            Double::doubleValue));
 
-        // Then
-        then(throwable)
-                .isInstanceOf(UnableToCalculateDueToLackOfDataException.class)
-                .hasMessage("error.message.unableToCalculateDueToLackOfDataException");
-    }
+            // Then
+            then(throwable)
+                    .isInstanceOf(UnableToCalculateDueToLackOfDataException.class)
+                    .hasMessage("error.message.unableToCalculateDueToLackOfDataException");
+        }
 
-    @Test
-    @DisplayName("CalculateAverageFromLists - Empty denominator list parameter")
-    void CalculateAverageFromLists_WhenPassEmptyDenominatorListAsAParameters_ThenThrowException() {
-        // Given
-        List<Double> numerator = List.of(10.0d);
-        List<Double> denominator = List.of();
+        @ParameterizedTest(name = "{index} : is {0}")
+        @NullSource
+        @DisplayName("when numerator function")
+        void CalculateAverageByDtoList_WhenNumeratorFunctionIsNull_ThenThrowException(
+                Function<Double, Double> numeratorImpl) {
 
-        // When
-        Throwable throwable = catchThrowable(() ->
-                averageFactorCalculator.calculateAverageFromLists(numerator, denominator));
+            // When
+            Throwable throwable = catchThrowable(() ->
+                    averageFactorCalculator.calculateAverageByDtoList(
+                            List.of(5.0d),
+                            numeratorImpl,
+                            Double::doubleValue));
 
-        // Then
-        then(throwable)
-                .isInstanceOf(UnableToCalculateDueToLackOfDataException.class)
-                .hasMessage("error.message.unableToCalculateDueToLackOfDataException");
-    }
+            // Then
+            then(throwable)
+                    .isInstanceOf(UnableToCalculateDueToLackOfDataException.class)
+                    .hasMessage("error.message.unableToCalculateDueToLackOfDataException");
+        }
 
-    @Test
-    @DisplayName("CalculateAverageFromLists - Null numerator list parameter")
-    void CalculateAverageFromLists_WhenPassNullNumeratorListAsAParameters_ThenThrowException() {
-        // Given
-        List<Double> numerator = null;
-        List<Double> denominator = List.of(10.0d);
+        @ParameterizedTest(name = "{index} : is {0}")
+        @NullSource
+        @DisplayName("when denominator function")
+        void CalculateAverageByDtoList_WhenDenominatorFunctionIsNull_ThenThrowException(
+                Function<Double, Double> denominatorImpl) {
 
-        // When
-        Throwable throwable = catchThrowable(() ->
-                averageFactorCalculator.calculateAverageFromLists(numerator, denominator));
+            // When
+            Throwable throwable = catchThrowable(() ->
+                    averageFactorCalculator.calculateAverageByDtoList(
+                            List.of(5.0d),
+                            Double::doubleValue,
+                            denominatorImpl));
 
-        // Then
-        then(throwable)
-                .isInstanceOf(UnableToCalculateDueToLackOfDataException.class)
-                .hasMessage("error.message.unableToCalculateDueToLackOfDataException");
-    }
-
-    @Test
-    @DisplayName("CalculateAverageFromLists - Null denominator list parameter")
-    void CalculateAverageFromLists_WhenPassNullDenominatorListAsAParameters_ThenThrowException() {
-        // Given
-        List<Double> numerator = List.of(10.0d);
-        List<Double> denominator = null;
-
-        // When
-        Throwable throwable = catchThrowable(() ->
-                averageFactorCalculator.calculateAverageFromLists(numerator, denominator));
-
-        // Then
-        then(throwable)
-                .isInstanceOf(UnableToCalculateDueToLackOfDataException.class)
-                .hasMessage("error.message.unableToCalculateDueToLackOfDataException");
-    }
-
-
-
-    @Test
-    @DisplayName("CalculateAverageByDtoList - Correct result")
-    void CalculateAverageByDtoList_WhenPassEmptyDenominatorListAsAParameters_ThenThrowException() {
-        // Given
-        List<Double> list = List.of(5.0d, 10.0d);
-
-        double expectedValue = 1.0;
-
-        // When
-        double actualValue = averageFactorCalculator.calculateAverageByDtoList(
-                list,
-                Double::doubleValue,
-                Double::doubleValue);
-
-        // Then
-        then(actualValue).isEqualTo(expectedValue);
-    }
-
-    @Test
-    @DisplayName("CalculateAverageByDtoList - Null dtos list parameter")
-    void CalculateAverageByDtoList_WhenPassNullDtosListAsAParameters_ThenThrowException() {
-        // Given
-        List<Double> nullList = null;
-
-        // When
-        Throwable throwable = catchThrowable(() ->
-                averageFactorCalculator.calculateAverageByDtoList(
-                        nullList,
-                        Double::doubleValue,
-                        Double::doubleValue));
-
-        // Then
-        then(throwable)
-                .isInstanceOf(UnableToCalculateDueToLackOfDataException.class)
-                .hasMessage("error.message.unableToCalculateDueToLackOfDataException");
-    }
-
-    @Test
-    @DisplayName("CalculateAverageByDtoList - Empty dtos list parameter")
-    void CalculateAverageByDtoList_WhenPassEmptyDtosListAsAParameters_ThenThrowException() {
-        // Given
-        List<Double> emptyList = List.of();
-
-        // When
-        Throwable throwable = catchThrowable(() ->
-                averageFactorCalculator.calculateAverageByDtoList(
-                        emptyList,
-                        Double::doubleValue,
-                        Double::doubleValue));
-
-        // Then
-        then(throwable)
-                .isInstanceOf(UnableToCalculateDueToLackOfDataException.class)
-                .hasMessage("error.message.unableToCalculateDueToLackOfDataException");
-    }
-
-    @Test
-    @DisplayName("CalculateAverageByDtoList - Null numeratorImpl parameter")
-    void CalculateAverageByDtoList_WhenPassNullNumeratorImplAsAParameters_ThenThrowException() {
-        // Given
-        Function<Double, Double> numeratorImpl = null;
-
-        // When
-        Throwable throwable = catchThrowable(() ->
-                averageFactorCalculator.calculateAverageByDtoList(
-                        List.of(5.0d),
-                        numeratorImpl,
-                        Double::doubleValue));
-
-        // Then
-        then(throwable)
-                .isInstanceOf(UnableToCalculateDueToLackOfDataException.class)
-                .hasMessage("error.message.unableToCalculateDueToLackOfDataException");
-    }
-
-    @Test
-    @DisplayName("CalculateAverageByDtoList - Null denominatorImpl parameter")
-    void CalculateAverageByDtoList_WhenPassNullDenominatorImplAsAParameters_ThenThrowException() {
-        // Given
-        Function<Double, Double> denominatorImpl = null;
-
-        // When
-        Throwable throwable = catchThrowable(() ->
-                averageFactorCalculator.calculateAverageByDtoList(
-                        List.of(5.0d),
-                        Double::doubleValue,
-                        denominatorImpl));
-
-        // Then
-        then(throwable)
-                .isInstanceOf(UnableToCalculateDueToLackOfDataException.class)
-                .hasMessage("error.message.unableToCalculateDueToLackOfDataException");
+            // Then
+            then(throwable)
+                    .isInstanceOf(UnableToCalculateDueToLackOfDataException.class)
+                    .hasMessage("error.message.unableToCalculateDueToLackOfDataException");
+        }
     }
 }

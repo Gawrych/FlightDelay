@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BinaryOperator;
@@ -152,9 +153,9 @@ class TrafficFactorsCalculatorImplTest {
         // Given
         List<TrafficDto> expectedList = List.of(new TrafficDto());
 
-        Map<Integer, TrafficDto> mergedValues = Map.of(
-                1, TrafficDto.builder().total(10).build(),
-                2, TrafficDto.builder().total(20).build());
+        Map<Month, TrafficDto> mergedValues = Map.of(
+                Month.of(1), TrafficDto.builder().total(10).build(),
+                Month.of(2), TrafficDto.builder().total(20).build());
 
         given(topDtoFactorCalculator.sumDtosInTheSameMonths(anyList(), any())).willReturn(mergedValues);
 

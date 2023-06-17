@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.Month;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BinaryOperator;
@@ -42,7 +43,7 @@ public class TrafficFactorsCalculatorImpl implements TrafficFactorsCalculator {
     public double calculateAverageMonthly(List<TrafficDto> trafficDtos) {
         if (trafficDtos == null || trafficDtos.isEmpty()) throw new TrafficDataNotFoundException();
 
-        Map<Integer, TrafficDto> mergedValues = topDtoFactorCalculator.sumDtosInTheSameMonths(
+        Map<Month, TrafficDto> mergedValues = topDtoFactorCalculator.sumDtosInTheSameMonths(
                 trafficDtos,
                 trafficRemapping);
 

@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -65,9 +67,10 @@ class ArrivalDelayFactorsCalculatorImplTest {
         });
     }
 
-    @Test
+    @ParameterizedTest(name = "{index} : {0} element list size")
+    @ValueSource(ints = {1, 2})
     @DisplayName("CalculateMostCommonDelayCause - Correct list size")
-    void CalculateMostCommonDelayCause_WhenPassValidListAsAParameter_ThenReturnCorrectListSize() {
+    void CalculateMostCommonDelayCause_WhenPassValidListAsAParameter_ThenReturnCorrectListSize(int listSizeLimit) {
         // Given
         List<ArrivalDelayDto> list = new ArrayList<>();
 
@@ -79,9 +82,7 @@ class ArrivalDelayFactorsCalculatorImplTest {
                 .delays(Map.of(DelayCause.ACCIDENT, 10))
                 .build());
 
-        int listLimit = 1;
-
-        ReflectionTestUtils.setField(arrivalDelayFactorsCalculator, "listLimit", listLimit);
+        ReflectionTestUtils.setField(arrivalDelayFactorsCalculator, "listLimit", listSizeLimit);
 
         // When
         List<ValueWithTextHolder> valueWithTextHolders =
@@ -90,7 +91,7 @@ class ArrivalDelayFactorsCalculatorImplTest {
         // Then
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(valueWithTextHolders)
-                    .hasSize(1);
+                    .hasSize(listSizeLimit);
 
             softly.assertThat(valueWithTextHolders)
                     .extracting("text")

@@ -5,6 +5,7 @@ import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalcul
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Month;
 import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -15,32 +16,29 @@ public class TopDtoFactorCalculatorImpl<T extends DelayEntityDto> implements Top
 
     @Override
     public T getTopMonthDto(List<T> dtos,
-                                              BinaryOperator<T> remappingImpl,
-                                              Function<T, Double> averageImpl) {
+                            BinaryOperator<T> remappingImpl,
+                            Function<T, Double> averageImpl) {
 
-        if (dtos.isEmpty() || remappingImpl == null || averageImpl == null)
-            throw new UnableToCalculateDueToLackOfDataException();
-
-        Map<Integer, T> summedValues = sumDtosInTheSameMonths(dtos, remappingImpl);
+        Map<Month, T> summedValues = sumDtosInTheSameMonths(dtos, remappingImpl);
 
         return findTopDto(summedValues.values(), averageImpl);
     }
 
     @Override
-    public Map<Integer, T> sumDtosInTheSameMonths(List<T> dtos, BinaryOperator<T> remappingImpl) {
-        if (dtos.isEmpty() || remappingImpl == null) throw new UnableToCalculateDueToLackOfDataException();
+    public Map<Month, T> sumDtosInTheSameMonths(List<T> dtos, BinaryOperator<T> remappingImpl) {
+        if (dtos == null || dtos.isEmpty() || remappingImpl == null) throw new UnableToCalculateDueToLackOfDataException();
 
-        Map<Integer, T> mergedValues = new HashMap<>();
+        Map<Month, T> mergedValues = new HashMap<>();
 
         dtos.forEach(element ->
-                mergedValues.merge(element.getDate().getMonthValue(), element, remappingImpl));
+                mergedValues.merge(element.getDate().getMonth(), element, remappingImpl));
 
         return mergedValues;
     }
 
     @Override
     public T findTopDto(Collection<T> dtos, Function<T, Double> averageImpl) {
-        if (dtos.isEmpty() || averageImpl == null) throw new UnableToCalculateDueToLackOfDataException();
+        if (dtos == null || dtos.isEmpty() || averageImpl == null) throw new UnableToCalculateDueToLackOfDataException();
 
         return dtos.stream()
                 .max(Comparator.comparing(averageImpl))

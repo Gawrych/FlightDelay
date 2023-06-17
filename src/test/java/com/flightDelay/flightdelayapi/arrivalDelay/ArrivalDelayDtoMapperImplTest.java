@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("ArrivalDelayDtoMapper Tests")
+@DisplayName("Arrival delay dto mapper")
 class ArrivalDelayDtoMapperImplTest {
 
     private ArrivalDelayDtoMapperImpl arrivalDelayDtoMapper;

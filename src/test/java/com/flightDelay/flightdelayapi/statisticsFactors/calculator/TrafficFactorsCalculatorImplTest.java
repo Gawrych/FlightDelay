@@ -5,8 +5,11 @@ import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolde
 import com.flightDelay.flightdelayapi.traffic.TrafficDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -21,12 +24,13 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.BDDAssertions.catchThrowable;
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("TrafficFactorsCalculator Tests")
+@DisplayName("Traffic factors calculator")
 class TrafficFactorsCalculatorImplTest {
 
     @Mock
@@ -58,181 +62,136 @@ class TrafficFactorsCalculatorImplTest {
                 trafficRemapping);
     }
 
-    @Test
-    @DisplayName("CalculateTopMonth - Correct result")
-    void CalculateTopMonth_WhenPassValidList_ThenReturnCorrectResult() {
-        // Given
-        List<TrafficDto> expectedList = List.of(new TrafficDto());
+    @Nested
+    @DisplayName("returns value with data holder")
+    class ReturnsCorrectResult {
 
-        TrafficDto exampleDto = getTrafficDtoExample();
+        @Test
+        @DisplayName("created based on result from top dto calculator ")
+        void CalculateTopMonth_WhenPassValidList_ThenReturnCorrectResult() {
+            // Given
+            List<TrafficDto> expectedList = List.of(new TrafficDto());
 
-        given(trafficAveraging.apply(any(TrafficDto.class))).willReturn(10.0d);
-        given(topDtoFactorCalculator.getTopMonthDto(anyList(), any(), any())).willReturn(exampleDto);
+            TrafficDto exampleDto = getTrafficDtoExample();
 
-        ValueWithDateHolder expectedValue = new ValueWithDateHolder(LocalDate.ofEpochDay(1), 10.0d);
+            given(trafficAveraging.apply(any(TrafficDto.class))).willReturn(10.0d);
+            given(topDtoFactorCalculator.getTopMonthDto(anyList(), any(), any())).willReturn(exampleDto);
 
-        // When
-        ValueWithDateHolder actualValue = trafficFactorsCalculator.calculateTopMonth(expectedList);
+            ValueWithDateHolder expectedValue = new ValueWithDateHolder(LocalDate.ofEpochDay(1), 10.0d);
 
-        // Then
-        then(actualValue).usingRecursiveComparison().isEqualTo(expectedValue);
+            // When
+            ValueWithDateHolder actualValue = trafficFactorsCalculator.calculateTopMonth(expectedList);
+
+            // Then
+            then(actualValue).usingRecursiveComparison().isEqualTo(expectedValue);
+        }
     }
 
-    @Test
-    @DisplayName("CalculateTopMonth - Pass input list to top dto calculator")
-    void CalculateTopMonth_WhenPassValidList_ThenPassThisListToTopDtoFactorCalculator() {
-        // Given
-        List<TrafficDto> expectedList = List.of(new TrafficDto());
+    @Nested
+    @DisplayName("pass input list to external")
+    class PassInputListToExternal {
 
-        TrafficDto exampleDto = getTrafficDtoExample();
+        @Test
+        @DisplayName("top dto calculator to sum dtos in the same months")
+        void CalculateAverageMonthly_WhenPassValidList_ThenPassThisListToTopDtoFactorCalculator() {
+            // Given
+            List<TrafficDto> expectedList = List.of(new TrafficDto());
 
-        given(trafficAveraging.apply(any(TrafficDto.class))).willReturn(10.0d);
-        given(topDtoFactorCalculator.getTopMonthDto(anyList(), any(), any())).willReturn(exampleDto);
+            // When
+            trafficFactorsCalculator.calculateAverageMonthly(expectedList);
 
-        // When
-        trafficFactorsCalculator.calculateTopMonth(expectedList);
+            // Then
+            verify(topDtoFactorCalculator).sumDtosInTheSameMonths(listCaptor.capture(), any());
 
-        // Then
-        verify(topDtoFactorCalculator).getTopMonthDto(listCaptor.capture(), any(), any());
+            List<TrafficDto> capturedList = listCaptor.getValue();
 
-        List<TrafficDto> capturedList = listCaptor.getValue();
+            then(capturedList).isEqualTo(expectedList);
+        }
 
-        then(capturedList).isEqualTo(expectedList);
+        @Test
+        @DisplayName("top dto calculator to find top month")
+        void CalculateTopMonth_WhenPassValidList_ThenPassThisListToTopDtoFactorCalculator() {
+            // Given
+            List<TrafficDto> expectedList = List.of(new TrafficDto());
+
+            TrafficDto exampleDto = getTrafficDtoExample();
+
+            given(trafficAveraging.apply(any(TrafficDto.class))).willReturn(10.0d);
+            given(topDtoFactorCalculator.getTopMonthDto(anyList(), any(), any())).willReturn(exampleDto);
+
+            // When
+            trafficFactorsCalculator.calculateTopMonth(expectedList);
+
+            // Then
+            verify(topDtoFactorCalculator).getTopMonthDto(listCaptor.capture(), any(), any());
+
+            List<TrafficDto> capturedList = listCaptor.getValue();
+
+            then(capturedList).isEqualTo(expectedList);
+        }
     }
 
-    @Test
-    @DisplayName("CalculateTopMonth - Valid input")
-    void CalculateTopMonth_WhenPassValidList_ThenNotThrowException() {
-        // Given
-        List<TrafficDto> list = List.of(new TrafficDto());
+    @Nested
+    @DisplayName("pass calculated values to external")
+    class PassCalculatedValuesToExternal {
 
-        // When
-        Throwable throwable = catchThrowable(() ->
-                trafficFactorsCalculator.calculateTopMonth(list));
+        @Test
+        @DisplayName("average calculator for calculate average monthly traffic")
+        void CalculateAverageMonthly_WhenCalculateDataCorrectly_ThenPassCalculatedValuesToAverageCalculator() {
+            // Given
+            List<TrafficDto> expectedList = List.of(new TrafficDto());
 
-        // Then
-        then(throwable)
-                .isNotInstanceOf(TrafficDataNotFoundException.class);
+            Map<Month, TrafficDto> mergedValues = Map.of(
+                    Month.of(1), TrafficDto.builder().total(10).build(),
+                    Month.of(2), TrafficDto.builder().total(20).build());
+
+            given(topDtoFactorCalculator.sumDtosInTheSameMonths(anyList(), any())).willReturn(mergedValues);
+
+            // When
+            trafficFactorsCalculator.calculateAverageMonthly(expectedList);
+
+            // Then
+            verify(averageFactorCalculator).calculateAverage(doubleCaptor.capture(), doubleCaptor.capture());
+
+            double actualSumOfAllTotalField = doubleCaptor.getAllValues().get(0);
+            double actualAmountOfMonths = doubleCaptor.getAllValues().get(1);
+
+            then(actualSumOfAllTotalField).isEqualTo(30);
+            then(actualAmountOfMonths).isEqualTo(2);
+        }
     }
 
-    @Test
-    @DisplayName("CalculateTopMonth - Empty list")
-    void CalculateTopMonth_WhenPassEmptyList_ThenThrowException() {
-        // Given
-        List<TrafficDto> emptyList = List.of();
+    @Nested
+    @DisplayName("throws an exception")
+    class ThrowsAnException {
 
-        // When
-        Throwable throwable = catchThrowable(() ->
-                trafficFactorsCalculator.calculateTopMonth(emptyList));
+        @ParameterizedTest(name = "{index} : is {0}")
+        @NullAndEmptySource
+        @DisplayName("when input list in method calculating top month")
+        void CalculateTopMonth_WhenPassNullOrEmptyList_ThenThrowException(List<TrafficDto> nullOrEmptyList) {
+            // When
+            Throwable throwable = catchThrowable(() ->
+                    trafficFactorsCalculator.calculateTopMonth(nullOrEmptyList));
 
-        // Then
-        then(throwable)
-                .isInstanceOf(TrafficDataNotFoundException.class)
-                .hasMessage("error.message.trafficDataNotFound");
-    }
+            // Then
+            then(throwable)
+                    .isInstanceOf(TrafficDataNotFoundException.class)
+                    .hasMessage("error.message.trafficDataNotFound");
+        }
 
-    @Test
-    @DisplayName("CalculateTopMonth - Null list")
-    void CalculateTopMonth_WhenPassNullList_ThenThrowException() {
-        // Given
-        List<TrafficDto> emptyList = null;
+        @ParameterizedTest(name = "{index} : is {0}")
+        @NullAndEmptySource
+        @DisplayName("when input list in method calculating monthly average")
+        void CalculateAverageMonthly_WhenPassNullOrEmptyList_ThenThrowException(List<TrafficDto> nullOrEmptyList) {
+            // When
+            Throwable throwable = catchThrowable(() ->
+                    trafficFactorsCalculator.calculateAverageMonthly(nullOrEmptyList));
 
-        // When
-        Throwable throwable = catchThrowable(() ->
-                trafficFactorsCalculator.calculateTopMonth(emptyList));
-
-        // Then
-        then(throwable)
-                .isInstanceOf(TrafficDataNotFoundException.class)
-                .hasMessage("error.message.trafficDataNotFound");
-    }
-
-    @Test
-    @DisplayName("CalculateAverageMonthly - Calculated values pass to average calculator")
-    void CalculateAverageMonthly_WhenPassValidList_ThenPassCalculatedValuedToAverageCalculator() {
-        // Given
-        List<TrafficDto> expectedList = List.of(new TrafficDto());
-
-        Map<Month, TrafficDto> mergedValues = Map.of(
-                Month.of(1), TrafficDto.builder().total(10).build(),
-                Month.of(2), TrafficDto.builder().total(20).build());
-
-        given(topDtoFactorCalculator.sumDtosInTheSameMonths(anyList(), any())).willReturn(mergedValues);
-
-        // When
-        trafficFactorsCalculator.calculateAverageMonthly(expectedList);
-
-        // Then
-        verify(averageFactorCalculator).calculateAverage(doubleCaptor.capture(), doubleCaptor.capture());
-
-        double actualSumOfAllTotalField = doubleCaptor.getAllValues().get(0);
-        double actualAmountOfMonths = doubleCaptor.getAllValues().get(1);
-
-        then(actualSumOfAllTotalField).isEqualTo(30);
-        then(actualAmountOfMonths).isEqualTo(2);
-    }
-
-    @Test
-    @DisplayName("CalculateAverageMonthly - Input list pass to top dto calculator")
-    void CalculateAverageMonthly_WhenPassValidList_ThenPassThisListToTopDtoFactorCalculator() {
-        // Given
-        List<TrafficDto> expectedList = List.of(new TrafficDto());
-
-        // When
-        trafficFactorsCalculator.calculateAverageMonthly(expectedList);
-
-        // Then
-        verify(topDtoFactorCalculator).sumDtosInTheSameMonths(listCaptor.capture(), any());
-
-        List<TrafficDto> capturedList = listCaptor.getValue();
-
-        then(capturedList).isEqualTo(expectedList);
-    }
-
-    @Test
-    @DisplayName("CalculateAverageMonthly - Valid input")
-    void CalculateAverageMonthly_WhenPassValidList_ThenNotThrowException() {
-        // Given
-        List<TrafficDto> list = List.of(new TrafficDto());
-
-        // When
-        Throwable throwable = catchThrowable(() ->
-                trafficFactorsCalculator.calculateAverageMonthly(list));
-
-        // Then
-        then(throwable).isNull();
-    }
-
-    @Test
-    @DisplayName("CalculateAverageMonthly - Empty list")
-    void CalculateAverageMonthly_WhenPassEmptyList_ThenThrowException() {
-        // Given
-        List<TrafficDto> emptyList = List.of();
-
-        // When
-        Throwable throwable = catchThrowable(() ->
-                trafficFactorsCalculator.calculateAverageMonthly(emptyList));
-
-        // Then
-        then(throwable)
-                .isInstanceOf(TrafficDataNotFoundException.class)
-                .hasMessage("error.message.trafficDataNotFound");
-    }
-
-    @Test
-    @DisplayName("CalculateAverageMonthly - Null list")
-    void CalculateAverageMonthly_WhenPassNullList_ThenThrowException() {
-        // Given
-        List<TrafficDto> emptyList = null;
-
-        // When
-        Throwable throwable = catchThrowable(() ->
-                trafficFactorsCalculator.calculateAverageMonthly(emptyList));
-
-        // Then
-        then(throwable)
-                .isInstanceOf(TrafficDataNotFoundException.class)
-                .hasMessage("error.message.trafficDataNotFound");
+            // Then
+            then(throwable)
+                    .isInstanceOf(TrafficDataNotFoundException.class)
+                    .hasMessage("error.message.trafficDataNotFound");
+        }
     }
 
     private static TrafficDto getTrafficDtoExample() {

@@ -54,8 +54,6 @@ public class TrafficFactorsCalculatorImpl implements TrafficFactorsCalculator {
 
         double amountOfMonths = mergedValues.keySet().size();
 
-        log.warn("To string test: {}", this);
-
         return averageFactorCalculator.calculateAverage(sumOfAllTraffic, amountOfMonths);
     }
 }

@@ -26,10 +26,10 @@ public class TrafficFactorCollectorImpl extends StatisticFactorCollector<Traffic
     private final StatisticFactorCreator statisticFactorCreator;
 
     @Override
-    public List<PrecisionFactor> collect(String airportIdent) {
-        List<TrafficDto> trafficDtos = trafficService.findAllLatestByAirport(airportIdent);
+    public List<PrecisionFactor> collect(String airportCode) {
+        List<TrafficDto> trafficDtos = trafficService.findAllLatestByAirport(airportCode);
 
-        return super.collectFactors(airportIdent, trafficDtos, TrafficFactor.values());
+        return super.collectFactors(airportCode, trafficDtos, TrafficFactor.values());
     }
 
     @Override

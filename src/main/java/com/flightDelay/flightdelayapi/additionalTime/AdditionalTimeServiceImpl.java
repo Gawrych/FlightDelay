@@ -64,7 +64,6 @@ public class AdditionalTimeServiceImpl implements AdditionalTimeService {
                 .toList();
     }
 
-
     @Override
     public boolean save(AdditionalTime additionalTime) {
         String airportIdent = additionalTime.getAirportCode();
@@ -93,8 +92,7 @@ public class AdditionalTimeServiceImpl implements AdditionalTimeService {
         return true;
     }
 
-    @Override
-    public AdditionalTime setAirportBidirectionalRelationshipByCode(String airportCode, AdditionalTime additionalTime) {
+    private AdditionalTime setAirportBidirectionalRelationshipByCode(String airportCode, AdditionalTime additionalTime) {
         Airport airport = airportService.findByAirportIdent(airportCode);
 
         additionalTime.setAirport(airport);

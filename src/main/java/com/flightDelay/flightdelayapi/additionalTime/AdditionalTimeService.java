@@ -8,8 +8,6 @@ public interface AdditionalTimeService extends UpdateFromJson {
 
     boolean save(AdditionalTime additionalTime);
 
-    AdditionalTime setAirportBidirectionalRelationshipByCode(String airportCode, AdditionalTime additionalTime);
-
     List<AdditionalTimeDto> findAllLatestByAirport(String airportIdent);
 
     List<AdditionalTime> updateFromJson(List<AdditionalTime> additionalTimes);

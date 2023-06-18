@@ -20,9 +20,9 @@ public class StatisticFactorController {
 
     public final StatisticFactorService statisticFactorService;
 
-    @PostMapping("/{airportIdent}")
+    @PostMapping("/{airportCode}")
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, PrecisionFactor> getFactors(@PathVariable @AirportIcaoCodeValidator String airportIdent,
+    public Map<String, PrecisionFactor> getFactors(@PathVariable @AirportIcaoCodeValidator String airportCode,
                                                    @RequestHeader(
                                                            value = "Accept-Language",
                                                            defaultValue = "en-US") String language) {
@@ -31,6 +31,6 @@ public class StatisticFactorController {
 
         log.info("Result language has been set to {}", Locale.forLanguageTag(language).getDisplayName());
 
-        return statisticFactorService.getFactorsByPhase(airportIdent);
+        return statisticFactorService.getFactorsByPhase(airportCode);
     }
 }

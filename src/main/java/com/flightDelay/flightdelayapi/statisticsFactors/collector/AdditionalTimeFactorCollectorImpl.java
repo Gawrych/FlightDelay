@@ -25,10 +25,10 @@ public class AdditionalTimeFactorCollectorImpl extends StatisticFactorCollector<
     private final AdditionalTimeService additionalTimeService;
 
     @Override
-    public List<PrecisionFactor> collect(String airportIdent) {
-        List<AdditionalTimeDto> additionalTimeDtos = additionalTimeService.findAllLatestByAirport(airportIdent);
+    public List<PrecisionFactor> collect(String airportCode) {
+        List<AdditionalTimeDto> additionalTimeDtos = additionalTimeService.findAllLatestByAirport(airportCode);
 
-        return super.collectFactors(airportIdent, additionalTimeDtos, AdditionalTimeFactor.values());
+        return super.collectFactors(airportCode, additionalTimeDtos, AdditionalTimeFactor.values());
     }
 
     @Override

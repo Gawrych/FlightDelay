@@ -125,7 +125,11 @@ class PreDepartureFactorCollectorImplTest {
             void CollectFactors_WhenPassDtoListFromDatabase_ThenReturnListOfFactors() {
                 // Given
                 List<PreDepartureDelayDto> expectedList = List.of(new PreDepartureDelayDto());
+
                 given(preDepartureDelayService.findAllLatestByAirport(anyString())).willReturn(expectedList);
+
+                doReturn(List.of()).when(preDepartureFactorCollector)
+                        .collectFactors(anyString(), anyList(), any(PreDepartureDelayFactor[].class));
 
                 // When
                 preDepartureFactorCollector.collect("AAAA");
@@ -134,7 +138,7 @@ class PreDepartureFactorCollectorImplTest {
                 verify(preDepartureFactorCollector).collectFactors(
                         anyString(),
                         dtoCaptor.capture(),
-                        any(EntityStatisticFactor[].class));
+                        any(PreDepartureDelayFactor[].class));
 
                 List<PreDepartureDelayDto> actualList = dtoCaptor.getValue();
 
@@ -146,7 +150,11 @@ class PreDepartureFactorCollectorImplTest {
             void CollectFactors_WhenPassPreDepartureFactorArray_ThenReturnListOfFactors() {
                 // Given
                 List<PreDepartureDelayDto> dtos = List.of(new PreDepartureDelayDto());
+
                 given(preDepartureDelayService.findAllLatestByAirport(anyString())).willReturn(dtos);
+
+                doReturn(List.of()).when(preDepartureFactorCollector)
+                        .collectFactors(anyString(), anyList(), any(PreDepartureDelayFactor[].class));
 
                 // When
                 preDepartureFactorCollector.collect("AAAA");

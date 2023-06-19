@@ -27,10 +27,10 @@ public class ArrivalDelayFactorCollectorImpl extends StatisticFactorCollector<Ar
     private final StatisticReportCreator statisticReportCreator;
 
     @Override
-    public List<PrecisionReport> collect(String airportIdent) {
-        List<ArrivalDelayDto> arrivalDelayDtos = arrivalDelayService.findAllLatestByAirport(airportIdent);
+    public List<PrecisionReport> collect(String airportCode) {
+        List<ArrivalDelayDto> arrivalDelayDtos = arrivalDelayService.findAllLatestByAirport(airportCode);
 
-        return super.collectFactors(airportIdent, arrivalDelayDtos, ArrivalDelayFactor.values());
+        return super.collectFactors(airportCode, arrivalDelayDtos, ArrivalDelayFactor.values());
     }
 
     @Override

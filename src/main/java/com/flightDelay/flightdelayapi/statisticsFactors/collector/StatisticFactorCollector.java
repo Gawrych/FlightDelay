@@ -22,7 +22,7 @@ public abstract class StatisticFactorCollector<T extends DelayEntityDto> {
                 factors.add(completeFactor);
 
             } catch (LackOfCrucialDataException | ResourceNotFoundException e) {
-                log.warn("Unable to calculate {} due to lack of data or incorrect data for airport with ident: {}",
+                log.warn("Unable to calculate {} due to lack of data or incorrect data for airport with code: {}",
                         factorName,
                         airportCode);
 

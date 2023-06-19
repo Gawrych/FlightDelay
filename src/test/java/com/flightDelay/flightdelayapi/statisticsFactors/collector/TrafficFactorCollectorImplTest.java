@@ -67,118 +67,132 @@ class TrafficFactorCollectorImplTest {
     @DisplayName("correctly collects factors")
     class ReturnFilledList {
 
-        @Test
-        @DisplayName("when pass dto list to superclass method")
-        void CollectFactors_WhenPassDtoListFromDatabase_ThenReturnListOfFactors() {
-            // Given
-            List<TrafficDto> expectedList = List.of(new TrafficDto());
-            given(trafficService.findAllLatestByAirport(anyString())).willReturn(expectedList);
+        @Nested
+        @DisplayName("when match")
+        class MatchFactor {
 
-            // When
-            trafficFactorCollector.collect("AAAA");
+            @Test
+            @DisplayName("factor TOP_MONTH_OF_TRAFFIC with external calculator")
+            void CollectFactors_WhenPassTopMonthOfTraffic_ThenMatchWithExternalCalculator() {
+                // Given
+                TrafficFactor factorName = TrafficFactor.TOP_MONTH_OF_TRAFFIC;
 
-            // Then
-            verify(trafficFactorCollector).collectFactors(
-                    anyString(),
-                    dtoCaptor.capture(),
-                    any(EntityStatisticFactor[].class));
+                // When
+                trafficFactorCollector.calculateFactor(factorName, List.of());
 
-            List<TrafficDto> actualList = dtoCaptor.getValue();
+                // Then
+                verify(trafficFactorsCalculator).calculateTopMonth(anyList());
+                verifyNoMoreInteractions(trafficFactorsCalculator);
+            }
 
-            then(actualList).isEqualTo(expectedList);
+            @Test
+            @DisplayName("factor AVERAGE_MONTHLY_TRAFFIC with external calculator")
+            void CollectFactors_WhenPassAverageMonthlyTraffic_ThenMatchWithExternalCalculator() {
+                // Given
+                TrafficFactor factorName = TrafficFactor.AVERAGE_MONTHLY_TRAFFIC;
+
+                // When
+                trafficFactorCollector.calculateFactor(factorName, List.of());
+
+                // Then
+                verify(trafficFactorsCalculator).calculateAverageMonthly(anyList());
+                verifyNoMoreInteractions(trafficFactorsCalculator);
+            }
         }
 
-        @Test
-        @DisplayName("when pass traffic factors array to superclass method")
-        void CollectFactors_WhenPassTrafficFactorArray_ThenReturnListOfFactors() {
-            // Given
-            List<TrafficDto> trafficDtos = List.of(new TrafficDto());
-            given(trafficService.findAllLatestByAirport(anyString())).willReturn(trafficDtos);
+        @Nested
+        @DisplayName("when pass")
+        class PassFactor {
 
-            // When
-            trafficFactorCollector.collect("AAAA");
+            @Test
+            @DisplayName("dto list to superclass method")
+            void CollectFactors_WhenPassDtoListFromDatabase_ThenReturnListOfFactors() {
+                // Given
+                List<TrafficDto> expectedList = List.of(new TrafficDto());
+                given(trafficService.findAllLatestByAirport(anyString())).willReturn(expectedList);
+                doReturn(List.of()).when(trafficFactorCollector)
+                        .collectFactors(anyString(), anyList(), any(TrafficFactor[].class));
 
-            // Then
-            EntityStatisticFactor[] expectedEntity = TrafficFactor.values();
+                // When
+                trafficFactorCollector.collect("AAAA");
 
-            verify(trafficFactorCollector).collectFactors(anyString(), anyList(), entityArrayCaptor.capture());
+                // Then
+                verify(trafficFactorCollector).collectFactors(
+                        anyString(),
+                        dtoCaptor.capture(),
+                        any(TrafficFactor[].class));
 
-            EntityStatisticFactor[] actualEntity = entityArrayCaptor.getValue();
+                List<TrafficDto> actualList = dtoCaptor.getValue();
 
-            then(actualEntity).isEqualTo(expectedEntity);
+                then(actualList).isEqualTo(expectedList);
+            }
+
+            @Test
+            @DisplayName("traffic factors array to superclass method")
+            void CollectFactors_WhenPassTrafficFactorArray_ThenReturnListOfFactors() {
+                // Given
+                List<TrafficDto> trafficDtos = List.of(new TrafficDto());
+                given(trafficService.findAllLatestByAirport(anyString())).willReturn(trafficDtos);
+                doReturn(List.of()).when(trafficFactorCollector)
+                        .collectFactors(anyString(), anyList(), any(TrafficFactor[].class));
+
+                // When
+                trafficFactorCollector.collect("AAAA");
+
+                // Then
+                EntityStatisticFactor[] expectedEntity = TrafficFactor.values();
+
+                verify(trafficFactorCollector).collectFactors(anyString(), anyList(), entityArrayCaptor.capture());
+
+                EntityStatisticFactor[] actualEntity = entityArrayCaptor.getValue();
+
+                then(actualEntity).isEqualTo(expectedEntity);
+            }
+
+            @Test
+            @DisplayName("factor TOP_MONTH_OF_TRAFFIC and calculated value to report creator")
+            void CollectFactors_WhenGetsTopMonthOfTrafficAndValue_ThenPassToPrecisionFactorCreator() {
+                // Given
+                TrafficFactor expectedFactor = TrafficFactor.TOP_MONTH_OF_TRAFFIC;
+                ValueWithDateHolder expectedValue = mock(ValueWithDateHolder.class);
+                given(trafficFactorsCalculator.calculateTopMonth(anyList())).willReturn(expectedValue);
+
+                // When
+                trafficFactorCollector.calculateFactor(expectedFactor, List.of());
+
+                // Then
+                verify(statisticReportCreator).create(trafficFactorCaptor.capture(), valueWithDateHolderCaptor.capture());
+
+                TrafficFactor actualTrafficFactor = trafficFactorCaptor.getValue();
+                ValueWithDateHolder actualValue = valueWithDateHolderCaptor.getValue();
+
+                then(actualTrafficFactor).isEqualTo(expectedFactor);
+                then(actualValue).isEqualTo(expectedValue);
+            }
+
+            @Test
+            @DisplayName("factor AVERAGE_MONTHLY_TRAFFIC and calculated value to report creator")
+            void CollectFactors_WhenGetsAverageMonthlyTrafficAndValue_ThenPassToPrecisionFactorCreator() {
+                // Given
+                TrafficFactor expectedFactor = TrafficFactor.AVERAGE_MONTHLY_TRAFFIC;
+                double expectedValue = 10.0d;
+                given(trafficFactorsCalculator.calculateAverageMonthly(anyList())).willReturn(expectedValue);
+
+                // When
+                trafficFactorCollector.calculateFactor(expectedFactor, List.of());
+
+                // Then
+                verify(statisticReportCreator).create(trafficFactorCaptor.capture(), doubleCaptor.capture());
+
+                TrafficFactor actualTrafficFactor = trafficFactorCaptor.getValue();
+                double actualValue = doubleCaptor.getValue();
+
+                then(actualTrafficFactor).isEqualTo(expectedFactor);
+                then(actualValue).isEqualTo(expectedValue);
+            }
         }
 
-        @Test
-        @DisplayName("when match factor TOP_MONTH_OF_TRAFFIC with external calculator")
-        void CollectFactors_WhenPassTopMonthOfTraffic_ThenMatchWithExternalCalculator() {
-            // Given
-            TrafficFactor factorName = TrafficFactor.TOP_MONTH_OF_TRAFFIC;
-
-            // When
-            trafficFactorCollector.calculateFactor(factorName, List.of());
-
-            // Then
-            verify(trafficFactorsCalculator).calculateTopMonth(anyList());
-            verifyNoMoreInteractions(trafficFactorsCalculator);
-        }
-
-        @Test
-        @DisplayName("when match factor AVERAGE_MONTHLY_TRAFFIC with external calculator")
-        void CollectFactors_WhenPassAverageMonthlyTraffic_ThenMatchWithExternalCalculator() {
-            // Given
-            TrafficFactor factorName = TrafficFactor.AVERAGE_MONTHLY_TRAFFIC;
-
-            // When
-            trafficFactorCollector.calculateFactor(factorName, List.of());
-
-            // Then
-            verify(trafficFactorsCalculator).calculateAverageMonthly(anyList());
-            verifyNoMoreInteractions(trafficFactorsCalculator);
-        }
-
-        @Test
-        @DisplayName("when pass factor TOP_MONTH_OF_TRAFFIC and calculated value to report creator")
-        void CollectFactors_WhenGetsTopMonthOfTrafficAndValue_ThenPassToPrecisionFactorCreator() {
-            // Given
-            TrafficFactor expectedFactor = TrafficFactor.TOP_MONTH_OF_TRAFFIC;
-            ValueWithDateHolder expectedValue = mock(ValueWithDateHolder.class);
-            given(trafficFactorsCalculator.calculateTopMonth(anyList())).willReturn(expectedValue);
-
-            // When
-            trafficFactorCollector.calculateFactor(expectedFactor, List.of());
-
-            // Then
-            verify(statisticReportCreator).create(trafficFactorCaptor.capture(), valueWithDateHolderCaptor.capture());
-
-            TrafficFactor actualTrafficFactor = trafficFactorCaptor.getValue();
-            ValueWithDateHolder actualValue = valueWithDateHolderCaptor.getValue();
-
-            then(actualTrafficFactor).isEqualTo(expectedFactor);
-            then(actualValue).isEqualTo(expectedValue);
-        }
-
-        @Test
-        @DisplayName("when pass factor AVERAGE_MONTHLY_TRAFFIC and calculated value to report creator")
-        void CollectFactors_WhenGetsAverageMonthlyTrafficAndValue_ThenPassToPrecisionFactorCreator() {
-            // Given
-            TrafficFactor expectedFactor = TrafficFactor.AVERAGE_MONTHLY_TRAFFIC;
-            double expectedValue = 10.0d;
-            given(trafficFactorsCalculator.calculateAverageMonthly(anyList())).willReturn(expectedValue);
-
-            // When
-            trafficFactorCollector.calculateFactor(expectedFactor, List.of());
-
-            // Then
-            verify(statisticReportCreator).create(trafficFactorCaptor.capture(), doubleCaptor.capture());
-
-            TrafficFactor actualTrafficFactor = trafficFactorCaptor.getValue();
-            double actualValue = doubleCaptor.getValue();
-
-            then(actualTrafficFactor).isEqualTo(expectedFactor);
-            then(actualValue).isEqualTo(expectedValue);
-        }
-
-        @ParameterizedTest(name = "{index} : {0} input factor name")
+        @ParameterizedTest(name = "{index} : {0} factor name")
         @EnumSource(TrafficFactor.class)
         @DisplayName("when no data factor method pass to report creator")
         void CollectFactors_WhenNoDataFactorGetsDataFromSuperclass_ThenPassToPrecisionFactorCreator(

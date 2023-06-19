@@ -4,15 +4,18 @@ import com.flightDelay.flightdelayapi.shared.DelayEntityDto;
 import com.flightDelay.flightdelayapi.shared.exception.LackOfCrucialDataException;
 import com.flightDelay.flightdelayapi.shared.exception.resource.ResourceNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
-import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
+import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionReport;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
@@ -21,6 +24,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("The statistic factor collector")
@@ -28,6 +32,13 @@ class StatisticFactorCollectorTest {
 
     @Spy
     private StatisticFactorCollector<DelayEntityDto> statisticFactorCollector;
+
+    @Captor
+    private ArgumentCaptor<EntityStatisticFactor> entityCaptor;
+
+    @Captor
+    private ArgumentCaptor<List<DelayEntityDto>> dtosCaptor;
+
 
     @Nested
     @DisplayName("returns correctly filled list")
@@ -43,23 +54,25 @@ class StatisticFactorCollectorTest {
                     mock(EntityStatisticFactor.class)};
 
             // When
-            statisticFactorCollector.collectFactors("AAAA", null, entityFactorArray);
+            statisticFactorCollector.collectFactors("AAAA", List.of(), entityFactorArray);
 
             // Then
-            verify(statisticFactorCollector).calculateFactor(entityFactorArray[0], null);
-            verify(statisticFactorCollector).calculateFactor(entityFactorArray[1], null);
-            verify(statisticFactorCollector).calculateFactor(entityFactorArray[2], null);
+            verify(statisticFactorCollector, times(3)).calculateFactor(entityCaptor.capture(), anyList());
+
+            List<EntityStatisticFactor> actualEntities = entityCaptor.getAllValues();
+
+            then(actualEntities).isEqualTo(Arrays.asList(entityFactorArray));
         }
 
         @Nested
-        @DisplayName("after created complete factors by")
+        @DisplayName("when create complete factors by")
         class CompleteFactors {
 
             @Test
             @DisplayName("iterate through the entity statistic factor array")
             void CollectFactors_WhenIterateThroughFactorArray_ThenCreateCompleteFactors() {
                 // Given
-                PrecisionFactor completeFactor = mock(PrecisionFactor.class);
+                PrecisionReport completeFactor = mock(PrecisionReport.class);
                 given(statisticFactorCollector.calculateFactor(any(), anyList())).willReturn(completeFactor);
 
                 EntityStatisticFactor[] entityFactor = {
@@ -67,7 +80,7 @@ class StatisticFactorCollectorTest {
                         mock(EntityStatisticFactor.class)};
 
                 // When
-                List<PrecisionFactor> actualFactor =
+                List<PrecisionReport> actualFactor =
                         statisticFactorCollector.collectFactors("AAAA", List.of(), entityFactor);
 
                 // Then
@@ -91,12 +104,18 @@ class StatisticFactorCollectorTest {
                 statisticFactorCollector.collectFactors("AAAA", dtosList, entityFactorArray);
 
                 // Then
-                verify(statisticFactorCollector).calculateFactor(entityFactor, dtosList);
+                verify(statisticFactorCollector).calculateFactor(entityCaptor.capture(), dtosCaptor.capture());
+
+                EntityStatisticFactor actualEntity = entityCaptor.getValue();
+                List<DelayEntityDto> actualDtos = dtosCaptor.getValue();
+
+                then(actualDtos).isEqualTo(dtosList);
+                then(actualEntity).isEqualTo(entityFactor);
             }
         }
 
         @Nested
-        @DisplayName("after created no data factors")
+        @DisplayName("when create no data factors")
         class NoDataFactors {
 
             @Test
@@ -134,7 +153,7 @@ class StatisticFactorCollectorTest {
     }
 
     @Nested
-    @DisplayName("returns empty list")
+    @DisplayName("return empty list")
     class ReturnsEmptyList {
 
         @Test
@@ -144,7 +163,7 @@ class StatisticFactorCollectorTest {
             EntityStatisticFactor[] entityFactors = {};
 
             // When
-            List<PrecisionFactor> actualList =
+            List<PrecisionReport> actualList =
                     statisticFactorCollector.collectFactors("AAAA", List.of(), entityFactors);
 
             // Then

@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ValueWithTextStatisticFactor extends StatisticFactor {
+public class ValueWithTextStatisticReport extends StatisticReport {
 
     @JsonProperty("value")
     private double value;

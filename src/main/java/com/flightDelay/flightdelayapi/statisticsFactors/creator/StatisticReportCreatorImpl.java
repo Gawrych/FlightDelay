@@ -16,7 +16,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
+public class StatisticReportCreatorImpl implements StatisticReportCreator {
 
     @Value("${date.defaultDatePattern}")
     private String defaultDatePattern;
@@ -30,9 +30,9 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
     private final ResourceBundleMessageSource messageSource;
 
     @Override
-    public PrecisionFactor createSimpleValue(EntityStatisticFactor factorName,
-                                             double value) {
-        return SimpleValueStatisticFactor.builder()
+    public PrecisionReport create(EntityStatisticFactor factorName,
+                                  double value) {
+        return SimpleValueStatisticReport.builder()
                 .id(factorName)
                 .name(getMessage(factorName))
                 .unitSymbol(factorName.getUnit().getUnit())
@@ -44,9 +44,9 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
     }
 
     @Override
-    public PrecisionFactor createListValuesWithText(EntityStatisticFactor factorName,
-                                                      List<ValueWithTextHolder> values) {
-        return TopValueWithTextStatisticFactor.builder()
+    public PrecisionReport create(EntityStatisticFactor factorName,
+                                  List<ValueWithTextHolder> values) {
+        return TopValueWithTextStatisticReport.builder()
                 .id(factorName)
                 .name(getMessage(factorName))
                 .unitSymbol(factorName.getUnit().getUnit())
@@ -59,8 +59,8 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
     }
 
     @Override
-    public PrecisionFactor createValueWithDate(EntityStatisticFactor factorName,
-                                               ValueWithDateHolder value) {
+    public PrecisionReport create(EntityStatisticFactor factorName,
+                                  ValueWithDateHolder value) {
 
          String datePattern = factorName.getType() == StatisticFactorType.TOP_VALUE_WITH_PRECISION_DATE
                 ? defaultDatePattern
@@ -68,7 +68,7 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(datePattern);
 
-        return ValueWithTextStatisticFactor.builder()
+        return ValueWithTextStatisticReport.builder()
                 .id(factorName)
                 .name(getMessage(factorName))
                 .unitSymbol(factorName.getUnit().getUnit())
@@ -81,8 +81,8 @@ public class StatisticFactorCreatorImpl implements StatisticFactorCreator {
     }
 
     @Override
-    public PrecisionFactor createNoDataFactor(EntityStatisticFactor factorName) {
-        return StatisticFactor.builder()
+    public PrecisionReport create(EntityStatisticFactor factorName) {
+        return StatisticReport.builder()
                 .id(factorName)
                 .name(getMessage(factorName))
                 .unitSymbol(factorName.getUnit().getUnit())

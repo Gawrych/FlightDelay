@@ -1,7 +1,7 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.controller;
 
 import com.flightDelay.flightdelayapi.shared.validator.AirportIcaoCodeValidator;
-import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
+import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionReport;
 import com.flightDelay.flightdelayapi.statisticsFactors.service.StatisticFactorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class StatisticFactorController {
 
     @PostMapping("/{airportCode}")
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, PrecisionFactor> getFactors(@PathVariable @AirportIcaoCodeValidator String airportCode,
+    public Map<String, PrecisionReport> getFactors(@PathVariable @AirportIcaoCodeValidator String airportCode,
                                                    @RequestHeader(
                                                            value = "Accept-Language",
                                                            defaultValue = "en-US") String language) {

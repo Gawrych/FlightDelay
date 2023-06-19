@@ -4,7 +4,7 @@ import com.flightDelay.flightdelayapi.shared.DelayEntityDto;
 import com.flightDelay.flightdelayapi.shared.exception.LackOfCrucialDataException;
 import com.flightDelay.flightdelayapi.shared.exception.resource.ResourceNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
-import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
+import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionReport;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -13,12 +13,12 @@ import java.util.List;
 @Slf4j
 public abstract class StatisticFactorCollector<T extends DelayEntityDto> {
 
-    public List<PrecisionFactor> collectFactors(String airportCode, List<T> dtos, EntityStatisticFactor[] entityFactor) {
-        List<PrecisionFactor> factors = new ArrayList<>();
+    public List<PrecisionReport> collectFactors(String airportCode, List<T> dtos, EntityStatisticFactor[] entityFactor) {
+        List<PrecisionReport> factors = new ArrayList<>();
 
         for (EntityStatisticFactor factorName : entityFactor) {
             try {
-                PrecisionFactor completeFactor = calculateFactor(factorName, dtos);
+                PrecisionReport completeFactor = calculateFactor(factorName, dtos);
                 factors.add(completeFactor);
 
             } catch (LackOfCrucialDataException | ResourceNotFoundException e) {
@@ -26,7 +26,7 @@ public abstract class StatisticFactorCollector<T extends DelayEntityDto> {
                         factorName,
                         airportCode);
 
-                PrecisionFactor noDataFactor = getNoDataFactor(factorName);
+                PrecisionReport noDataFactor = getNoDataFactor(factorName);
                 factors.add(noDataFactor);
             }
         }
@@ -34,7 +34,7 @@ public abstract class StatisticFactorCollector<T extends DelayEntityDto> {
         return factors;
     }
 
-    protected abstract PrecisionFactor calculateFactor(EntityStatisticFactor factorName, List<T> dtos);
+    protected abstract PrecisionReport calculateFactor(EntityStatisticFactor factorName, List<T> dtos);
 
-    protected abstract PrecisionFactor getNoDataFactor(EntityStatisticFactor factorName);
+    protected abstract PrecisionReport getNoDataFactor(EntityStatisticFactor factorName);
 }

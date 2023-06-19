@@ -51,7 +51,7 @@ class InstrumentLandingSystemCalculatorImplTest {
     class ThrowsAnException {
 
         @Test
-        @DisplayName("when not valid conditions are passed to minimum required category calculator")
+        @DisplayName("when not valid conditions are passed")
         void GetMinRequiredCategory_WhenConditionsAreNotValid_thenThrowException() {
             // Given
             int cloudBase = -1;

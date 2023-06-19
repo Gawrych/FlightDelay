@@ -64,7 +64,7 @@ class TrafficFactorCollectorImplTest {
     }
 
     @Nested
-    @DisplayName("correctly collect factors")
+    @DisplayName("correctly collects factors")
     class ReturnFilledList {
 
         @Test

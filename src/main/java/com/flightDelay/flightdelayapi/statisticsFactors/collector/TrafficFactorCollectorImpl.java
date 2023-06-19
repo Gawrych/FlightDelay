@@ -1,10 +1,11 @@
 package com.flightDelay.flightdelayapi.statisticsFactors.collector;
 
 import com.flightDelay.flightdelayapi.statisticsFactors.calculator.TrafficFactorsCalculator;
-import com.flightDelay.flightdelayapi.statisticsFactors.creator.StatisticFactorCreator;
+import com.flightDelay.flightdelayapi.statisticsFactors.creator.StatisticReportCreator;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.TrafficFactor;
-import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
+import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionReport;
+import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import com.flightDelay.flightdelayapi.traffic.TrafficDto;
 import com.flightDelay.flightdelayapi.traffic.TrafficService;
 import jakarta.persistence.EnumType;
@@ -23,30 +24,32 @@ public class TrafficFactorCollectorImpl extends StatisticFactorCollector<Traffic
 
     private final TrafficFactorsCalculator trafficFactorsCalculator;
 
-    private final StatisticFactorCreator statisticFactorCreator;
+    private final StatisticReportCreator statisticReportCreator;
 
     @Override
-    public List<PrecisionFactor> collect(String airportCode) {
+    public List<PrecisionReport> collect(String airportCode) {
         List<TrafficDto> trafficDtos = trafficService.findAllLatestByAirport(airportCode);
 
         return super.collectFactors(airportCode, trafficDtos, TrafficFactor.values());
     }
 
     @Override
-    protected PrecisionFactor calculateFactor(EntityStatisticFactor factorName, List<TrafficDto> trafficDtos) {
+    protected PrecisionReport calculateFactor(EntityStatisticFactor factorName, List<TrafficDto> trafficDtos) {
         return switch (EnumType.valueOf(TrafficFactor.class, factorName.name())) {
-            case TOP_MONTH_OF_TRAFFIC -> statisticFactorCreator.createValueWithDate(
-                    factorName,
-                    trafficFactorsCalculator.calculateTopMonth(trafficDtos));
+            case TOP_MONTH_OF_TRAFFIC -> {
+                ValueWithDateHolder calculatedValue = trafficFactorsCalculator.calculateTopMonth(trafficDtos);
+                yield statisticReportCreator.create(factorName, calculatedValue);
+            }
 
-            case AVERAGE_MONTHLY_TRAFFIC -> statisticFactorCreator.createSimpleValue(
-                    factorName,
-                    trafficFactorsCalculator.calculateAverageMonthly(trafficDtos));
+            case AVERAGE_MONTHLY_TRAFFIC -> {
+                double calculatedValue = trafficFactorsCalculator.calculateAverageMonthly(trafficDtos);
+                yield statisticReportCreator.create(factorName, calculatedValue);
+            }
         };
     }
 
     @Override
-    protected PrecisionFactor getNoDataFactor(EntityStatisticFactor factorName) {
-        return statisticFactorCreator.createNoDataFactor(factorName);
+    protected PrecisionReport getNoDataFactor(EntityStatisticFactor factorName) {
+        return statisticReportCreator.create(factorName);
     }
 }

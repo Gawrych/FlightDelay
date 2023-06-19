@@ -4,7 +4,7 @@ import com.flightDelay.flightdelayapi.statisticsFactors.collector.AdditionalTime
 import com.flightDelay.flightdelayapi.statisticsFactors.collector.ArrivalDelayFactorCollector;
 import com.flightDelay.flightdelayapi.statisticsFactors.collector.PreDepartureFactorCollector;
 import com.flightDelay.flightdelayapi.statisticsFactors.collector.TrafficFactorCollector;
-import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
+import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionReport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,8 +28,8 @@ public class StatisticFactorServiceImpl implements StatisticFactorService {
 
     private final TrafficFactorCollector trafficFactorCollector;
 
-    public Map<String, PrecisionFactor> getFactorsByPhase(String airportCode) {
-        List<PrecisionFactor> factors = new ArrayList<>();
+    public Map<String, PrecisionReport> getFactorsByPhase(String airportCode) {
+        List<PrecisionReport> factors = new ArrayList<>();
 
         factors.addAll(preDepartureFactorCollector.collect(airportCode));
         factors.addAll(additionalTimeFactorCollector.collect(airportCode));

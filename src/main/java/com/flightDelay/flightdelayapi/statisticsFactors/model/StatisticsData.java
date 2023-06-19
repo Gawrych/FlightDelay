@@ -17,17 +17,17 @@ import java.util.Map;
 public class StatisticsData {
 
     @JsonProperty("average_values")
-    private Map<String, PrecisionFactor> averages;
+    private Map<String, PrecisionReport> averages;
 
     @JsonProperty("top_months")
-    private Map<String, PrecisionFactor> topMonths;
+    private Map<String, PrecisionReport> topMonths;
 
     public StatisticsData() {
         this.averages = new HashMap<>();
         this.topMonths = new HashMap<>();
     }
 
-    public void add(EntityStatisticFactor factorName, PrecisionFactor factor) {
+    public void add(EntityStatisticFactor factorName, PrecisionReport factor) {
         switch(factorName.getType()) {
             case TOP_VALUE_WITH_DATE -> topMonths.put(factorName.name().toLowerCase(), factor);
             case AVERAGE -> averages.put(factorName.name().toLowerCase(), factor);

@@ -3,10 +3,11 @@ package com.flightDelay.flightdelayapi.statisticsFactors.collector;
 import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeDto;
 import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeService;
 import com.flightDelay.flightdelayapi.statisticsFactors.calculator.AdditionalTimeFactorsCalculator;
-import com.flightDelay.flightdelayapi.statisticsFactors.creator.StatisticFactorCreator;
+import com.flightDelay.flightdelayapi.statisticsFactors.creator.StatisticReportCreator;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.AdditionalTimeFactor;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
-import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
+import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionReport;
+import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,19 +21,19 @@ public class AdditionalTimeFactorCollectorImpl extends StatisticFactorCollector<
 
     private final AdditionalTimeFactorsCalculator additionalTimeFactorsCalculator;
 
-    private final StatisticFactorCreator statisticFactorCreator;
+    private final StatisticReportCreator statisticReportCreator;
 
     private final AdditionalTimeService additionalTimeService;
 
     @Override
-    public List<PrecisionFactor> collect(String airportCode) {
+    public List<PrecisionReport> collect(String airportCode) {
         List<AdditionalTimeDto> additionalTimeDtos = additionalTimeService.findAllLatestByAirport(airportCode);
 
         return super.collectFactors(airportCode, additionalTimeDtos, AdditionalTimeFactor.values());
     }
 
     @Override
-    protected PrecisionFactor calculateFactor(EntityStatisticFactor factorName,
+    protected PrecisionReport calculateFactor(EntityStatisticFactor factorName,
                                               List<AdditionalTimeDto> additionalTimeDtos) {
 
         List<AdditionalTimeDto> additionalTimeDtosInPhase = additionalTimeDtos.stream()
@@ -40,20 +41,26 @@ public class AdditionalTimeFactorCollectorImpl extends StatisticFactorCollector<
                 .toList();
 
         return switch (factorName.getType()) {
-            case TOP_VALUE_WITH_DATE -> statisticFactorCreator.createValueWithDate(
-                    factorName,
-                    additionalTimeFactorsCalculator.calculateTopDelayMonth(additionalTimeDtosInPhase));
+            case TOP_VALUE_WITH_DATE -> {
+                ValueWithDateHolder calculatedValue = additionalTimeFactorsCalculator
+                        .calculateTopDelayMonth(additionalTimeDtosInPhase);
 
-            case AVERAGE -> statisticFactorCreator.createSimpleValue(
-                    factorName,
-                    additionalTimeFactorsCalculator.calculateAverageFromList(additionalTimeDtosInPhase));
+                yield statisticReportCreator.create(factorName, calculatedValue);
+            }
+
+            case AVERAGE -> {
+                double calculatedValue = additionalTimeFactorsCalculator
+                        .calculateAverageFromList(additionalTimeDtosInPhase);
+
+                yield statisticReportCreator.create(factorName, calculatedValue);
+            }
 
             default -> getNoDataFactor(factorName);
         };
     }
 
     @Override
-    protected PrecisionFactor getNoDataFactor(EntityStatisticFactor factorName) {
-        return statisticFactorCreator.createNoDataFactor(factorName);
+    protected PrecisionReport getNoDataFactor(EntityStatisticFactor factorName) {
+        return statisticReportCreator.create(factorName);
     }
 }

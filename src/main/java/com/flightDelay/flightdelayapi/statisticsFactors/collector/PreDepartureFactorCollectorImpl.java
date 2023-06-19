@@ -3,10 +3,11 @@ package com.flightDelay.flightdelayapi.statisticsFactors.collector;
 import com.flightDelay.flightdelayapi.preDepartureDelay.PreDepartureDelayDto;
 import com.flightDelay.flightdelayapi.preDepartureDelay.PreDepartureDelayService;
 import com.flightDelay.flightdelayapi.statisticsFactors.calculator.PreDepartureDelayFactorsCalculator;
-import com.flightDelay.flightdelayapi.statisticsFactors.creator.StatisticFactorCreator;
+import com.flightDelay.flightdelayapi.statisticsFactors.creator.StatisticReportCreator;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.EntityStatisticFactor;
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.PreDepartureDelayFactor;
-import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionFactor;
+import com.flightDelay.flightdelayapi.statisticsFactors.model.PrecisionReport;
+import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import jakarta.persistence.EnumType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,36 +24,46 @@ public class PreDepartureFactorCollectorImpl extends StatisticFactorCollector<Pr
 
     private final PreDepartureDelayFactorsCalculator preDepartureDelayFactorsCalculator;
 
-    private final StatisticFactorCreator statisticFactorCreator;
+    private final StatisticReportCreator statisticReportCreator;
 
     @Override
-    public List<PrecisionFactor> collect(String airportIdent) {
-        List<PreDepartureDelayDto> preDepartureDelayDtos = preDepartureDelayService.findAllLatestByAirport(airportIdent);
+    public List<PrecisionReport> collect(String airportCode) {
+        List<PreDepartureDelayDto> preDepartureDelayDtos = preDepartureDelayService.findAllLatestByAirport(airportCode);
 
-        return super.collectFactors(airportIdent, preDepartureDelayDtos, PreDepartureDelayFactor.values());
+        return super.collectFactors(airportCode, preDepartureDelayDtos, PreDepartureDelayFactor.values());
     }
 
     @Override
-    protected PrecisionFactor calculateFactor(EntityStatisticFactor factorName,
+    protected PrecisionReport calculateFactor(EntityStatisticFactor factorName,
                                               List<PreDepartureDelayDto> preDepartureDelayDtos) {
 
         return switch (EnumType.valueOf(PreDepartureDelayFactor.class, factorName.name())) {
-            case TOP_MONTH_OF_PRE_DEPARTURE_DELAY -> statisticFactorCreator.createValueWithDate(
-                    factorName,
-                    preDepartureDelayFactorsCalculator.calculateTopMonthDelay(preDepartureDelayDtos));
+            case TOP_MONTH_OF_PRE_DEPARTURE_DELAY -> {
+                ValueWithDateHolder calculatedValue = preDepartureDelayFactorsCalculator
+                        .calculateTopMonthDelay(preDepartureDelayDtos);
 
-            case TOP_DAY_OF_PRE_DEPARTURE_DELAY -> statisticFactorCreator.createValueWithDate(
-                    factorName,
-                    preDepartureDelayFactorsCalculator.calculateTopDayDelay(preDepartureDelayDtos));
+                yield statisticReportCreator.create(factorName, calculatedValue);
+            }
 
-            case AVERAGE_PRE_DEPARTURE_DELAY -> statisticFactorCreator.createSimpleValue(
-                    factorName,
-                    preDepartureDelayFactorsCalculator.calculateAverageDelayTime(preDepartureDelayDtos));
+            case TOP_DAY_OF_PRE_DEPARTURE_DELAY -> {
+                ValueWithDateHolder calculatedValue = preDepartureDelayFactorsCalculator
+                        .calculateTopDayDelay(preDepartureDelayDtos);
+
+                yield statisticReportCreator.create(factorName, calculatedValue);
+
+            }
+
+            case AVERAGE_PRE_DEPARTURE_DELAY -> {
+                double calculatedValue = preDepartureDelayFactorsCalculator
+                        .calculateAverageDelayTime(preDepartureDelayDtos);
+
+                yield statisticReportCreator.create(factorName, calculatedValue);
+            }
         };
     }
 
     @Override
-    protected PrecisionFactor getNoDataFactor(EntityStatisticFactor factorName) {
-        return statisticFactorCreator.createNoDataFactor(factorName);
+    protected PrecisionReport getNoDataFactor(EntityStatisticFactor factorName) {
+        return statisticReportCreator.create(factorName);
     }
 }

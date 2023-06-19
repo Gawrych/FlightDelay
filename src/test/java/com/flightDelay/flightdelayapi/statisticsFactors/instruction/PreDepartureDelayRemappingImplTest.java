@@ -52,6 +52,7 @@ class PreDepartureDelayRemappingImplTest {
             // When
             preDepartureDelayRemapping.apply(firstDto, secondDto);
 
+            // TODO: change it to captor
             // Then
             verify(mapper).mapFrom(secondDto.getDate(), 2.0d, 15.0d);
         }

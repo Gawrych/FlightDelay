@@ -15,7 +15,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TopValueWithTextStatisticFactor extends StatisticFactor {
+public class TopValueWithTextStatisticReport extends StatisticReport {
 
     @JsonProperty("values")
     private List<ValueWithTextHolder> values;

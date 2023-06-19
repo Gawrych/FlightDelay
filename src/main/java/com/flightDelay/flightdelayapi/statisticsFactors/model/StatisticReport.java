@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatisticFactor implements PrecisionFactor {
+public class StatisticReport implements PrecisionReport {
 
     @JsonProperty("id")
     private EntityStatisticFactor id;

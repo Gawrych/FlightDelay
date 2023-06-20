@@ -43,7 +43,7 @@ public class AdditionalTimeFactorCollectorImpl extends StatisticFactorCollector<
         return switch (factorName.getType()) {
             case TOP_VALUE_WITH_DATE -> {
                 ValueWithDateHolder calculatedValue = additionalTimeFactorsCalculator
-                        .calculateTopDelayMonth(additionalTimeDtosInPhase);
+                        .calculateTopMonthDelay(additionalTimeDtosInPhase);
 
                 yield statisticReportCreator.create(factorName, calculatedValue);
             }

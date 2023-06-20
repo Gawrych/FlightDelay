@@ -9,5 +9,5 @@ public interface AdditionalTimeFactorsCalculator {
 
     double calculateAverageFromList(List<AdditionalTimeDto> allByAirportWithDateAfter);
 
-    ValueWithDateHolder calculateTopDelayMonth(List<AdditionalTimeDto> allByAirportWithDateAfter);
+    ValueWithDateHolder calculateTopMonthDelay(List<AdditionalTimeDto> allByAirportWithDateAfter);
 }

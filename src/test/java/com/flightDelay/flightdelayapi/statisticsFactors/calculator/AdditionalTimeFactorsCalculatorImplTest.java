@@ -5,8 +5,11 @@ import com.flightDelay.flightdelayapi.shared.exception.resource.AdditionalTimeDa
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -23,11 +26,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("AdditionalTimeFactorsCalculator Tests")
+@DisplayName("The additional time factors calculator")
 class AdditionalTimeFactorsCalculatorImplTest {
 
     @Mock
@@ -56,182 +58,166 @@ class AdditionalTimeFactorsCalculatorImplTest {
                 binaryOperatorRemapping);
     }
 
-    @Test
-    @DisplayName("CalculateAverageFromList - Pass input list to average calculator")
-    void CalculateAverageFromList_WhenPassValidList_ThenPassThisListToAverageFactorCalculator() {
-        // Given
-        List<AdditionalTimeDto> list = List.of(new AdditionalTimeDto());
+    @Nested
+    @DisplayName("returns correct result")
+    class ReturnsCorrectResult {
 
-        // When
-        additionalTimeFactorsCalculator.calculateAverageFromList(list);
+        @Nested
+        @DisplayName("when result is correctly created based on input in")
+        class CorrectValue {
 
-        // Then
-        verify(averageFactorCalculator).calculateAverageByDtoList(captor.capture(), any(), any());
+            @Test
+            @DisplayName("top month delay calculating method")
+            void CalculateTopMonthDelay_WhenPassValidListAsAParameter_ThenReturnCorrectResult() {
+                // Given
+                List<AdditionalTimeDto> list = List.of(new AdditionalTimeDto());
 
-        List<AdditionalTimeDto> capturedList = captor.getValue();
+                AdditionalTimeDto exampleDto = getAdditionalTimeDtoExample();
 
-        then(capturedList).isEqualTo(list);
+                given(functionAveraging.apply(any(AdditionalTimeDto.class))).willReturn(10.0d);
+                given(topDtoFactorCalculator.getTopMonthDto(anyList(), any(), any())).willReturn(exampleDto);
+
+                ValueWithDateHolder expectedValue = new ValueWithDateHolder(LocalDate.ofEpochDay(1), 10.0d);
+
+                // When
+                ValueWithDateHolder actualValue = additionalTimeFactorsCalculator.calculateTopMonthDelay(list);
+
+                // Then
+                then(actualValue).usingRecursiveComparison().isEqualTo(expectedValue);
+            }
+
+            @Test
+            @DisplayName("average from list calculating method")
+            void CalculateAverageFromList_WhenPassValidListAsAParameter_ThenReturnResultFromAverageCalculator() {
+                // Given
+                List<AdditionalTimeDto> validList = List.of(new AdditionalTimeDto());
+
+                double expectedValue = 1.0d;
+                given(averageFactorCalculator.calculateAverageByDtoList(anyList(), any(), any())).willReturn(expectedValue);
+
+                // When
+                double actualValue = additionalTimeFactorsCalculator.calculateAverageFromList(validList);
+
+                // Then
+                then(actualValue).isEqualTo(expectedValue);
+            }
+        }
+
+        @Nested
+        @DisplayName("when parameter list was passed to")
+        class PassInputList {
+
+            @Test
+            @DisplayName("top dto calculator for top month from grouped dtos on months")
+            void CalculateTopMonthDelay_WhenPassValidListAsAParameter_ThenPassThisListToTopDtoFactorCalculator() {
+                // Given
+                List<AdditionalTimeDto> list = List.of(new AdditionalTimeDto());
+
+                AdditionalTimeDto exampleDto = getAdditionalTimeDtoExample();
+
+                given(functionAveraging.apply(any(AdditionalTimeDto.class))).willReturn(10.0d);
+                given(topDtoFactorCalculator.getTopMonthDto(anyList(), any(), any())).willReturn(exampleDto);
+
+                // When
+                additionalTimeFactorsCalculator.calculateTopMonthDelay(list);
+
+                // Then
+                verify(topDtoFactorCalculator).getTopMonthDto(captor.capture(), any(), any());
+
+                List<AdditionalTimeDto> capturedList = captor.getValue();
+
+                then(capturedList).isEqualTo(list);
+            }
+
+            @Test
+            @DisplayName("average calculator for average delay time")
+            void CalculateAverageFromList_WhenPassValidList_ThenPassThisListToAverageFactorCalculator() {
+                // Given
+                List<AdditionalTimeDto> list = List.of(new AdditionalTimeDto());
+
+                // When
+                additionalTimeFactorsCalculator.calculateAverageFromList(list);
+
+                // Then
+                verify(averageFactorCalculator).calculateAverageByDtoList(captor.capture(), any(), any());
+
+                List<AdditionalTimeDto> capturedList = captor.getValue();
+
+                then(capturedList).isEqualTo(list);
+            }
+        }
+
     }
 
-    @Test
-    @DisplayName("CalculateAverageFromList - Valid list parameter")
-    void CalculateAverageFromList_WhenPassValidListAsAParameter_ThenReturnResultFromAverageCalculator() {
-        // Given
-        List<AdditionalTimeDto> validList = List.of(new AdditionalTimeDto());
+    @Nested
+    @DisplayName("throws an exception")
+    class ThrowsAnException {
 
-        double expectedValue = 1.0d;
-        given(averageFactorCalculator.calculateAverageByDtoList(anyList(), any(), any())).willReturn(expectedValue);
+        @ParameterizedTest(name = "{index} : {0} list")
+        @NullAndEmptySource
+        @DisplayName("when average delay time calculating method gets")
+        void CalculateAverageFromList_WhenPassNullList_ThenThrowException(List<AdditionalTimeDto> notValidList) {
+            // When
+            final Throwable throwable = catchThrowable(() ->
+                    additionalTimeFactorsCalculator.calculateAverageFromList(notValidList));
 
-        // When
-        double actualValue = additionalTimeFactorsCalculator.calculateAverageFromList(validList);
+            // Then
+            then(throwable)
+                    .isInstanceOf(AdditionalTimeDataNotFoundException.class)
+                    .hasMessage("error.message.additionalTimeDataNotFound");
+        }
 
-        // Then
-        then(actualValue).isEqualTo(expectedValue);
+        @ParameterizedTest(name = "{index} : {0} list")
+        @NullAndEmptySource
+        @DisplayName("when top month delay calculating method gets")
+        void CalculateTopMonthDelay_WhenPassNullList_ThenThrowException(List<AdditionalTimeDto> notValidList) {
+            // When
+            final Throwable throwable = catchThrowable(() ->
+                    additionalTimeFactorsCalculator.calculateTopMonthDelay(notValidList));
+
+            // Then
+            then(throwable)
+                    .isInstanceOf(AdditionalTimeDataNotFoundException.class)
+                    .hasMessage("error.message.additionalTimeDataNotFound");
+        }
     }
 
-    @Test
-    @DisplayName("CalculateAverageFromList - Valid list parameter")
-    void CalculateAverageFromList_WhenPassValidListAsAParameter_ThenNotThrowException() {
-        // Given
-        List<AdditionalTimeDto> notEmptyList = List.of(new AdditionalTimeDto());
+    @Nested
+    @DisplayName("not throws a data not found exception")
+    class NotThrowsAnException {
 
-        // When
-        final Throwable throwable = catchThrowable(() ->
-                additionalTimeFactorsCalculator.calculateAverageFromList(notEmptyList));
+        @Nested
+        @DisplayName("when input parameter is valid in")
+        class ValidInput {
 
-        // Then
-        then(throwable).isNull();
-        verify(averageFactorCalculator).calculateAverageByDtoList(anyList(), any(), any());
-    }
+            @Test
+            @DisplayName("average from list calculating method")
+            void CalculateAverageFromList_WhenPassValidList_ThenNotThrowException() {
+                // Given
+                List<AdditionalTimeDto> list = List.of(new AdditionalTimeDto());
 
-    @Test
-    @DisplayName("CalculateAverageFromList - Empty list parameter")
-    void CalculateAverageFromList_WhenPassEmptyListAsAParameter_ThenThrowException() {
-        // Given
-        List<AdditionalTimeDto> emptyList = List.of();
+                // When
+                Throwable throwable = catchThrowable(() ->
+                        additionalTimeFactorsCalculator.calculateAverageFromList(list));
 
-        // When
-        final Throwable throwable = catchThrowable(() ->
-                additionalTimeFactorsCalculator.calculateAverageFromList(emptyList));
+                // Then
+                then(throwable).isNull();
+            }
 
-        // Then
-        then(throwable)
-                .isInstanceOf(AdditionalTimeDataNotFoundException.class)
-                .hasMessage("error.message.additionalTimeDataNotFound");
+            @Test
+            @DisplayName("top month delay calculating method")
+            void CalculateTopMonthDelay_WhenPassValidList_ThenNotThrowException() {
+                // Given
+                List<AdditionalTimeDto> list = List.of(new AdditionalTimeDto());
 
-        verifyNoInteractions(topDtoFactorCalculator);
-    }
+                // When
+                Throwable throwable = catchThrowable(() ->
+                        additionalTimeFactorsCalculator.calculateTopMonthDelay(list));
 
-
-    @Test
-    @DisplayName("CalculateAverageFromList - Null list parameter")
-    void CalculateAverageFromList_WhenPassNullListAsAParameter_ThenThrowException() {
-        // Given
-        List<AdditionalTimeDto> nullList = null;
-
-        // When
-        final Throwable throwable = catchThrowable(() ->
-                additionalTimeFactorsCalculator.calculateAverageFromList(nullList));
-
-        // Then
-        then(throwable)
-                .isInstanceOf(AdditionalTimeDataNotFoundException.class)
-                .hasMessage("error.message.additionalTimeDataNotFound");
-
-        verifyNoInteractions(topDtoFactorCalculator);
-    }
-
-    @Test
-    @DisplayName("CalculateTopDelayMonth - Input list in Top Dto calculator")
-    void CalculateTopDelayMonth_WhenPassValidListAsAParameter_ThenPassThisListToTopDtoFactorCalculator() {
-        // Given
-        List<AdditionalTimeDto> list = List.of(new AdditionalTimeDto());
-
-        AdditionalTimeDto exampleDto = getAdditionalTimeDtoExample();
-
-        given(functionAveraging.apply(any(AdditionalTimeDto.class))).willReturn(10.0d);
-        given(topDtoFactorCalculator.getTopMonthDto(anyList(), any(), any())).willReturn(exampleDto);
-
-        // When
-        additionalTimeFactorsCalculator.calculateTopDelayMonth(list);
-
-        // Then
-        verify(topDtoFactorCalculator).getTopMonthDto(captor.capture(), any(), any());
-
-        List<AdditionalTimeDto> capturedList = captor.getValue();
-
-        then(capturedList).isEqualTo(list);
-    }
-
-    @Test
-    @DisplayName("CalculateTopDelayMonth - Correct result")
-    void CalculateTopDelayMonth_WhenPassValidListAsAParameter_ThenReturnCorrectResult() {
-        // Given
-        List<AdditionalTimeDto> list = List.of(new AdditionalTimeDto());
-
-        AdditionalTimeDto exampleDto = getAdditionalTimeDtoExample();
-
-        given(functionAveraging.apply(any(AdditionalTimeDto.class))).willReturn(10.0d);
-        given(topDtoFactorCalculator.getTopMonthDto(anyList(), any(), any())).willReturn(exampleDto);
-
-        ValueWithDateHolder expectedValue = new ValueWithDateHolder(LocalDate.ofEpochDay(1), 10.0d);
-
-        // When
-        ValueWithDateHolder actualValue = additionalTimeFactorsCalculator.calculateTopDelayMonth(list);
-
-        // Then
-        then(actualValue).usingRecursiveComparison().isEqualTo(expectedValue);
-    }
-
-    @Test
-    @DisplayName("CalculateTopDelayMonth - Valid list parameter")
-    void CalculateTopDelayMonth_WhenPassValidListAsAParameter_ThenNotThrowException() {
-        // Given
-        List<AdditionalTimeDto> notEmptyList = List.of(new AdditionalTimeDto());
-
-        // When
-        final Throwable throwable = catchThrowable(() ->
-                additionalTimeFactorsCalculator.calculateTopDelayMonth(notEmptyList));
-
-        // Then
-        then(throwable).isNotInstanceOf(AdditionalTimeDataNotFoundException.class);
-        verify(topDtoFactorCalculator).getTopMonthDto(anyList(), any(), any());
-    }
-
-    @Test
-    @DisplayName("CalculateTopDelayMonth - Empty list parameter")
-    void CalculateTopDelayMonth_WhenPassEmptyListAsAParameter_ThenThrowException() {
-        // Given
-        List<AdditionalTimeDto> emptyList = List.of();
-
-        // When
-        final Throwable throwable = catchThrowable(() ->
-                additionalTimeFactorsCalculator.calculateTopDelayMonth(emptyList));
-
-        // Then
-        then(throwable)
-                .isInstanceOf(AdditionalTimeDataNotFoundException.class)
-                .hasMessage("error.message.additionalTimeDataNotFound");
-
-        verifyNoInteractions(topDtoFactorCalculator);
-    }
-
-    @Test
-    @DisplayName("CalculateTopDelayMonth - Null list parameter")
-    void CalculateTopDelayMonth_WhenPassNullListAsAParameter_ThenThrowException() {
-        // Given
-        List<AdditionalTimeDto> nullList = null;
-
-        // When
-        final Throwable throwable = catchThrowable(() ->
-                additionalTimeFactorsCalculator.calculateTopDelayMonth(nullList));
-
-        // Then
-        then(throwable)
-                .isInstanceOf(AdditionalTimeDataNotFoundException.class)
-                .hasMessage("error.message.additionalTimeDataNotFound");
-
-        verifyNoInteractions(topDtoFactorCalculator);
+                // Then
+                then(throwable).isNotInstanceOf(AdditionalTimeDataNotFoundException.class);
+            }
+        }
     }
 
     private static AdditionalTimeDto getAdditionalTimeDtoExample() {

@@ -177,13 +177,13 @@ class PreDepartureDelayFactorsCalculatorImplTest {
     @DisplayName("throws an exception")
     class ThrowsAnException {
 
-            @ParameterizedTest(name = "{index} : List is {0}")
+            @ParameterizedTest(name = "{index} : {0} list")
             @NullAndEmptySource
             @DisplayName("when average delay time calculating method gets")
-            void CalculateAverageDelayTime_WhenPassNullList_ThenThrowException(List<PreDepartureDelayDto> list) {
+            void CalculateAverageDelayTime_WhenPassNullList_ThenThrowException(List<PreDepartureDelayDto> notValidList) {
                 // When
                 Throwable throwable = catchThrowable(() ->
-                        preDepartureDelayFactorsCalculator.calculateAverageDelayTime(list));
+                        preDepartureDelayFactorsCalculator.calculateAverageDelayTime(notValidList));
 
                 // Then
                 then(throwable)
@@ -192,13 +192,13 @@ class PreDepartureDelayFactorsCalculatorImplTest {
             }
 
 
-            @ParameterizedTest(name = "{index} : List is {0}")
+            @ParameterizedTest(name = "{index} : {0} list")
             @NullAndEmptySource
             @DisplayName("when top day delay calculating method gets")
-            void CalculateTopDayDelay_WhenPassNullList_ThenThrowException(List<PreDepartureDelayDto> list) {
+            void CalculateTopDayDelay_WhenPassNullList_ThenThrowException(List<PreDepartureDelayDto> notValidList) {
                 // When
                 Throwable throwable = catchThrowable(() ->
-                        preDepartureDelayFactorsCalculator.calculateTopDayDelay(list));
+                        preDepartureDelayFactorsCalculator.calculateTopDayDelay(notValidList));
 
                 // Then
                 then(throwable)
@@ -206,13 +206,13 @@ class PreDepartureDelayFactorsCalculatorImplTest {
                         .hasMessage("error.message.preDepartureDelayDataNotFound");
             }
 
-            @ParameterizedTest(name = "{index} : List is {0}")
+            @ParameterizedTest(name = "{index} : {0} list")
             @NullAndEmptySource
             @DisplayName("when top month delay calculating method gets")
-            void CalculateTopMonthDelay_WhenPassNullList_ThenThrowException(List<PreDepartureDelayDto> list) {
+            void CalculateTopMonthDelay_WhenPassNullList_ThenThrowException(List<PreDepartureDelayDto> notValidList) {
                 // When
                 Throwable throwable = catchThrowable(() ->
-                        preDepartureDelayFactorsCalculator.calculateTopMonthDelay(list));
+                        preDepartureDelayFactorsCalculator.calculateTopMonthDelay(notValidList));
 
                 // Then
                 then(throwable)

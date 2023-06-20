@@ -33,7 +33,7 @@ public class AdditionalTimeFactorsCalculatorImpl implements AdditionalTimeFactor
     }
 
     @Override
-    public ValueWithDateHolder calculateTopDelayMonth(List<AdditionalTimeDto> additionalTimeDtos) {
+    public ValueWithDateHolder calculateTopMonthDelay(List<AdditionalTimeDto> additionalTimeDtos) {
         if (additionalTimeDtos == null || additionalTimeDtos.isEmpty()) throw new AdditionalTimeDataNotFoundException();
 
         AdditionalTimeDto topMonthDto = topDtoFactorCalculator.getTopMonthDto(

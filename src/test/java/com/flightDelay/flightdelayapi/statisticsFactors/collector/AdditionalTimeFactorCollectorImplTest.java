@@ -84,7 +84,7 @@ class AdditionalTimeFactorCollectorImplTest {
                 additionalTimeFactorCollector.calculateFactor(factorName, List.of());
 
                 // Then
-                verify(additionalTimeFactorsCalculator).calculateTopDelayMonth(anyList());
+                verify(additionalTimeFactorsCalculator).calculateTopMonthDelay(anyList());
                 verifyNoMoreInteractions(additionalTimeFactorsCalculator);
             }
 
@@ -98,7 +98,7 @@ class AdditionalTimeFactorCollectorImplTest {
                 additionalTimeFactorCollector.calculateFactor(factorName, List.of());
 
                 // Then
-                verify(additionalTimeFactorsCalculator).calculateTopDelayMonth(anyList());
+                verify(additionalTimeFactorsCalculator).calculateTopMonthDelay(anyList());
                 verifyNoMoreInteractions(additionalTimeFactorsCalculator);
             }
         }
@@ -236,7 +236,7 @@ class AdditionalTimeFactorCollectorImplTest {
             // Then
             List<AdditionalTimeDto> expectedList = List.of(taxiOutStage);
 
-            verify(additionalTimeFactorsCalculator).calculateTopDelayMonth(dtoCaptor.capture());
+            verify(additionalTimeFactorsCalculator).calculateTopMonthDelay(dtoCaptor.capture());
 
             List<AdditionalTimeDto> actualList = dtoCaptor.getValue();
 
@@ -263,7 +263,7 @@ class AdditionalTimeFactorCollectorImplTest {
             // Then
             List<AdditionalTimeDto> expectedList = List.of(taxiInAndAsmaStage);
 
-            verify(additionalTimeFactorsCalculator).calculateTopDelayMonth(dtoCaptor.capture());
+            verify(additionalTimeFactorsCalculator).calculateTopMonthDelay(dtoCaptor.capture());
 
             List<AdditionalTimeDto> actualList = dtoCaptor.getValue();
 

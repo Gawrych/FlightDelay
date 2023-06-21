@@ -2,13 +2,13 @@ package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 
 import com.flightDelay.flightdelayapi.shared.DelayEntityDto;
 import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToLackOfDataException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -35,12 +35,8 @@ class TopDtoFactorCalculatorImplTest {
     @Mock
     private Function<DelayEntityDto, Double> averageImpl;
 
+    @InjectMocks
     private TopDtoFactorCalculatorImpl<DelayEntityDto> topDtoFactorCalculator;
-
-    @BeforeEach
-    void setUp() {
-        this.topDtoFactorCalculator = new TopDtoFactorCalculatorImpl<>();
-    }
 
     @Nested
     @DisplayName("returns correct result")

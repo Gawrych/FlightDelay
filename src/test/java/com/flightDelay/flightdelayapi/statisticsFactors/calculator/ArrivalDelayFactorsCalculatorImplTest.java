@@ -5,7 +5,6 @@ import com.flightDelay.flightdelayapi.shared.exception.resource.ArrivalDelayData
 import com.flightDelay.flightdelayapi.statisticsFactors.enums.DelayCause;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithTextHolder;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -27,12 +27,8 @@ import static org.assertj.core.api.BDDAssertions.then;
 @DisplayName("The arrival delay factors calculator")
 class ArrivalDelayFactorsCalculatorImplTest {
 
+    @InjectMocks
     private ArrivalDelayFactorsCalculatorImpl arrivalDelayFactorsCalculator;
-
-    @BeforeEach
-    void setUp() {
-        arrivalDelayFactorsCalculator = new ArrivalDelayFactorsCalculatorImpl();
-    }
 
     @Nested
     @DisplayName("returns correct result")

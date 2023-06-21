@@ -2,7 +2,6 @@ package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 
 import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToIncorrectDataException;
 import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToLackOfDataException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -22,12 +22,8 @@ import static org.assertj.core.api.BDDAssertions.then;
 @DisplayName("Average factor calculator")
 class AverageFactorCalculatorImplTest {
 
+    @InjectMocks
     private AverageFactorCalculatorImpl averageFactorCalculator;
-
-    @BeforeEach
-    void setUp() {
-        averageFactorCalculator = new AverageFactorCalculatorImpl();
-    }
 
     @Nested
     @DisplayName("returns correct result")

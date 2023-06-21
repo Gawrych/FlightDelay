@@ -3,7 +3,6 @@ package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 import com.flightDelay.flightdelayapi.preDepartureDelay.PreDepartureDelayDto;
 import com.flightDelay.flightdelayapi.shared.exception.resource.PreDepartureDelayDataNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -23,7 +23,6 @@ import java.util.function.Function;
 import static org.assertj.core.api.BDDAssertions.catchThrowable;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -43,19 +42,11 @@ class PreDepartureDelayFactorsCalculatorImplTest {
     @Mock
     private BinaryOperator<PreDepartureDelayDto> preDepartureDelayRemapping;
 
-    @Captor
-    private ArgumentCaptor<List<PreDepartureDelayDto>> captor;
-
+    @InjectMocks
     private PreDepartureDelayFactorsCalculatorImpl preDepartureDelayFactorsCalculator;
 
-    @BeforeEach
-    void setUp() {
-        this.preDepartureDelayFactorsCalculator = new PreDepartureDelayFactorsCalculatorImpl(
-                averageFactorCalculator,
-                topDtoFactorCalculator,
-                preDepartureDelayAveraging,
-                preDepartureDelayRemapping);
-    }
+    @Captor
+    private ArgumentCaptor<List<PreDepartureDelayDto>> captor;
 
     @Nested
     @DisplayName("returns correct result")

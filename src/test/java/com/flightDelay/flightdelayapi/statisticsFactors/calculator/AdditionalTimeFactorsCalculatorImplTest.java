@@ -3,7 +3,6 @@ package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 import com.flightDelay.flightdelayapi.additionalTime.AdditionalTimeDto;
 import com.flightDelay.flightdelayapi.shared.exception.resource.AdditionalTimeDataNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -39,24 +39,16 @@ class AdditionalTimeFactorsCalculatorImplTest {
     private TopDtoFactorCalculator<AdditionalTimeDto> topDtoFactorCalculator;
 
     @Mock
-    private Function<AdditionalTimeDto, Double> functionAveraging;
+    private Function<AdditionalTimeDto, Double> additionalTimeAveraging;
 
     @Mock
-    private BinaryOperator<AdditionalTimeDto> binaryOperatorRemapping;
+    private BinaryOperator<AdditionalTimeDto> additionalTimeRemapping;
+
+    @InjectMocks
+    private AdditionalTimeFactorsCalculatorImpl additionalTimeFactorsCalculator;
 
     @Captor
     private ArgumentCaptor<List<AdditionalTimeDto>> captor;
-
-    private AdditionalTimeFactorsCalculator additionalTimeFactorsCalculator;
-
-    @BeforeEach
-    void setUp() {
-        additionalTimeFactorsCalculator = new AdditionalTimeFactorsCalculatorImpl(
-                averageFactorCalculator,
-                topDtoFactorCalculator,
-                functionAveraging,
-                binaryOperatorRemapping);
-    }
 
     @Nested
     @DisplayName("returns correct result")
@@ -74,7 +66,7 @@ class AdditionalTimeFactorsCalculatorImplTest {
 
                 AdditionalTimeDto exampleDto = getAdditionalTimeDtoExample();
 
-                given(functionAveraging.apply(any(AdditionalTimeDto.class))).willReturn(10.0d);
+                given(additionalTimeAveraging.apply(any(AdditionalTimeDto.class))).willReturn(10.0d);
                 given(topDtoFactorCalculator.getTopMonthDto(anyList(), any(), any())).willReturn(exampleDto);
 
                 ValueWithDateHolder expectedValue = new ValueWithDateHolder(LocalDate.ofEpochDay(1), 10.0d);
@@ -115,7 +107,7 @@ class AdditionalTimeFactorsCalculatorImplTest {
 
                 AdditionalTimeDto exampleDto = getAdditionalTimeDtoExample();
 
-                given(functionAveraging.apply(any(AdditionalTimeDto.class))).willReturn(10.0d);
+                given(additionalTimeAveraging.apply(any(AdditionalTimeDto.class))).willReturn(10.0d);
                 given(topDtoFactorCalculator.getTopMonthDto(anyList(), any(), any())).willReturn(exampleDto);
 
                 // When

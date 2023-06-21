@@ -3,7 +3,6 @@ package com.flightDelay.flightdelayapi.statisticsFactors.calculator;
 import com.flightDelay.flightdelayapi.shared.exception.resource.TrafficDataNotFoundException;
 import com.flightDelay.flightdelayapi.statisticsFactors.model.ValueWithDateHolder;
 import com.flightDelay.flightdelayapi.traffic.TrafficDto;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -45,22 +45,14 @@ class TrafficFactorsCalculatorImplTest {
     @Mock
     private BinaryOperator<TrafficDto> trafficRemapping;
 
+    @InjectMocks
+    private TrafficFactorsCalculatorImpl trafficFactorsCalculator;
+
     @Captor
     private ArgumentCaptor<List<TrafficDto>> listCaptor;
 
     @Captor
     private ArgumentCaptor<Double> doubleCaptor;
-
-    private TrafficFactorsCalculatorImpl trafficFactorsCalculator;
-
-    @BeforeEach
-    void setUp() {
-        this.trafficFactorsCalculator = new TrafficFactorsCalculatorImpl(
-                averageFactorCalculator,
-                topDtoFactorCalculator,
-                trafficAveraging,
-                trafficRemapping);
-    }
 
     @Nested
     @DisplayName("returns value with data holder")

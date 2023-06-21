@@ -109,7 +109,7 @@ class AdditionalTimeFactorCollectorImplTest {
 
             @Test
             @DisplayName("when pass dto list to superclass method")
-            void CollectFactors_WhenPassDtoListFromDatabase_ThenReturnListOfFactors() {
+            void Collect_WhenPassDtoListFromDatabase_ThenReturnListOfFactors() {
                 // Given
                 List<AdditionalTimeDto> expectedList = List.of(new AdditionalTimeDto());
 
@@ -134,7 +134,7 @@ class AdditionalTimeFactorCollectorImplTest {
 
             @Test
             @DisplayName("when pass additional time factors array to superclass method")
-            void CollectFactors_WhenPassAdditionalTimeFactorArray_ThenReturnListOfFactors() {
+            void Collect_WhenPassAdditionalTimeFactorArray_ThenReturnListOfFactors() {
                 // Given
                 List<AdditionalTimeDto> additionalTimeDtos = List.of(new AdditionalTimeDto());
 
@@ -202,7 +202,7 @@ class AdditionalTimeFactorCollectorImplTest {
         @ParameterizedTest(name = "{index} : {0} factor name")
         @EnumSource(AdditionalTimeFactor.class)
         @DisplayName("when no data factor method pass to report creator")
-        void CollectFactors_WhenNoDataFactorGetsDataFromSuperclass_ThenPassToPrecisionFactorCreator(
+        void GetNoDataFactor_WhenNoDataFactorGetsDataFromSuperclass_ThenPassToPrecisionFactorCreator(
                 AdditionalTimeFactor additionalTimeFactor) {
 
             // When

@@ -24,6 +24,7 @@ import java.util.List;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -128,7 +129,7 @@ class PreDepartureFactorCollectorImplTest {
 
                 given(preDepartureDelayService.findAllLatestByAirport(anyString())).willReturn(expectedList);
 
-                doReturn(List.of()).when(preDepartureFactorCollector)
+                willReturn(List.of()).given(preDepartureFactorCollector)
                         .collectFactors(anyString(), anyList(), any(PreDepartureDelayFactor[].class));
 
                 // When
@@ -153,7 +154,7 @@ class PreDepartureFactorCollectorImplTest {
 
                 given(preDepartureDelayService.findAllLatestByAirport(anyString())).willReturn(dtos);
 
-                doReturn(List.of()).when(preDepartureFactorCollector)
+                willReturn(List.of()).given(preDepartureFactorCollector)
                         .collectFactors(anyString(), anyList(), any(PreDepartureDelayFactor[].class));
 
                 // When

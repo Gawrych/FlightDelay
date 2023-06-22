@@ -2,11 +2,7 @@ package com.flightDelay.flightdelayapi.airport;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,9 +13,9 @@ public class AirportController {
 
     private final AirportService airportService;
 
-    @PutMapping("/json")
-    public ResponseEntity<List<Airport>> update(@RequestBody String dataInJson) {
-        List<Airport> addedEntities = airportService.updateFromJson(dataInJson);
-        return new ResponseEntity<>(addedEntities, HttpStatus.CREATED);
+    @PutMapping(consumes = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<Airport> update(@RequestBody String dataInJson) {
+        return airportService.updateFromJson(dataInJson);
     }
 }

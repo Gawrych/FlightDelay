@@ -37,7 +37,7 @@ class StatisticFactorControllerTest {
     @Mock
     public StatisticFactorService statisticFactorService;
 
-    private JacksonTester<Map<String, StatisticReport>> jsonDeserializer;
+    private JacksonTester<Map<String, StatisticReport>> jsonSerializer;
 
     @InjectMocks
     private StatisticFactorController statisticFactorController;
@@ -49,7 +49,7 @@ class StatisticFactorControllerTest {
     }
 
     @Test
-    @DisplayName("return names and statistics reports in map from statistic factor service")
+    @DisplayName("returns names and statistics reports in map from statistic factor service")
     void CalculateTopMonthDelay_WhenPassValidListAsAParameter_ThenReturnCorrectResult() throws Exception {
         // Given
         Map<String, PrecisionReport> expectedMap = new HashMap<>();
@@ -64,12 +64,12 @@ class StatisticFactorControllerTest {
 
         // Then
         then(response.getContentAsString())
-                .isEqualTo(jsonDeserializer.write(new HashMap<>()).getJson());
+                .isEqualTo(jsonSerializer.write(new HashMap<>()).getJson());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"AAAA", "BBBB", "CCCC"})
-    @DisplayName("pass airport code to statistics factor service")
+    @DisplayName("passes airport code to statistics factor service")
     void CalculateTopMonthDelay_WhenGetValidAirportCode_ThenReturnCorrectResult(String airportCode) throws Exception {
         // When
         mvc.perform(post("/api/v1/statistics/" + airportCode))
@@ -81,8 +81,8 @@ class StatisticFactorControllerTest {
     }
 
     @Test
-    @DisplayName("return Ok status when statistic factor service return a map")
-    void CalculateTopMonthDelay_WhenGet_ThenReturnCorrectResult() throws Exception {
+    @DisplayName("returns Ok status when statistic factor service return a map")
+    void CalculateTopMonthDelay_WhenGetServiceReturnAMap_ThenReturnOkStatus() throws Exception {
         // Given
         given(statisticFactorService.getFactorsByPhase(anyString())).willReturn(Map.of());
 

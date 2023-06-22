@@ -37,8 +37,8 @@ class PreDepartureDelayRemappingImplTest {
     class ReturnsCorrectResult {
 
         @Test
-        @DisplayName("summing the same fields")
-        void CalculateTopDayDelay_WhenPassValidList_ThenReturnCorrectResult() {
+        @DisplayName("by passes to mapper summed fields")
+        void Apply_WhenGetValuesFromDtoFields_ThenPassThemToMapper() {
             // Given
             PreDepartureDelayDto firstDto = PreDepartureDelayDto.builder()
                     .numberOfDepartures(1.0d)

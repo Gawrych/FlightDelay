@@ -12,6 +12,6 @@ public interface ArrivalDelayRepository extends ListCrudRepository<ArrivalDelay,
 
     boolean existsByGeneratedId(String generatedId);
 
-    @Query("SELECT u FROM ArrivalDelay u WHERE u.airportCode = :airportIdent AND u.date > :startDate")
-    List<ArrivalDelay> findAllByAirportWithDateAfter(String airportIdent, LocalDate startDate);
+    @Query("SELECT u FROM ArrivalDelay u WHERE u.airportCode = :airportCode AND u.date > :startDate")
+    List<ArrivalDelay> findAllByAirportWithDateAfter(String airportCode, LocalDate startDate);
 }

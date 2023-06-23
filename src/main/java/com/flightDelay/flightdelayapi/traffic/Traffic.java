@@ -15,29 +15,30 @@ import java.time.ZoneId;
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Traffic {
 
     @Id
-    @Column(unique = true)
+    @Column(name = "`generatedId`", unique = true, nullable = false)
     private String generatedId;
 
     @JsonProperty("APT_ICAO")
-    @Column(nullable = false)
+    @Column(name = "`airportCode`", nullable = false)
     private String airportCode;
 
     @JsonProperty("YEAR")
-    @Column(nullable = false)
+    @Column(name = "`year`", nullable = false)
     private Integer year;
 
     @JsonProperty("MONTH_NUM")
-    @Column(nullable = false)
+    @Column(name = "`monthNum`", nullable = false)
     private Integer monthNum;
 
     // TODO: Change to date instead of flightDate
-    @Column(columnDefinition = "DATE")
+    @Column(name = "`flightDate`", columnDefinition = "DATE")
     @JsonProperty("FLT_DATE")
     private LocalDate flightDate;
 

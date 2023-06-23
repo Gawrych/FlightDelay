@@ -22,23 +22,23 @@ import java.time.ZoneId;
 public class ArrivalDelay {
 
     @Id
-    @Column(unique = true, nullable = false)
+    @Column(name = "`generatedId`", unique = true, nullable = false)
     private String generatedId;
 
     @JsonProperty("YEAR")
-    @Column(nullable = false)
+    @Column(name = "`year`", nullable = false)
     private Integer year;
 
     @JsonProperty("MONTH_NUM")
-    @Column(nullable = false)
+    @Column(name = "`month`", nullable = false)
     private Integer month;
 
-    @Column(columnDefinition = "DATE")
     @JsonProperty("FLT_DATE")
+    @Column(name = "`date`", columnDefinition = "DATE")
     private LocalDate date;
 
     @JsonProperty("APT_ICAO")
-    @Column(nullable = false)
+    @Column(name = "`airportCode`", nullable = false)
     private String airportCode;
 
     @JsonProperty("FLT_ARR_1")

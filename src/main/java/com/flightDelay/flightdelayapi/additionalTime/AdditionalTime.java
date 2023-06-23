@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.flightDelay.flightdelayapi.airport.Airport;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.Instant;
@@ -23,7 +22,6 @@ import java.time.ZoneId;
 public class AdditionalTime {
 
     @Id
-    @NotNull
     @Column(name = "`generatedId`", unique = true, nullable = false)
     private String generatedId;
 

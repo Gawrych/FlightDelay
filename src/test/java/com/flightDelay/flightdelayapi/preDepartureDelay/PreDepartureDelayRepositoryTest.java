@@ -1,4 +1,4 @@
-package com.flightDelay.flightdelayapi.additionalTime;
+package com.flightDelay.flightdelayapi.preDepartureDelay;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,44 +11,37 @@ import java.util.List;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @DataJpaTest
-@DisplayName("The additional time repository")
-class AdditionalTimeRepositoryTest {
+@DisplayName("The pre departure delay repository")
+class PreDepartureDelayRepositoryTest {
+
 
     @Autowired
-    private AdditionalTimeRepository additionalTimeRepository;
+    private PreDepartureDelayRepository preDepartureDelayRepository;
 
     @Test
     @DisplayName("returns all records from database that are newer than input date")
     void FindAllByAirportWithDateAfter_WhenPassDateAndAirport_ThenReturnFromDatabaseRecordsAfterPassedDate() {
         // Given
-        AdditionalTime firstAdditionalTimeRecord = AdditionalTime.builder()
+        PreDepartureDelay firstAdditionalTimeRecord = PreDepartureDelay.builder()
                 .year(1)
                 .monthNum(1)
                 .flightDate(LocalDate.ofEpochDay(1))
-                .stage("A")
                 .airportCode("AAAA")
-                .totalFlight(1)
-                .totalReferenceTimeInMinutes(1)
-                .totalAdditionalTimeInMinutes(1)
                 .build();
 
-        AdditionalTime secondAdditionalTimeRecord = AdditionalTime.builder()
+        PreDepartureDelay secondAdditionalTimeRecord = PreDepartureDelay.builder()
                 .year(1)
                 .monthNum(1)
                 .flightDate(LocalDate.ofEpochDay(3))
-                .stage("A")
                 .airportCode("AAAA")
-                .totalFlight(1)
-                .totalReferenceTimeInMinutes(1)
-                .totalAdditionalTimeInMinutes(1)
                 .build();
 
-        additionalTimeRepository.save(firstAdditionalTimeRecord);
-        additionalTimeRepository.save(secondAdditionalTimeRecord);
+        preDepartureDelayRepository.save(firstAdditionalTimeRecord);
+        preDepartureDelayRepository.save(secondAdditionalTimeRecord);
 
         // When
-        List<AdditionalTime> actualRecords =
-                additionalTimeRepository.findAllByAirportWithDateAfter("AAAA", LocalDate.ofEpochDay(2));
+        List<PreDepartureDelay> actualRecords =
+                preDepartureDelayRepository.findAllByAirportWithDateAfter("AAAA", LocalDate.ofEpochDay(2));
 
         // Then
         then(actualRecords).hasSize(1);

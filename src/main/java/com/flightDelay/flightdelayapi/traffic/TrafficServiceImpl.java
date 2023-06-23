@@ -32,15 +32,15 @@ public class TrafficServiceImpl implements TrafficService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public List<TrafficDto> findAllLatestByAirport(String airportIdent) {
+    public List<TrafficDto> findAllLatestByAirport(String airportCode) {
         LocalDate startDate = LocalDate.now().minusMonths(amountOfMonthsToCollectData);
 
         List<Traffic> traffic = trafficRepository
-                .findAllByAirportWithDateAfter(airportIdent, startDate);
+                .findAllByAirportWithDateAfter(airportCode, startDate);
 
         log.info("{} traffic records have been found in the database for airport: {}",
                 traffic.size(),
-                airportIdent);
+                airportCode);
 
         return mapper.mapFromList(traffic);
     }
@@ -51,7 +51,8 @@ public class TrafficServiceImpl implements TrafficService {
         return entityMapper
                 .jsonArrayToList(newDataInJson, Traffic.class, objectMapper)
                 .stream()
-                .filter(this::save).toList();
+                .filter(this::save)
+                .toList();
     }
 
     @Override
@@ -64,14 +65,13 @@ public class TrafficServiceImpl implements TrafficService {
 
     @Override
     public boolean save(Traffic traffic) {
-        String airportIdent = traffic.getAirportCode();
+        String airportCode = traffic.getAirportCode();
         String trafficId = traffic.generateId();
 
-        if (!airportService.existsByAirportIdent(airportIdent)) {
+        if (!airportService.existsByAirportIdent(airportCode)) {
             log.warn("New Traffic with id: {} has airport ident not matching to any airport in the database: {}",
                     trafficId,
-                    airportIdent);
-
+                    airportCode);
 
             return false;
         }
@@ -82,7 +82,7 @@ public class TrafficServiceImpl implements TrafficService {
             return false;
         }
 
-        trafficRepository.save(setAirportBidirectionalRelationshipByCode(airportIdent, traffic));
+        trafficRepository.save(setAirportBidirectionalRelationshipByCode(airportCode, traffic));
 
         log.info("New Traffic with id: {} has been created", trafficId);
 

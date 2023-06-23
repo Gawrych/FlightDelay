@@ -74,7 +74,7 @@ class TrafficServiceImplTest {
 
         @Test
         @DisplayName("traffic mapper to map traffic to dto")
-        void FindAllLatestByAirport_WhenPassTrafficListToMapper_ThenTrafficDtoList() {
+        void FindAllLatestByAirport_WhenPassRecordListToMapper_ThenRecordDtoList() {
             // Given
             List<Traffic> trafficList = List.of(mock(Traffic.class));
 
@@ -106,7 +106,7 @@ class TrafficServiceImplTest {
 
         @Test
         @DisplayName("traffic repository to save traffic in database")
-        void UpdateFromJson_WhenReturnDataFromMapper_ThenPassTrafficToRepositoryToSave() {
+        void UpdateFromJson_WhenReturnDataFromMapper_ThenPassRecordToRepositoryToSave() {
             // Given
             Traffic traffic = mock(Traffic.class);
             Airport airport = mock(Airport.class, RETURNS_DEEP_STUBS);
@@ -134,7 +134,7 @@ class TrafficServiceImplTest {
 
         @Test
         @DisplayName("traffic repository to save traffic list in database")
-        void UpdateFromJson_WhenReturnDataFromMapper_ThenPassTrafficListToRepositoryToSave() {
+        void UpdateFromJson_WhenReturnDataFromMapper_ThenPassRecordListToRepositoryToSave() {
             // Given
             Traffic traffic = mock(Traffic.class);
             Airport airport = mock(Airport.class, RETURNS_DEEP_STUBS);
@@ -195,7 +195,7 @@ class TrafficServiceImplTest {
 
         @Test
         @DisplayName("when passes traffic list")
-        void UpdateFromJson_WhenPassTrafficList_ThenReturnsOnlyAddedEntities() {
+        void UpdateFromJson_WhenPassRecordList_ThenReturnsOnlyAddedEntities() {
             // Given
             Traffic correctTraffic = mock(Traffic.class);
             Traffic duplicatedTraffic = mock(Traffic.class);
@@ -228,7 +228,7 @@ class TrafficServiceImplTest {
 
         @Test
         @DisplayName("when assigned airport exists and new traffic does not exists in database")
-        void UpdateFromJson_WhenReturnDataFromMapper_ThenPassTrafficListToRepositoryToSave() {
+        void UpdateFromJson_WhenReturnDataFromMapper_ThenPassListToRepositoryToSave() {
             // Given
             Traffic traffic = mock(Traffic.class);
             Airport airport = mock(Airport.class, RETURNS_DEEP_STUBS);

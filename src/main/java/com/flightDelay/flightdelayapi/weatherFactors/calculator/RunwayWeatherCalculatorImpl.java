@@ -1,5 +1,6 @@
 package com.flightDelay.flightdelayapi.weatherFactors.calculator;
 
+import com.flightDelay.flightdelayapi.statisticsFactors.exception.UnableToCalculateDueToIncorrectDataException;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,8 @@ public class RunwayWeatherCalculatorImpl implements RunwayWeatherCalculator {
 
     @Override
     public int calculateRunwayVisualRange(float visibility, boolean isDay) {
+        if (visibility < 1) throw new UnableToCalculateDueToIncorrectDataException();
+
         double multiplier = 1.6;
 
         if (isDay) {

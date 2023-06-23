@@ -41,10 +41,10 @@ public class WeatherAPIServiceImpl implements WeatherAPIService {
     private final WeatherMapper weatherMapper;
 
     @Override
-    public Weather getWeather(String airportIdent, LocalDateTime date) {
+    public Weather getWeather(String airportCode, LocalDateTime date) {
         checkRangeOfTheDate(date);
 
-        String populatedURL = populateBaseUrl(airportIdent, date, date);
+        String populatedURL = populateBaseUrl(airportCode, date, date);
         JsonNode jsonNode = getJsonNodeFromApi(populatedURL);
 
         int hour = date.getHour();
@@ -53,13 +53,13 @@ public class WeatherAPIServiceImpl implements WeatherAPIService {
     }
 
     @Override
-    public List<Weather> getWeatherPeriods(String airportIdent, int amountOfDays) {
+    public List<Weather> getWeatherPeriods(String airportCode, int amountOfDays) {
         LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime endDate = currentTime.plusDays(amountOfDays);
 
         checkRangeOfTheDate(endDate);
 
-        String populatedURL = populateBaseUrl(airportIdent, currentTime, endDate);
+        String populatedURL = populateBaseUrl(airportCode, currentTime, endDate);
         JsonNode jsonNode = getJsonNodeFromApi(populatedURL);
 
         int startHour = currentTime.getHour();
@@ -81,8 +81,8 @@ public class WeatherAPIServiceImpl implements WeatherAPIService {
         }
     }
 
-    private String populateBaseUrl(String airportIdent, LocalDateTime startDate, LocalDateTime endDate) {
-        Airport airport = airportService.findByAirportIdent(airportIdent);
+    private String populateBaseUrl(String airportCode, LocalDateTime startDate, LocalDateTime endDate) {
+        Airport airport = airportService.findByAirportIdent(airportCode);
 
         Double latitude = airport.getLatitudeDeg();
         Double longitude = airport.getLongitudeDeg();

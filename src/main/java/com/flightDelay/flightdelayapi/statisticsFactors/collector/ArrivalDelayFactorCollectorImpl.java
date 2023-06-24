@@ -36,7 +36,6 @@ public class ArrivalDelayFactorCollectorImpl extends StatisticFactorCollector<Ar
     @Override
     protected PrecisionReport calculateFactor(EntityStatisticFactor factorName,
                                               List<ArrivalDelayDto> arrivalDelayDtos) {
-
         return switch (EnumType.valueOf(ArrivalDelayFactor.class, factorName.name())) {
             case MOST_COMMON_DELAY_CAUSE -> {
                 List<ValueWithTextHolder> calculatedValue = arrivalDelayFactorsCalculator

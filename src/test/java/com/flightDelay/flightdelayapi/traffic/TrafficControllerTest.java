@@ -52,7 +52,6 @@ class TrafficControllerTest {
     @Nested
     @DisplayName("returns all entities added to the database")
     class ReturnsAllAddedEntities {
-
         @Test
         @DisplayName("from file")
         void UpdateFromFile_WhenAddEntitiesFromFileToDatabase_ThenReturnAddedEntities() throws Exception {

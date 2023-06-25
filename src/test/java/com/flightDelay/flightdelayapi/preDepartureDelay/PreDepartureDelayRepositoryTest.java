@@ -25,14 +25,14 @@ class PreDepartureDelayRepositoryTest {
         PreDepartureDelay firstAdditionalTimeRecord = PreDepartureDelay.builder()
                 .year(1)
                 .monthNum(1)
-                .flightDate(LocalDate.ofEpochDay(1))
+                .date(LocalDate.ofEpochDay(1))
                 .airportCode("AAAA")
                 .build();
 
         PreDepartureDelay secondAdditionalTimeRecord = PreDepartureDelay.builder()
                 .year(1)
                 .monthNum(1)
-                .flightDate(LocalDate.ofEpochDay(3))
+                .date(LocalDate.ofEpochDay(3))
                 .airportCode("AAAA")
                 .build();
 

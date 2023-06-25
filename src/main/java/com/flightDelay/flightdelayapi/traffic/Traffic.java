@@ -37,20 +37,18 @@ public class Traffic {
     @Column(name = "`monthNum`", nullable = false)
     private Integer monthNum;
 
-    // TODO: Change to date instead of flightDate
-    @Column(name = "`flightDate`", columnDefinition = "DATE")
+    @Column(name = "`date`", columnDefinition = "DATE")
     @JsonProperty("FLT_DATE")
-    private LocalDate flightDate;
+    private LocalDate date;
 
     @JsonProperty("FLT_DEP_1")
-    private Integer flightDepartures;
+    private Integer departures;
 
-//    TODO: Change flightArrival to flightArrivals maybe only arrivals
     @JsonProperty("FLT_ARR_1")
-    private Integer flightArrival;
+    private Integer arrivals;
 
     @JsonProperty("FLT_TOT_1")
-    private Integer flightTotal;
+    private Integer total;
 
     @JsonProperty("FLT_DEP_IFR_2")
     private Integer flightDeparturesInstrumentFlightRules;
@@ -62,9 +60,9 @@ public class Traffic {
     private Integer flightTotalInstrumentFlightRules;
 
     @JsonProperty("FLT_DATE")
-    public void setFlightDate(long flightDateMillis) {
+    public void setDate(long flightDateMillis) {
         Instant instant = Instant.ofEpochMilli(flightDateMillis);
-        this.flightDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+        this.date = instant.atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     @PrePersist
@@ -79,6 +77,6 @@ public class Traffic {
     private Airport airport;
 
     public String generateId() {
-        return this.flightDate + "-" + this.airportCode;
+        return this.date + "-" + this.airportCode;
     }
 }

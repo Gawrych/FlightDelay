@@ -16,6 +16,6 @@ public interface PreDepartureDelayRepository extends ListCrudRepository<PreDepar
 
     boolean existsByAirportCode(String airportIdent);
 
-    @Query("SELECT u FROM PreDepartureDelay u WHERE u.airportCode = :airportIdent AND u.flightDate > :startDate")
+    @Query("SELECT u FROM PreDepartureDelay u WHERE u.airportCode = :airportIdent AND u.date > :startDate")
     List<PreDepartureDelay> findAllByAirportWithDateAfter(String airportIdent, LocalDate startDate);
 }

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 @Configuration
-@PropertySource("classpath:properties/database.properties")
+@PropertySource("classpath:properties/database-dev.properties")
 @PropertySource("classpath:properties/weatherOpenMeteoApi.properties")
 @PropertySource("classpath:properties/flightPhasesLimits.properties")
 @PropertySource("classpath:properties/statisticsFactors.properties")

@@ -33,10 +33,9 @@ public class AdditionalTime {
     @JsonProperty("MONTH_NUM")
     private Integer monthNum;
 
-    // TODO: Change flightDate to date everywhere
-    @Column(name = "`flightDate`", columnDefinition = "DATE")
+    @Column(name = "`date`", columnDefinition = "DATE")
     @JsonProperty("FLT_DATE")
-    private LocalDate flightDate;
+    private LocalDate date;
 
     @Column(name = "`stage`", nullable = false)
     @JsonProperty("STAGE")
@@ -65,9 +64,9 @@ public class AdditionalTime {
     private Airport airport;
 
     @JsonProperty("FLT_DATE")
-    public void setFlightDate(long flightDateMillis) {
+    public void setDate(long flightDateMillis) {
         Instant instant = Instant.ofEpochMilli(flightDateMillis);
-        this.flightDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+        this.date = instant.atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     @PrePersist
@@ -76,6 +75,6 @@ public class AdditionalTime {
     }
 
     public String generateId() {
-        return this.flightDate + "-" + this.airportCode + "-" + this.stage;
+        return this.date + "-" + this.airportCode + "-" + this.stage;
     }
 }

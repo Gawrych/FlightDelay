@@ -33,9 +33,9 @@ public class PreDepartureDelay {
     @JsonProperty("MONTH_NUM")
     private Integer monthNum;
 
-    @Column(name = "`flightDate`", columnDefinition = "DATE")
+    @Column(name = "`date`", columnDefinition = "DATE")
     @JsonProperty("FLT_DATE")
-    private LocalDate flightDate;
+    private LocalDate date;
 
     @Column(name = "`airportCode`", nullable = false)
     @JsonProperty("APT_ICAO")
@@ -50,9 +50,9 @@ public class PreDepartureDelay {
     private Integer delayInMinutes;
 
     @JsonProperty("FLT_DATE")
-    public void setFlightDate(long flightDateMillis) {
+    public void setDate(long flightDateMillis) {
         Instant instant = Instant.ofEpochMilli(flightDateMillis);
-        this.flightDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+        this.date = instant.atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     @PrePersist
@@ -61,7 +61,7 @@ public class PreDepartureDelay {
     }
 
     public String generateId() {
-        return this.flightDate + "-" + this.airportCode;
+        return this.date + "-" + this.airportCode;
     }
 
     @ToString.Exclude

@@ -21,7 +21,7 @@ public class AdditionalTimeDto implements DelayEntityDto {
 
     private double totalAdditionalTimeInMinutes;
 
-    @JsonDeserialize(using = AdditionalTimeStageEnumDeserializer.class) // TODO: Change message
-    @EnumValidator(enumClass = AdditionalTimeStage.class, message = "{error.message.incorrectPhase}")
+    @JsonDeserialize(using = AdditionalTimeStageEnumDeserializer.class)
+    @EnumValidator(enumClass = AdditionalTimeStage.class, message = "{error.message.additionalTimeStageEnumDeserializer}")
     private AdditionalTimeStage stage;
 }

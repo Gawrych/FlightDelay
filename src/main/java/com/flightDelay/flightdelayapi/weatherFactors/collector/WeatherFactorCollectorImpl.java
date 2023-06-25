@@ -9,6 +9,7 @@ import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
 import com.flightDelay.flightdelayapi.shared.enums.FlightPhase;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.IlsCategory;
 import com.flightDelay.flightdelayapi.weatherFactors.enums.WeatherFactorName;
+import com.flightDelay.flightdelayapi.weatherFactors.exception.IllegalFlightPhaseException;
 import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactor;
 import com.flightDelay.flightdelayapi.weatherFactors.qualifier.FlightPhaseFactorInfluenceQualifier;
 import lombok.RequiredArgsConstructor;
@@ -87,7 +88,7 @@ public class WeatherFactorCollectorImpl implements WeatherFactorCollector {
         return switch (phase) {
             case ARRIVAL -> landingFactorInfluenceQualifier.checkLimits(name, value, ilsCategory);
             case DEPARTURE -> takeoffFactorInfluenceQualifier.checkLimits(name, value, ilsCategory);
-            default -> throw new IllegalStateException("Unexpected value: " + phase); // TODO: Create custom exception
+            default -> throw new IllegalFlightPhaseException(phase.name());
         };
     }
 }

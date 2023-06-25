@@ -12,6 +12,6 @@ public interface TrafficRepository extends ListCrudRepository<Traffic, Long> {
     boolean existsByGeneratedId(String generatedId);
 
     //TODO: Check if after change List<Traffic> to List<TrafficDto> it mapped automatically
-    @Query("SELECT u FROM Traffic u WHERE u.airportCode = :airportCode AND u.flightDate > :startDate")
+    @Query("SELECT u FROM Traffic u WHERE u.airportCode = :airportCode AND u.date > :startDate")
     List<Traffic> findAllByAirportWithDateAfter(String airportCode, LocalDate startDate);
 }

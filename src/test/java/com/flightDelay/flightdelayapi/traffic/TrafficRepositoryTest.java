@@ -24,14 +24,14 @@ class TrafficRepositoryTest {
         Traffic firstAdditionalTimeRecord = Traffic.builder()
                 .year(1)
                 .monthNum(1)
-                .flightDate(LocalDate.ofEpochDay(1))
+                .date(LocalDate.ofEpochDay(1))
                 .airportCode("AAAA")
                 .build();
 
         Traffic secondAdditionalTimeRecord = Traffic.builder()
                 .year(1)
                 .monthNum(1)
-                .flightDate(LocalDate.ofEpochDay(3))
+                .date(LocalDate.ofEpochDay(3))
                 .airportCode("AAAA")
                 .build();
 

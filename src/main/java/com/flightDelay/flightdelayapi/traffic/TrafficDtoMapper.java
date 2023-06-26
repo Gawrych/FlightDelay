@@ -11,10 +11,10 @@ import java.util.List;
 public interface TrafficDtoMapper {
 
     @Mappings({
-            @Mapping(source = "traffic.flightDate", target = "date"),
-            @Mapping(source = "traffic.flightDepartures", target = "departures"),
-            @Mapping(source = "traffic.flightArrival", target = "arrivals"),
-            @Mapping(source = "traffic.flightTotal", target = "total")
+            @Mapping(source = "traffic.date", target = "date"),
+            @Mapping(source = "traffic.departures", target = "departures"),
+            @Mapping(source = "traffic.arrivals", target = "arrivals"),
+            @Mapping(source = "traffic.total", target = "total")
     })
     TrafficDto mapFrom(Traffic traffic);
 

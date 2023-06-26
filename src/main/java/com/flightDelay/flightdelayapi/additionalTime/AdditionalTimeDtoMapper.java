@@ -11,7 +11,7 @@ import java.util.List;
 public interface AdditionalTimeDtoMapper {
 
     @Mappings({
-            @Mapping(source = "additionalTime.flightDate", target = "date"),
+            @Mapping(source = "additionalTime.date", target = "date"),
             @Mapping(source = "additionalTime.totalFlight", target = "totalFlight"),
             @Mapping(source = "additionalTime.stage", target = "stage"),
             @Mapping(source = "additionalTime.totalAdditionalTimeInMinutes", target = "totalAdditionalTimeInMinutes"),

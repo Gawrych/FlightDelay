@@ -38,7 +38,7 @@ public class Traffic {
     private Integer monthNum;
 
     @Column(name = "`date`", columnDefinition = "DATE")
-    @JsonProperty("FLT_DATE")
+    @JsonProperty("DATE")
     private LocalDate date;
 
     @JsonProperty("FLT_DEP_1")
@@ -59,7 +59,7 @@ public class Traffic {
     @JsonProperty("FLT_TOT_IFR_2")
     private Integer flightTotalInstrumentFlightRules;
 
-    @JsonProperty("FLT_DATE")
+    @JsonProperty("DATE")
     public void setDate(long flightDateMillis) {
         Instant instant = Instant.ofEpochMilli(flightDateMillis);
         this.date = instant.atZone(ZoneId.systemDefault()).toLocalDate();

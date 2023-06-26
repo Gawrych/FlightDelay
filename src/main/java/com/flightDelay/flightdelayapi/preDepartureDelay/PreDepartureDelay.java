@@ -34,7 +34,7 @@ public class PreDepartureDelay {
     private Integer monthNum;
 
     @Column(name = "`date`", columnDefinition = "DATE")
-    @JsonProperty("FLT_DATE")
+    @JsonProperty("DATE")
     private LocalDate date;
 
     @Column(name = "`airportCode`", nullable = false)
@@ -49,7 +49,7 @@ public class PreDepartureDelay {
     @JsonProperty("DLY_ATC_PRE_2")
     private Integer delayInMinutes;
 
-    @JsonProperty("FLT_DATE")
+    @JsonProperty("DATE")
     public void setDate(long flightDateMillis) {
         Instant instant = Instant.ofEpochMilli(flightDateMillis);
         this.date = instant.atZone(ZoneId.systemDefault()).toLocalDate();

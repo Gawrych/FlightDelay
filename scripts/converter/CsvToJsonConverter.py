@@ -25,10 +25,19 @@ class CsvToJsonConverter:
             json_dictionary = json.loads(json_str)
             df = pd.DataFrame(json_dictionary)
 
-            self.calculate_dates(df)
+            asma_file_name = 'ASMA_Additional_Time'
+            taxi_in_file_name = 'Taxi-In_Additional_Time'
+            taxi_out_file_name = 'Taxi-Out_Additional_Time'
 
-            df['FLT_DATE'] = pd.to_datetime(df['FLT_DATE'])
-            df['FLT_DATE'] = df['FLT_DATE'].apply(lambda x: int(x.timestamp()))
+            if file_name != asma_file_name and file_name != taxi_in_file_name and file_name != taxi_out_file_name:
+                self.amountOfMonthsToCollectDataFrom = 5
+                # Convert the 'DATE' column to datetime
+                df['DATE'] = pd.to_datetime(df['DATE'])
+
+                # Convert the datetime to timestamp (long format)
+                df['DATE'] = df['DATE'].apply(lambda x: int(x.timestamp() * 1000))
+
+            self.calculate_dates(df)
 
             df = df[((df['YEAR'] == self.last_year)
                      & (df['MONTH_NUM'] >= self.start_month))
@@ -41,17 +50,17 @@ class CsvToJsonConverter:
             exit(1)
 
     def calculate_dates(self, df):
-        last_year = df['YEAR'].max()
-        last_month = df[df['YEAR'] == last_year]['MONTH_NUM'].max()
+        self.last_year = df['YEAR'].max()
+        self.last_month = df[df['YEAR'] == self.last_year]['MONTH_NUM'].max()
 
-        start_month = last_month - self.amountOfMonthsToCollectDataFrom + 1
-        if start_month <= 0:
-            start_month += 12
-            last_year -= 1
+        self.start_month = self.last_month - self.amountOfMonthsToCollectDataFrom + 1
+        if self.start_month <= 0:
+            self.start_month += 12
+            self.last_year -= 1
 
     def __init__(self):
         self.folder_path = '/home/broslaw/Programming/flight-delay-api/src/main/resources/data/'
-        self.amountOfMonthsToCollectDataFrom = 5
+        self.amountOfMonthsToCollectDataFrom = 17
         self.last_year = 0
         self.last_month = 0
         self.start_month = 0

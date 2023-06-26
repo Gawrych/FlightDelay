@@ -11,7 +11,7 @@ import java.util.List;
 public interface PreDepartureDelayDtoMapper {
 
     @Mappings({
-            @Mapping(source = "preDepartureDelay.flightDate", target = "date"),
+            @Mapping(source = "preDepartureDelay.date", target = "date"),
             @Mapping(source = "preDepartureDelay.numberOfDepartures", target = "numberOfDepartures"),
             @Mapping(source = "preDepartureDelay.delayInMinutes", target = "delayInMinutes"),
     })

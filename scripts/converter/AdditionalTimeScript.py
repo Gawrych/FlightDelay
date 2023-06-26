@@ -8,7 +8,7 @@ def departure_additional_time_completion(json_to_be_completed, stage):
     for jsonObj in json_to_be_completed:
         year = jsonObj['YEAR']
         month = jsonObj['MONTH_NUM']
-        jsonObj['FLT_DATE'] = (datetime.datetime(year, month, 1) - unix_time).total_seconds() * 1000
+        jsonObj['DATE'] = (datetime.datetime(year, month, 1) - unix_time).total_seconds() * 1000
         jsonObj['STAGE'] = stage
 
     return json_to_be_completed

@@ -34,7 +34,7 @@ public class AdditionalTime {
     private Integer monthNum;
 
     @Column(name = "`date`", columnDefinition = "DATE")
-    @JsonProperty("FLT_DATE")
+    @JsonProperty("DATE")
     private LocalDate date;
 
     @Column(name = "`stage`", nullable = false)
@@ -63,7 +63,7 @@ public class AdditionalTime {
     @JoinColumn(name = "airportIdent")
     private Airport airport;
 
-    @JsonProperty("FLT_DATE")
+    @JsonProperty("DATE")
     public void setDate(long flightDateMillis) {
         Instant instant = Instant.ofEpochMilli(flightDateMillis);
         this.date = instant.atZone(ZoneId.systemDefault()).toLocalDate();

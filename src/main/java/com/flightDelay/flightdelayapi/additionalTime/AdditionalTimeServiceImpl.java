@@ -32,15 +32,15 @@ public class AdditionalTimeServiceImpl implements AdditionalTimeService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public List<AdditionalTimeDto> findAllLatestByAirport(String airportIdent) {
+    public List<AdditionalTimeDto> findAllLatestByAirport(String airportCode) {
         LocalDate startDate = LocalDate.now().minusMonths(amountOfMonthsToCollectData);
 
         List<AdditionalTime> additionalTimes = additionalTimeRepository
-                .findAllByAirportWithDateAfter(airportIdent, startDate);
+                .findAllByAirportWithDateAfter(airportCode, startDate);
 
         log.info("{} additional time records have been found in the database for airport: {}",
                 additionalTimes.size(),
-                airportIdent);
+                airportCode);
 
         return mapper.mapFromList(additionalTimes);
     }
@@ -66,13 +66,13 @@ public class AdditionalTimeServiceImpl implements AdditionalTimeService {
 
     @Override
     public boolean save(AdditionalTime additionalTime) {
-        String airportIdent = additionalTime.getAirportCode();
+        String airportCode = additionalTime.getAirportCode();
         String departureAdditionalTimeId = additionalTime.generateId();
 
-        if (!airportService.existsByAirportIdent(airportIdent)) {
+        if (!airportService.existsByAirportIdent(airportCode)) {
             log.warn("New DepartureAdditionalTime with id: {} has airport ident not matching to any airport in the database: {}",
                     departureAdditionalTimeId,
-                    airportIdent);
+                    airportCode);
             
             return false;
         }
@@ -84,7 +84,7 @@ public class AdditionalTimeServiceImpl implements AdditionalTimeService {
         }
 
         additionalTimeRepository.save(setAirportBidirectionalRelationshipByCode(
-                airportIdent,
+                airportCode,
                 additionalTime));
 
         log.info("New DepartureAdditionalTime with id: {} has been created", departureAdditionalTimeId);

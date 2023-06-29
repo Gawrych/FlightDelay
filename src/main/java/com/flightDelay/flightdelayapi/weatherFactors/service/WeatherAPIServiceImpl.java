@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class WeatherAPIServiceImpl implements WeatherAPIService {
 
     @Override
     public List<Weather> getWeatherPeriods(String airportCode, int amountOfDays) {
-        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("Europe/Warsaw"));
         LocalDateTime endDate = currentTime.plusDays(amountOfDays);
 
         checkRangeOfTheDate(endDate);

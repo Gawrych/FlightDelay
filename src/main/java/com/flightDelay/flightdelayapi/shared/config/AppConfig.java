@@ -8,13 +8,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 @Configuration
-@PropertySource("classpath:properties/database-dev.properties")
-@PropertySource("classpath:properties/weatherOpenMeteoApi.properties")
-@PropertySource("classpath:properties/flightPhasesLimits.properties")
-@PropertySource("classpath:properties/statisticsFactors.properties")
-@PropertySource("classpath:properties/weatherFactors.properties")
-@PropertySource("classpath:properties/dateAndTimePatterns.properties")
-@PropertySource("classpath:properties/importDataFromFile.properties")
+@PropertySource("classpath:config/weatherOpenMeteoApi.properties")
+@PropertySource("classpath:config/flightPhasesLimits.properties")
+@PropertySource("classpath:config/statisticsFactors.properties")
+@PropertySource("classpath:config/weatherFactors.properties")
+@PropertySource("classpath:config/dateAndTimePatterns.properties")
+@PropertySource("classpath:config/importDataFromFile.properties")
 public class AppConfig {
 
     @Bean
@@ -36,3 +35,4 @@ public class AppConfig {
         return new EnumValidatorConstraint();
     }
 }
+

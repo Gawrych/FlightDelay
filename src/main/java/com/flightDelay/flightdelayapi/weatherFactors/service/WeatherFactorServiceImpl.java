@@ -24,6 +24,9 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
     @Value("${date.defaultDateWithTimePattern}")
     private String defaultDateWithTimePattern;
 
+    @Value("${weather.periods.amountOfHoursInOnePeriod}")
+    private int amountOfHoursInOnePeriod;
+
     private final WeatherFactorCollector weatherFactorCollector;
 
     private final AirportWeatherCreator airportWeatherCreator;
@@ -50,14 +53,18 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
 
         return airportWeatherInPeriod
                 .stream()
-                .map(airportWeatherPeriod -> {
-                    LocalDateTime hourOfPeriod = LocalDateTime.parse(airportWeatherPeriod.getWeather().getTime());
-
-                    return new WeatherFactorsPeriod(
-                            hourOfPeriod.minusHours(1).format(formatter),
-                            hourOfPeriod.plusHours(2).format(formatter),
-                            weatherFactorCollector.getWeatherFactors(airportWeatherPeriod));
-                })
+                .map(airportWeatherPeriod -> createWeatherPeriod(airportWeatherPeriod, formatter))
                 .toList();
+    }
+
+    private WeatherFactorsPeriod createWeatherPeriod(AirportWeatherDto airportWeatherPeriod,
+                                                     DateTimeFormatter formatter) {
+
+        LocalDateTime hourOfPeriod = LocalDateTime.parse(airportWeatherPeriod.getWeather().getTime());
+
+        return new WeatherFactorsPeriod(
+                hourOfPeriod.format(formatter),
+                hourOfPeriod.plusHours(amountOfHoursInOnePeriod).format(formatter),
+                weatherFactorCollector.getWeatherFactors(airportWeatherPeriod));
     }
 }

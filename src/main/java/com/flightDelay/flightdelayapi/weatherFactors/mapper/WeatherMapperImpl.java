@@ -53,7 +53,6 @@ public abstract class WeatherMapperImpl implements WeatherMapper {
     }
 
     private int calculatePeriodsEndHour(int startHour, int amountOfDays) {
-        int amountOfPeriods = (amountOfDays * 24) / amountOfHoursInOnePeriod;
-        return startHour + (amountOfPeriods * amountOfHoursInOnePeriod);
+        return startHour + (amountOfDays * 24);
     }
 }

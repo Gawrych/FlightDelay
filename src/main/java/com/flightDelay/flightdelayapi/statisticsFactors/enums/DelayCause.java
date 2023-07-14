@@ -10,37 +10,39 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public enum DelayCause {
 
-    ACCIDENT(ArrivalDelay::getDelayInMinutesCausedByAccident),
+    ACCIDENT(ArrivalDelay::getDelayInMinutesCausedByAccident, "DISRUPTIONS"),
 
-    CAPACITY(ArrivalDelay::getDelayInMinutesCausedByCapacity),
+    CAPACITY(ArrivalDelay::getDelayInMinutesCausedByCapacity, "CAPACITY"),
 
-    DEICING(ArrivalDelay::getDelayInMinutesCausedByDeicing),
+    DEICING(ArrivalDelay::getDelayInMinutesCausedByDeicing, "WEATHER"),
 
-    EQUIPMENT(ArrivalDelay::getDelayInMinutesCausedByEquipment),
+    EQUIPMENT(ArrivalDelay::getDelayInMinutesCausedByEquipment, "DISRUPTIONS"),
 
-    AERODROME_CAPACITY(ArrivalDelay::getDelayInMinutesCausedByAerodromeCapacity),
+    AERODROME_CAPACITY(ArrivalDelay::getDelayInMinutesCausedByAerodromeCapacity, "CAPACITY"),
 
-    INDUSTRIAL_ACTION_ATC(ArrivalDelay::getDelayInMinutesCausedByIndustrialActionATC),
+    INDUSTRIAL_ACTION_ATC(ArrivalDelay::getDelayInMinutesCausedByIndustrialActionATC, "DISRUPTIONS"),
 
-    AIRSPACE_MANAGEMENT(ArrivalDelay::getDelayInMinutesCausedByAirspaceManagement),
+    AIRSPACE_MANAGEMENT(ArrivalDelay::getDelayInMinutesCausedByAirspaceManagement, "CAPACITY"),
 
-    INDUSTRIAL_ACTION(ArrivalDelay::getDelayInMinutesCausedByIndustrialAction),
+    INDUSTRIAL_ACTION(ArrivalDelay::getDelayInMinutesCausedByIndustrialAction, "DISRUPTIONS"),
 
-    OTHER(ArrivalDelay::getDelayInMinutesCausedByOther),
+    OTHER(ArrivalDelay::getDelayInMinutesCausedByOther, "DISRUPTIONS"),
 
-    SPECIAL_EVENT(ArrivalDelay::getDelayInMinutesCausedBySpecialEvent),
+    SPECIAL_EVENT(ArrivalDelay::getDelayInMinutesCausedBySpecialEvent, "EVENTS"),
 
-    ROUTEING(ArrivalDelay::getDelayInMinutesCausedByRouteing),
+    ROUTEING(ArrivalDelay::getDelayInMinutesCausedByRouteing, "CAPACITY"),
 
-    STAFFING(ArrivalDelay::getDelayInMinutesCausedByStaffing),
+    STAFFING(ArrivalDelay::getDelayInMinutesCausedByStaffing, "STAFFING"),
 
-    EQUIPMENT_ATC(ArrivalDelay::getDelayInMinutesCausedByEquipmentATC),
+    EQUIPMENT_ATC(ArrivalDelay::getDelayInMinutesCausedByEquipmentATC, "DISRUPTIONS"),
 
-    ENVIRONMENTAL_ISSUES(ArrivalDelay::getDelayInMinutesCausedByEnvironmentalIssues),
+    ENVIRONMENTAL_ISSUES(ArrivalDelay::getDelayInMinutesCausedByEnvironmentalIssues, "CAPACITY"),
 
-    WEATHER(ArrivalDelay::getDelayInMinutesCausedByWeather),
+    WEATHER(ArrivalDelay::getDelayInMinutesCausedByWeather, "WEATHER"),
 
-    NOT_SPECIFIED(ArrivalDelay::getDelayInMinutesCausedByNotSpecified);
+    NOT_SPECIFIED(ArrivalDelay::getDelayInMinutesCausedByNotSpecified, "DISRUPTIONS");
 
     private final Function<ArrivalDelay, Integer> causeReference;
+
+    private final String reasonGroup;
 }

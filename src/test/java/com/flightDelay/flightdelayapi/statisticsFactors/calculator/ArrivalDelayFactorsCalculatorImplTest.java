@@ -65,7 +65,7 @@ class ArrivalDelayFactorsCalculatorImplTest {
 
                     softly.assertThat(valueWithTextHolders)
                             .extracting("text")
-                            .containsSequence(DelayCause.ACCIDENT.name(), DelayCause.CAPACITY.name());
+                            .containsSequence(DelayCause.ACCIDENT.name() + "/" + DelayCause.ACCIDENT.getReasonGroup(), DelayCause.CAPACITY.name() + "/" + DelayCause.CAPACITY.getReasonGroup());
 
                     softly.assertThat(valueWithTextHolders)
                             .extracting("value")
@@ -102,7 +102,7 @@ class ArrivalDelayFactorsCalculatorImplTest {
 
                     softly.assertThat(valueWithTextHolders)
                             .extracting("text")
-                            .containsSequence(DelayCause.ACCIDENT.name(), DelayCause.DEICING.name());
+                            .containsSequence(DelayCause.ACCIDENT.name() + "/" + DelayCause.ACCIDENT.getReasonGroup(), DelayCause.DEICING.name() + "/" + DelayCause.DEICING.getReasonGroup());
 
                     softly.assertThat(valueWithTextHolders)
                             .extracting("value")
@@ -146,7 +146,7 @@ class ArrivalDelayFactorsCalculatorImplTest {
 
                     softly.assertThat(valueWithTextHolders)
                             .extracting("text")
-                            .containsSequence(DelayCause.ACCIDENT.name());
+                            .containsSequence(DelayCause.ACCIDENT.name() + "/" + DelayCause.ACCIDENT.getReasonGroup());
 
                     softly.assertThat(valueWithTextHolders)
                             .extracting("value")
@@ -183,7 +183,7 @@ class ArrivalDelayFactorsCalculatorImplTest {
 
                     softly.assertThat(valueWithTextHolders)
                             .extracting("text")
-                            .containsSequence(DelayCause.ACCIDENT.name());
+                            .containsSequence(DelayCause.ACCIDENT.name() + "/" + DelayCause.ACCIDENT.getReasonGroup());
 
                     softly.assertThat(valueWithTextHolders)
                             .extracting("value")

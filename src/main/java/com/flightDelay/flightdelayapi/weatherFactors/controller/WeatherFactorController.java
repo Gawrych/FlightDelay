@@ -2,6 +2,7 @@ package com.flightDelay.flightdelayapi.weatherFactors.controller;
 
 import com.flightDelay.flightdelayapi.shared.Flight;
 import com.flightDelay.flightdelayapi.shared.PrecisionTimeFlight;
+import com.flightDelay.flightdelayapi.weatherFactors.enums.WeatherFactorName;
 import com.flightDelay.flightdelayapi.weatherFactors.service.WeatherFactorService;
 import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactorsPeriod;
 import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactor;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 @RequestMapping(path = "/api/v1/weather", produces="application/json")
 public class WeatherFactorController {
 
@@ -25,8 +28,8 @@ public class WeatherFactorController {
 
     @PostMapping("/hour")
     @ResponseStatus(HttpStatus.OK)
-    public List<WeatherFactor> getFactorsToSpecifyTime(@RequestBody @Validated PrecisionTimeFlight precisionTimeFlight,
-                                                       @RequestHeader(
+    public Map<WeatherFactorName, WeatherFactor> getFactorsToSpecifyTime(@RequestBody @Validated PrecisionTimeFlight precisionTimeFlight,
+                                                                         @RequestHeader(
                                                                value = "Accept-Language",
                                                                defaultValue = "en-US") String language) {
 

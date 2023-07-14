@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface TrafficFactorCollector {
 
-    List<PrecisionReport> collect(String airportIdent);
+    List<PrecisionReport> collect(String airportCode);
 }

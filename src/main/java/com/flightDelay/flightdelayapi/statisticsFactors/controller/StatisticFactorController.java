@@ -15,6 +15,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 @RequestMapping(path = "/api/v1/statistics", produces="application/json")
 public class StatisticFactorController {
 

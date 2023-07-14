@@ -34,7 +34,6 @@ public class ApiExceptionHandler {
                 getLangMessage(exception));
     }
 
-
     @ExceptionHandler(RequestValidationException.class)
     public ResponseEntity<ApiError> handleBadRequestException(CustomRuntimeException exception,
                                                               HttpServletRequest request) {

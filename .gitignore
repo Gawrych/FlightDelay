@@ -37,8 +37,9 @@ src/main/java/com/flightDelay/flightdelayapi/converter/.idea
 scripts/converter/.idea
 src/main/resources/data
 src/main/resources/application.properties
-src/main/resources/config/database-dev.properties
-src/main/resources/config/database-prod.properties
 src/test/resources/application.properties
 src/main/resources/config/application-dev.properties
 src/main/resources/config/application-prod.properties
+src/main/resources/config/authentication.properties
+src/main/java/com/flightDelay/flightdelayapi/shared/auth
+src/main/java/com/flightDelay/flightdelayapi/shared/config/SecurityConfig.java

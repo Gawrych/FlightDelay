@@ -12,6 +12,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 @PropertySource("classpath:config/flightPhasesLimits.properties")
 @PropertySource("classpath:config/statisticsFactors.properties")
 @PropertySource("classpath:config/weatherFactors.properties")
+@PropertySource("classpath:config/authentication.properties")
 @PropertySource("classpath:config/dateAndTimePatterns.properties")
 @PropertySource("classpath:config/importDataFromFile.properties")
 public class AppConfig {

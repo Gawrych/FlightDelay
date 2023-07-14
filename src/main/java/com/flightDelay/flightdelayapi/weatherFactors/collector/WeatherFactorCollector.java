@@ -1,11 +1,12 @@
 package com.flightDelay.flightdelayapi.weatherFactors.collector;
 
-import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactor;
 import com.flightDelay.flightdelayapi.weatherFactors.dto.AirportWeatherDto;
+import com.flightDelay.flightdelayapi.weatherFactors.enums.WeatherFactorName;
+import com.flightDelay.flightdelayapi.weatherFactors.model.WeatherFactor;
 
-import java.util.List;
+import java.util.Map;
 
 public interface WeatherFactorCollector {
 
-    List<WeatherFactor> getWeatherFactors(AirportWeatherDto airportWeatherDto);
+    Map<WeatherFactorName, WeatherFactor> getWeatherFactors(AirportWeatherDto airportWeatherDto);
 }

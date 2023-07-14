@@ -50,7 +50,6 @@ public class PreDepartureFactorCollectorImpl extends StatisticFactorCollector<Pr
                         .calculateTopDayDelay(preDepartureDelayDtos);
 
                 yield statisticReportCreator.create(factorName, calculatedValue);
-
             }
 
             case AVERAGE_PRE_DEPARTURE_DELAY -> {

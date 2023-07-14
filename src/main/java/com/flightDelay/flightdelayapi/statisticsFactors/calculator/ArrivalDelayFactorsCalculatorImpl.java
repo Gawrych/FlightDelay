@@ -59,7 +59,8 @@ public class ArrivalDelayFactorsCalculatorImpl implements ArrivalDelayFactorsCal
         sortedList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
 
         return sortedList.stream()
-                .map(entry -> new ValueWithTextHolder(entry.getKey().name(), entry.getValue()))
+                .map(entry -> new ValueWithTextHolder(
+                        entry.getKey().name() + "/" + entry.getKey().getReasonGroup(), entry.getValue()))
                 .toList();
     }
 

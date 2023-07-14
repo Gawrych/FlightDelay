@@ -42,4 +42,3 @@ src/main/resources/config/application-dev.properties
 src/main/resources/config/application-prod.properties
 src/main/resources/config/authentication.properties
 src/main/java/com/flightDelay/flightdelayapi/shared/auth
-src/main/java/com/flightDelay/flightdelayapi/shared/config/SecurityConfig.java

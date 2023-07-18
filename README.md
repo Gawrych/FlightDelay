@@ -1,6 +1,6 @@
 # Flight Delay Calculator
 
-An API for calculating the probability of flight delays based on user-provided airport and time information. By leveraging a combination of historical airport statistics, real-time weather data sourced from the [OpenMeteo API](#Acknowledgements), and current traffic levels at European airports, my calculator generates accurate and insightful delay probabilities for specific times and locations.
+An API for calculating the probability of flight delays based on user-provided airport and time information. By leveraging a combination of historical airport statistics, real-time weather data sourced from the [OpenMeteo API](#acknowledgements), and current traffic levels at European airports, my calculator generates accurate and insightful delay probabilities for specific times and locations.
 
 I use this API in my web application [DelayFlight.pl](https://www.delayflight.pl)
 
@@ -75,22 +75,22 @@ I use this API in my web application [DelayFlight.pl](https://www.delayflight.pl
   * tailwind `windSpeed * cos(runwayHeadingDegrees - windDirection)`
   * cloud base `(temperature - dew point) / 10 × 1247 + airportElevation`
 
-  I get the ingredients for these calculations and the rest of the factors from the [weather API](#Acknowledgements) and from [here](#The-Data)
+  I get the ingredients for these calculations and the rest of the factors from the [weather API](#acknowledgements) and from [here](#the-Data)
 
 
   The final decision on whether to take off, land, or go around under the given weather conditions is up to the captain, which means that it is impossible to clearly state what delay will occur. As a result, the delay is a percentage and is based on how many limits have been exceeded.
 
-  The limits that have been set for each phase are based on the limits of the [Boeing 737](#Bibliography) and the [Airbus 320](#Bibliography) as a model of a passenger aircraft.
-  Additionally, based on the document [Weather phenomena affecting air traffic management operations](#Bibliography) I take into account the ways in which air traffic control adds additional time in the take-off or landing [phases](#Flight-Phases) in unfavorable weather.
+  The limits that have been set for each phase are based on the limits of the [Boeing 737](#bibliography) and the [Airbus 320](#bibliography) as a model of a passenger aircraft.
+  Additionally, based on the document [Weather phenomena affecting air traffic management operations](#bibliography) I take into account the ways in which air traffic control adds additional time in the take-off or landing [phases](#flight-Phases) in unfavorable weather.
 
 
   ### Statistic feature
   #### The Data
-  Static data on airports, runways and regions come from the [OurAirports](#Acknowledgements), which I convert and filter the shared CSV files to JSON format using a Python script written by me to optimize the database to only the largest European airports, excluding private, military airports, etc.<br/><br/>
-  The statistics that I use come from the [Eurocontrol](#Acknowledgements) website. I convert and filter the shared CSV files to JSON format using a Python script written by me.
+  Static data on airports, runways and regions come from the [OurAirports](#acknowledgements), which I convert and filter the shared CSV files to JSON format using a Python script written by me to optimize the database to only the largest European airports, excluding private, military airports, etc.<br/><br/>
+  The statistics that I use come from the [Eurocontrol](#acknowledgements) website. I convert and filter the shared CSV files to JSON format using a Python script written by me.
   
   #### General
-   I use many statistics on delays in specific takeoff and landing [phases](#Flight-Phases). I calculate the average monthly delays in each phase, the most delayed month, and other more precise values, such as the most common cause of delays and the average times of the most common delays. <br /> I create such factors, which then serve me to calculate the probability of a delay that constantly occurs at a given airport and the probability of a longer (over 15 minutes) delays. I calculate the average and probability which I display to the user, as the probability of delay and as the expected time if a longer delay occurs.
+   I use many statistics on delays in specific takeoff and landing [phases](#flight-Phases). I calculate the average monthly delays in each phase, the most delayed month, and other more precise values, such as the most common cause of delays and the average times of the most common delays. <br /> I create such factors, which then serve me to calculate the probability of a delay that constantly occurs at a given airport and the probability of a longer (over 15 minutes) delays. I calculate the average and probability which I display to the user, as the probability of delay and as the expected time if a longer delay occurs.
 
   ## Flight Phases:
   * **Taxi-out:**
@@ -108,7 +108,7 @@ I use this API in my web application [DelayFlight.pl](https://www.delayflight.pl
     * On-blocks
   <br/> <br/>
   #### Details
-  [ATC Pre-departure Delay](#Bibliography) <br /> 2.2 Concept of runway optimisation [Weather phenomena affecting air traffic management operations](#Bibliography) 
+  [ATC Pre-departure Delay](#bibliography) <br /> 2.2 Concept of runway optimisation [Weather phenomena affecting air traffic management operations](#bibliography) 
 
 ## Tech Stack
 * **Backend**

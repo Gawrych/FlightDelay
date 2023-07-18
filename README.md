@@ -49,8 +49,8 @@ I use this API in my web application [DelayFlight.pl](https://www.delayflight.pl
     }
   ```
 
-  ### Statistics Request
-  * Get airport statistics `GET/api/v1/statistics/{airportIcaoCode}`
+### Statistics Request
+* Get airport statistics `GET/api/v1/statistics/{airportIcaoCode}`
 
   #### Response example
   

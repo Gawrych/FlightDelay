@@ -135,7 +135,7 @@ I use this API in my web application [DelayFlight.pl](https://www.delayflight.pl
 I would like to express my sincere appreciation to 
 * [Eurocontrol](https://www.eurocontrol.int) - for providing statistical data
 * [OurAirports](https://www.ourairports.com) - for providing static airports data
-* [OpenMeteo](www.open-meteo.com) - for providing weather api
+* [OpenMeteo](https://www.open-meteo.com) - for providing weather api
 
 ## Bibliography
 * [Boeing 737 Limitations](http://www.b737.org.uk/limitations.htm)
@@ -144,6 +144,6 @@ I would like to express my sincere appreciation to
 * [Weather phenomena affecting air traffic management operations](https://ansperformance.eu/library/ATXIT_indicator_documentation_mar23.pdf)
 
 ## Contact
-Paweł Gawrych - [LinkedIn](www.linkedin.com/in/Gawrych) <br/>
+Paweł Gawrych - [LinkedIn](https://www.linkedin.com/in/Gawrych) <br/>
 Email - pawelgawrych203@gmail.com <br/>
 Web Application - [DelayFlight.pl](https://www.delayflight.pl/) <br/>

@@ -21,7 +21,7 @@ public class StatisticFactorController {
 
     public final StatisticFactorService statisticFactorService;
 
-    @PostMapping("/{airportCode}")
+    @GetMapping("/{airportCode}")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, PrecisionReport> getFactors(@PathVariable @AirportIcaoCodeValidator String airportCode,
                                                    @RequestHeader(

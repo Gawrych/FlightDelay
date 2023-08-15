@@ -38,17 +38,17 @@ public class WeatherFactorServiceImpl implements WeatherFactorService {
     @Override
     public Map<WeatherFactorName, WeatherFactor> getFactorsByHour(PrecisionTimeFlight precisionTimeFlight) {
         Weather weather = weatherAPIService.getWeather(
-                precisionTimeFlight.getAirportIdent(),
-                precisionTimeFlight.getDate());
+                precisionTimeFlight.flight().airportIdent(),
+                precisionTimeFlight.date());
 
-        AirportWeatherDto airportWeatherDto = airportWeatherCreator.mapSingleHour(precisionTimeFlight, weather);
+        AirportWeatherDto airportWeatherDto = airportWeatherCreator.mapSingleHour(precisionTimeFlight.flight(), weather);
 
         return weatherFactorCollector.getWeatherFactors(airportWeatherDto);
     }
 
     @Override
     public List<WeatherFactorsPeriod> getFactorsInPeriods(Flight flight, int amountOfDays) {
-        List<Weather> weatherInPeriods = weatherAPIService.getWeatherPeriods(flight.getAirportIdent(), amountOfDays);
+        List<Weather> weatherInPeriods = weatherAPIService.getWeatherPeriods(flight.airportIdent(), amountOfDays);
         List<AirportWeatherDto> airportWeatherInPeriod = airportWeatherCreator.mapPeriods(flight, weatherInPeriods);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(defaultDateWithTimePattern);

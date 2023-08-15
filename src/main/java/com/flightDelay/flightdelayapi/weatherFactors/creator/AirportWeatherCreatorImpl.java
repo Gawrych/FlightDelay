@@ -26,14 +26,14 @@ public class AirportWeatherCreatorImpl implements AirportWeatherCreator {
 
     @Override
     public AirportWeatherDto mapSingleHour(Flight flight, Weather weather) {
-        Airport airport = airportService.findByAirportIdent(flight.getAirportIdent());
+        Airport airport = airportService.findByAirportIdent(flight.airportIdent());
 
         return mapAirportWeatherDto(weather, airport, flight);
     }
 
     @Override
     public List<AirportWeatherDto> mapPeriods(Flight flight, List<Weather> weatherInPeriods) {
-        Airport airport = airportService.findByAirportIdent(flight.getAirportIdent());
+        Airport airport = airportService.findByAirportIdent(flight.airportIdent());
 
         return weatherInPeriods
                 .stream()

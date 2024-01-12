@@ -2,8 +2,6 @@
 
 An API for calculating the probability of flight delays based on user-provided airport and time information. By leveraging a combination of historical airport statistics, real-time weather data sourced from the [API](#acknowledgements), and current traffic levels at European airports.
 
-I use this API in my web application [DelayFlight.pl](https://www.delayflight.pl)
-
 ## Features
   ### Delay probability calculator
   You can input the specific date, time, and airport for your flight, and algorithms analyze historical airport statistics and current weather conditions to generate a probability of delay for your chosen time and location. This enables you to make more informed decisions about your travel plans.
